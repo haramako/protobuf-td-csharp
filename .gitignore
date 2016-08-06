@@ -1,3 +1,4 @@
-/*.o
-/.depends
-/protoc-gen-dfcsharp
+*.o
+.depends
+protoc-gen-dfcsharp
+*.exe
