@@ -4,8 +4,6 @@
 #region Designer generated code
 
 using pb = global::Google.ProtocolBuffers;
-using pbc = global::Google.ProtocolBuffers.Collections;
-using pbd = global::Google.ProtocolBuffers.Descriptors;
 using scg = global::System.Collections.Generic;
 namespace Master {
 
@@ -27,7 +25,7 @@ namespace Master {
 
   #region Messages
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PbxHeader : IPbMessage {
+  public sealed partial class PbxHeader : pb.IMessage {
     public PbxHeader() { }
     private static readonly PbxHeader defaultInstance = new PbxHeader();
     public static PbxHeader DefaultInstance {
@@ -38,7 +36,7 @@ namespace Master {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     public static partial class Types {
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class IntIndexEntry : IPbMessage {
+      public sealed partial class IntIndexEntry : pb.IMessage {
         public IntIndexEntry() { }
         private static readonly IntIndexEntry defaultInstance = new IntIndexEntry();
         public static IntIndexEntry DefaultInstance {
@@ -63,7 +61,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -92,7 +90,7 @@ namespace Master {
       }
 
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class StringIndexEntry : IPbMessage {
+      public sealed partial class StringIndexEntry : pb.IMessage {
         public StringIndexEntry() { }
         private static readonly StringIndexEntry defaultInstance = new StringIndexEntry();
         public static StringIndexEntry DefaultInstance {
@@ -117,7 +115,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -166,7 +164,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -181,11 +179,11 @@ namespace Master {
             break;
           }
           case 10: {
-            Test.Input_ReadMessageArray(tag, out this.IntIndex);
+            input.ReadMessageArray(tag, out this.IntIndex);
             break;
           }
           case 18: {
-            Test.Input_ReadMessageArray(tag, out this.StringIndex);
+            input.ReadMessageArray(tag, out this.StringIndex);
             break;
           }
         }
@@ -195,7 +193,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PresentCommand : IPbMessage {
+  public sealed partial class PresentCommand : pb.IMessage {
     public PresentCommand() { }
     private static readonly PresentCommand defaultInstance = new PresentCommand();
     public static PresentCommand DefaultInstance {
@@ -206,7 +204,7 @@ namespace Master {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     public static partial class Types {
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class StackItem : IPbMessage {
+      public sealed partial class StackItem : pb.IMessage {
         public StackItem() { }
         private static readonly StackItem defaultInstance = new StackItem();
         public static StackItem DefaultInstance {
@@ -231,7 +229,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -260,7 +258,7 @@ namespace Master {
       }
 
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class Fang : IPbMessage {
+      public sealed partial class Fang : pb.IMessage {
         public Fang() { }
         private static readonly Fang defaultInstance = new Fang();
         public static Fang DefaultInstance {
@@ -287,7 +285,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -346,7 +344,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -373,11 +371,11 @@ namespace Master {
             break;
           }
           case 34: {
-            Test.Input_ReadMessageArray(tag, out this.StackItems);
+            input.ReadMessageArray(tag, out this.StackItems);
             break;
           }
           case 42: {
-            Test.Input_ReadMessageArray(tag, out this.Cards);
+            input.ReadMessageArray(tag, out this.Cards);
             break;
           }
         }
@@ -387,7 +385,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class FangTemplate : IPbMessage {
+  public sealed partial class FangTemplate : pb.IMessage {
     public FangTemplate() { }
     private static readonly FangTemplate defaultInstance = new FangTemplate();
     public static FangTemplate DefaultInstance {
@@ -398,7 +396,7 @@ namespace Master {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     public static partial class Types {
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class StackItemBonus : IPbMessage {
+      public sealed partial class StackItemBonus : pb.IMessage {
         public StackItemBonus() { }
         private static readonly StackItemBonus defaultInstance = new StackItemBonus();
         public static StackItemBonus DefaultInstance {
@@ -421,7 +419,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -446,7 +444,7 @@ namespace Master {
       }
 
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class StackItemBonusEntry : IPbMessage {
+      public sealed partial class StackItemBonusEntry : pb.IMessage {
         public StackItemBonusEntry() { }
         private static readonly StackItemBonusEntry defaultInstance = new StackItemBonusEntry();
         public static StackItemBonusEntry DefaultInstance {
@@ -471,7 +469,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -500,7 +498,7 @@ namespace Master {
       }
 
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class DropStackItemBonusEntry : IPbMessage {
+      public sealed partial class DropStackItemBonusEntry : pb.IMessage {
         public DropStackItemBonusEntry() { }
         private static readonly DropStackItemBonusEntry defaultInstance = new DropStackItemBonusEntry();
         public static DropStackItemBonusEntry DefaultInstance {
@@ -525,7 +523,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -648,7 +646,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -763,7 +761,7 @@ namespace Master {
             break;
           }
           case 210: {
-            Test.Input_ReadStringArray(tag, out this.LimitBreakType);
+            input.ReadStringArray(tag, out this.LimitBreakType);
             break;
           }
           case 216: {
@@ -799,15 +797,15 @@ namespace Master {
             break;
           }
           case 282: {
-            Test.Input_ReadStringArray(tag, out this.Attribute);
+            input.ReadStringArray(tag, out this.Attribute);
             break;
           }
           case 290: {
-            Test.Input_ReadMessageArray(tag, out this.StackItemBonus);
+            input.ReadMessageArray(tag, out this.StackItemBonus);
             break;
           }
           case 298: {
-            Test.Input_ReadMessageArray(tag, out this.DropStackItemBonus);
+            input.ReadMessageArray(tag, out this.DropStackItemBonus);
             break;
           }
           case 314: {
@@ -825,7 +823,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class ActionSkill : IPbMessage {
+  public sealed partial class ActionSkill : pb.IMessage {
     public ActionSkill() { }
     private static readonly ActionSkill defaultInstance = new ActionSkill();
     public static ActionSkill DefaultInstance {
@@ -874,7 +872,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -951,7 +949,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PassiveSkill : IPbMessage {
+  public sealed partial class PassiveSkill : pb.IMessage {
     public PassiveSkill() { }
     private static readonly PassiveSkill defaultInstance = new PassiveSkill();
     public static PassiveSkill DefaultInstance {
@@ -1002,7 +1000,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1083,7 +1081,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PvpSkill : IPbMessage {
+  public sealed partial class PvpSkill : pb.IMessage {
     public PvpSkill() { }
     private static readonly PvpSkill defaultInstance = new PvpSkill();
     public static PvpSkill DefaultInstance {
@@ -1128,7 +1126,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1197,7 +1195,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PvpSoul : IPbMessage {
+  public sealed partial class PvpSoul : pb.IMessage {
     public PvpSoul() { }
     private static readonly PvpSoul defaultInstance = new PvpSoul();
     public static PvpSoul DefaultInstance {
@@ -1236,7 +1234,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1293,7 +1291,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PvpAttribute : IPbMessage {
+  public sealed partial class PvpAttribute : pb.IMessage {
     public PvpAttribute() { }
     private static readonly PvpAttribute defaultInstance = new PvpAttribute();
     public static PvpAttribute DefaultInstance {
@@ -1322,7 +1320,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1359,7 +1357,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class HomeLevel : IPbMessage {
+  public sealed partial class HomeLevel : pb.IMessage {
     public HomeLevel() { }
     private static readonly HomeLevel defaultInstance = new HomeLevel();
     public static HomeLevel DefaultInstance {
@@ -1392,7 +1390,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1437,7 +1435,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class MonsterLevel : IPbMessage {
+  public sealed partial class MonsterLevel : pb.IMessage {
     public MonsterLevel() { }
     private static readonly MonsterLevel defaultInstance = new MonsterLevel();
     public static MonsterLevel DefaultInstance {
@@ -1462,7 +1460,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1491,7 +1489,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class LimitBreakType : IPbMessage {
+  public sealed partial class LimitBreakType : pb.IMessage {
     public LimitBreakType() { }
     private static readonly LimitBreakType defaultInstance = new LimitBreakType();
     public static LimitBreakType DefaultInstance {
@@ -1534,7 +1532,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1558,47 +1556,47 @@ namespace Master {
           }
           case 26:
           case 24: {
-            Test.Input_ReadInt32Array(tag, out this.Hp);
+            input.ReadInt32Array(tag, out this.Hp);
             break;
           }
           case 34:
           case 32: {
-            Test.Input_ReadInt32Array(tag, out this.Attack);
+            input.ReadInt32Array(tag, out this.Attack);
             break;
           }
           case 42:
           case 40: {
-            Test.Input_ReadInt32Array(tag, out this.Defense);
+            input.ReadInt32Array(tag, out this.Defense);
             break;
           }
           case 50:
           case 48: {
-            Test.Input_ReadInt32Array(tag, out this.Items0);
+            input.ReadInt32Array(tag, out this.Items0);
             break;
           }
           case 58:
           case 56: {
-            Test.Input_ReadInt32Array(tag, out this.Items1);
+            input.ReadInt32Array(tag, out this.Items1);
             break;
           }
           case 66:
           case 64: {
-            Test.Input_ReadInt32Array(tag, out this.Items2);
+            input.ReadInt32Array(tag, out this.Items2);
             break;
           }
           case 74:
           case 72: {
-            Test.Input_ReadInt32Array(tag, out this.Items3);
+            input.ReadInt32Array(tag, out this.Items3);
             break;
           }
           case 82:
           case 80: {
-            Test.Input_ReadInt32Array(tag, out this.Items4);
+            input.ReadInt32Array(tag, out this.Items4);
             break;
           }
           case 90:
           case 88: {
-            Test.Input_ReadInt32Array(tag, out this.Items5);
+            input.ReadInt32Array(tag, out this.Items5);
             break;
           }
         }
@@ -1608,7 +1606,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class StackItemTemplate : IPbMessage {
+  public sealed partial class StackItemTemplate : pb.IMessage {
     public StackItemTemplate() { }
     private static readonly StackItemTemplate defaultInstance = new StackItemTemplate();
     public static StackItemTemplate DefaultInstance {
@@ -1643,7 +1641,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1692,7 +1690,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class EmeraldShopItem : IPbMessage {
+  public sealed partial class EmeraldShopItem : pb.IMessage {
     public EmeraldShopItem() { }
     private static readonly EmeraldShopItem defaultInstance = new EmeraldShopItem();
     public static EmeraldShopItem DefaultInstance {
@@ -1729,7 +1727,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1782,7 +1780,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PackItem : IPbMessage {
+  public sealed partial class PackItem : pb.IMessage {
     public PackItem() { }
     private static readonly PackItem defaultInstance = new PackItem();
     public static PackItem DefaultInstance {
@@ -1813,7 +1811,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1854,7 +1852,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PvpLeague : IPbMessage {
+  public sealed partial class PvpLeague : pb.IMessage {
     public PvpLeague() { }
     private static readonly PvpLeague defaultInstance = new PvpLeague();
     public static PvpLeague DefaultInstance {
@@ -1879,7 +1877,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1908,7 +1906,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PvpGrade : IPbMessage {
+  public sealed partial class PvpGrade : pb.IMessage {
     public PvpGrade() { }
     private static readonly PvpGrade defaultInstance = new PvpGrade();
     public static PvpGrade DefaultInstance {
@@ -1943,7 +1941,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -1979,7 +1977,7 @@ namespace Master {
           }
           case 50: {
             global::Master.PresentCommand builder = new global::Master.PresentCommand();
-            Test.Input_ReadMessage(builder, extensionRegistry);
+            input.ReadMessage(builder, extensionRegistry);
             Reward = builder;
             break;
           }
@@ -1994,7 +1992,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class PvpUnificationRule : IPbMessage {
+  public sealed partial class PvpUnificationRule : pb.IMessage {
     public PvpUnificationRule() { }
     private static readonly PvpUnificationRule defaultInstance = new PvpUnificationRule();
     public static PvpUnificationRule DefaultInstance {
@@ -2029,7 +2027,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -2078,7 +2076,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class QuestTemplate : IPbMessage {
+  public sealed partial class QuestTemplate : pb.IMessage {
     public QuestTemplate() { }
     private static readonly QuestTemplate defaultInstance = new QuestTemplate();
     public static QuestTemplate DefaultInstance {
@@ -2121,7 +2119,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -2177,7 +2175,7 @@ namespace Master {
           }
           case 90: {
             global::Master.PresentCommand builder = new global::Master.PresentCommand();
-            Test.Input_ReadMessage(builder, extensionRegistry);
+            input.ReadMessage(builder, extensionRegistry);
             Reward = builder;
             break;
           }
@@ -2188,7 +2186,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class UserStatTemplate : IPbMessage {
+  public sealed partial class UserStatTemplate : pb.IMessage {
     public UserStatTemplate() { }
     private static readonly UserStatTemplate defaultInstance = new UserStatTemplate();
     public static UserStatTemplate DefaultInstance {
@@ -2217,7 +2215,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -2254,7 +2252,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class LoginSheet : IPbMessage {
+  public sealed partial class LoginSheet : pb.IMessage {
     public LoginSheet() { }
     private static readonly LoginSheet defaultInstance = new LoginSheet();
     public static LoginSheet DefaultInstance {
@@ -2283,7 +2281,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -2320,7 +2318,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class LoginBonus : IPbMessage {
+  public sealed partial class LoginBonus : pb.IMessage {
     public LoginBonus() { }
     private static readonly LoginBonus defaultInstance = new LoginBonus();
     public static LoginBonus DefaultInstance {
@@ -2349,7 +2347,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -2377,7 +2375,7 @@ namespace Master {
           }
           case 34: {
             global::Master.PresentCommand builder = new global::Master.PresentCommand();
-            Test.Input_ReadMessage(builder, extensionRegistry);
+            input.ReadMessage(builder, extensionRegistry);
             Action = builder;
             break;
           }
@@ -2388,7 +2386,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class SpecialCutinOption : IPbMessage {
+  public sealed partial class SpecialCutinOption : pb.IMessage {
     public SpecialCutinOption() { }
     private static readonly SpecialCutinOption defaultInstance = new SpecialCutinOption();
     public static SpecialCutinOption DefaultInstance {
@@ -2423,7 +2421,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -2472,7 +2470,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class SoundList : IPbMessage {
+  public sealed partial class SoundList : pb.IMessage {
     public SoundList() { }
     private static readonly SoundList defaultInstance = new SoundList();
     public static SoundList DefaultInstance {
@@ -2521,7 +2519,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -2598,7 +2596,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class Enemy : IPbMessage {
+  public sealed partial class Enemy : pb.IMessage {
     public Enemy() { }
     private static readonly Enemy defaultInstance = new Enemy();
     public static Enemy DefaultInstance {
@@ -2711,7 +2709,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -2916,7 +2914,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class Item : IPbMessage {
+  public sealed partial class Item : pb.IMessage {
     public Item() { }
     private static readonly Item defaultInstance = new Item();
     public static Item DefaultInstance {
@@ -2995,7 +2993,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -3132,7 +3130,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class ItemName : IPbMessage {
+  public sealed partial class ItemName : pb.IMessage {
     public ItemName() { }
     private static readonly ItemName defaultInstance = new ItemName();
     public static ItemName DefaultInstance {
@@ -3157,7 +3155,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -3186,7 +3184,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class ItemNameDict : IPbMessage {
+  public sealed partial class ItemNameDict : pb.IMessage {
     public ItemNameDict() { }
     private static readonly ItemNameDict defaultInstance = new ItemNameDict();
     public static ItemNameDict DefaultInstance {
@@ -3197,7 +3195,7 @@ namespace Master {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     public static partial class Types {
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class List : IPbMessage {
+      public sealed partial class List : pb.IMessage {
         public List() { }
         private static readonly List defaultInstance = new List();
         public static List DefaultInstance {
@@ -3220,7 +3218,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -3235,7 +3233,7 @@ namespace Master {
                 break;
               }
               case 10: {
-                Test.Input_ReadMessageArray(tag, out this.List_);
+                input.ReadMessageArray(tag, out this.List_);
                 break;
               }
             }
@@ -3245,7 +3243,7 @@ namespace Master {
       }
 
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class DictEntry : IPbMessage {
+      public sealed partial class DictEntry : pb.IMessage {
         public DictEntry() { }
         private static readonly DictEntry defaultInstance = new DictEntry();
         public static DictEntry DefaultInstance {
@@ -3270,7 +3268,7 @@ namespace Master {
 
         #endregion
 
-        public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+        public void MergeFrom(pb::CodedInputStream input) {
           uint tag;
           string field_name;
           while (input.ReadTag(out tag, out field_name)) {
@@ -3290,7 +3288,7 @@ namespace Master {
               }
               case 18: {
                 global::Master.ItemNameDict.Types.List builder = new global::Master.ItemNameDict.Types.List();
-                Test.Input_ReadMessage(builder, extensionRegistry);
+                input.ReadMessage(builder, extensionRegistry);
                 Value = builder;
                 break;
               }
@@ -3319,7 +3317,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -3334,7 +3332,7 @@ namespace Master {
             break;
           }
           case 10: {
-            Test.Input_ReadMessageArray(tag, out this.Dict);
+            input.ReadMessageArray(tag, out this.Dict);
             break;
           }
         }
@@ -3344,7 +3342,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class Trap : IPbMessage {
+  public sealed partial class Trap : pb.IMessage {
     public Trap() { }
     private static readonly Trap defaultInstance = new Trap();
     public static Trap DefaultInstance {
@@ -3379,7 +3377,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -3428,7 +3426,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class StringData : IPbMessage {
+  public sealed partial class StringData : pb.IMessage {
     public StringData() { }
     private static readonly StringData defaultInstance = new StringData();
     public static StringData DefaultInstance {
@@ -3453,7 +3451,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -3482,7 +3480,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class SoloDuel : IPbMessage {
+  public sealed partial class SoloDuel : pb.IMessage {
     public SoloDuel() { }
     private static readonly SoloDuel defaultInstance = new SoloDuel();
     public static SoloDuel DefaultInstance {
@@ -3519,7 +3517,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {
@@ -3572,7 +3570,7 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class RoomInfo : IPbMessage {
+  public sealed partial class RoomInfo : pb.IMessage {
     public RoomInfo() { }
     private static readonly RoomInfo defaultInstance = new RoomInfo();
     public static RoomInfo DefaultInstance {
@@ -3603,7 +3601,7 @@ namespace Master {
 
     #endregion
 
-    public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       string field_name;
       while (input.ReadTag(out tag, out field_name)) {

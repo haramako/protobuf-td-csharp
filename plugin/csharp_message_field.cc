@@ -68,7 +68,7 @@ void MessageFieldGenerator::GenerateParsingCode(Writer* writer) {
     writer->WriteLine("input.ReadGroup($0$, builder, extensionRegistry);",
                       number());
   } else {
-    writer->WriteLine("Test.Input_ReadMessage(builder, extensionRegistry);");
+    writer->WriteLine("input.ReadMessage(builder, extensionRegistry);");
   }
   writer->WriteLine("$0$ = builder;", property_name());
 }

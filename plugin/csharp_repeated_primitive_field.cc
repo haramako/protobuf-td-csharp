@@ -63,7 +63,7 @@ void RepeatedPrimitiveFieldGenerator::GenerateMembers(Writer* writer) {
 }
 
 void RepeatedPrimitiveFieldGenerator::GenerateParsingCode(Writer* writer) {
-  writer->WriteLine("Test.Input_Read$0$Array(tag, out this.$1$);",
+  writer->WriteLine("input.Read$0$Array(tag, out this.$1$);",
                     capitalized_type_name(), name());
 }
 

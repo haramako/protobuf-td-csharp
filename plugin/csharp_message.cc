@@ -141,7 +141,7 @@ void MessageGenerator::Generate(Writer* writer) {
       "[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]");
   WriteGeneratedCodeAttributes(writer);
   writer->WriteLine(
-      "$0$ sealed partial class $1$ : IPbMessage {",
+      "$0$ sealed partial class $1$ : pb.IMessage {",
       class_access_level(), class_name());
   writer->Indent();
 #if 0
@@ -363,13 +363,13 @@ void MessageGenerator::GenerateParseFromMethods(Writer* writer) {
       "  return CreateBuilder().MergeDelimitedFrom(input, extensionRegistry).BuildParsed();");
   writer->WriteLine("}");
   writer->WriteLine(
-      "public static $0$ ParseFrom(pb::ICodedInputStream input) {",
+      "public static $0$ ParseFrom(pb::CodedInputStream input) {",
       class_name());
   writer->WriteLine(
       "  return ((Builder) CreateBuilder().MergeFrom(input)).BuildParsed();");
   writer->WriteLine("}");
   writer->WriteLine(
-      "public static $0$ ParseFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {",
+      "public static $0$ ParseFrom(pb::CodedInputStream input, pb::ExtensionRegistry extensionRegistry) {",
       class_name());
   writer->WriteLine(
       "  return ((Builder) CreateBuilder().MergeFrom(input, extensionRegistry)).BuildParsed();");
@@ -384,12 +384,13 @@ void MessageGenerator::GenerateBuilder(Writer* writer) {
   }
 }
 
+	
 void MessageGenerator::GenerateCommonBuilderMethods(Writer* writer) {
 }
 
 void MessageGenerator::GenerateBuilderParsingMethods(Writer* writer) {
   writer->WriteLine(
-					"public void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry) {");
+					"public void MergeFrom(pb::CodedInputStream input) {");
   writer->Indent();
   writer->WriteLine("uint tag;");
   writer->WriteLine("string field_name;");

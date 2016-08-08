@@ -64,7 +64,7 @@ void RepeatedEnumFieldGenerator::GenerateMembers(Writer* writer) {
 
 void RepeatedEnumFieldGenerator::GenerateParsingCode(Writer* writer) {
   writer->WriteLine(
-      "Test.Input_ReadEnumArray<$0$>(tag, field_name, this.$1$);",
+      "input.ReadEnumArray<$0$>(tag, field_name, this.$1$);",
       type_name(), name());
 }
 

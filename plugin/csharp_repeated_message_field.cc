@@ -64,7 +64,7 @@ void RepeatedMessageFieldGenerator::GenerateMembers(Writer* writer) {
 
 void RepeatedMessageFieldGenerator::GenerateParsingCode(Writer* writer) {
   writer->WriteLine(
-      "Test.Input_Read$0$Array(tag, out this.$1$);",
+      "input.Read$0$Array(tag, out this.$1$);",
       message_or_group(), name(), type_name());
 }
 

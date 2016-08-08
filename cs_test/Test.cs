@@ -1,21 +1,20 @@
 using pb = global::Google.ProtocolBuffers;
-using pbc = global::Google.ProtocolBuffers.Collections;
-using pbd = global::Google.ProtocolBuffers.Descriptors;
-using scg = global::System.Collections.Generic;
 
-public interface IPbMessage {
-	void MergeFrom(pb::ICodedInputStream input, pb::ExtensionRegistry extensionRegistry);
+namespace Google.ProtocolBuffers {
+	public interface IMessage {
+		void MergeFrom(pb::CodedInputStream input);
+	}
 }
 
 public class Test {
 	public static void Main(){
     }
 
-	public static void Input_ReadMessage(IPbMessage mes, object ex){
+	public static void Input_ReadMessage(pb::IMessage mes, object ex){
 	}
 
 	public static void Input_ReadMessageArray<T>(uint tag, out T[] field)
-		where T: IPbMessage {
+		where T: pb.IMessage {
 		field = new T[0];
 	}
 

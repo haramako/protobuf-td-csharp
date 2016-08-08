@@ -127,8 +127,6 @@ void UmbrellaClassGenerator::WriteIntroduction(Writer* writer) {
 
   writer->WriteLine();
   writer->WriteLine("using pb = global::Google.ProtocolBuffers;");
-  writer->WriteLine("using pbc = global::Google.ProtocolBuffers.Collections;");
-  writer->WriteLine("using pbd = global::Google.ProtocolBuffers.Descriptors;");
   writer->WriteLine("using scg = global::System.Collections.Generic;");
 
   if (!namespace_.empty()) {

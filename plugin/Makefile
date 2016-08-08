@@ -27,6 +27,5 @@ depends:
 	$(CXX) -MM $(CXXFLAGS) $(SRC) > .depends
 
 test:
-	protoc --plugin=./protoc-gen-dfcsharp --dfcsharp_out=. master.proto
-	$(SMCS) -r:ProtocolBuffers.dll Master.cs Test.cs
-
+	protoc --plugin=./protoc-gen-dfcsharp --dfcsharp_out=../cs_test/ master.proto
+	make -C ../cs_test test
