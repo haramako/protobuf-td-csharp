@@ -56,24 +56,15 @@ EnumFieldGenerator::~EnumFieldGenerator() {
 }
 
 void EnumFieldGenerator::GenerateMembers(Writer* writer) {
-  writer->WriteLine("private $0$ $1$_ = $2$;", type_name(), name(),
+  writer->WriteLine("public $0$ $1$ = $2$;", type_name(), name(),
                     default_value());
   AddDeprecatedFlag(writer);
   AddPublicMemberAttributes(writer);
-  writer->WriteLine("public $0$ $1$ {", type_name(), property_name());
-  writer->WriteLine("  get { return $0$_; }", name());
-  writer->WriteLine("}");
 }
 
 void EnumFieldGenerator::GenerateParsingCode(Writer* writer) {
-  writer->WriteLine("object unknown;");
-  writer->WriteLine("if(input.ReadEnum(ref result.$0$_, out unknown)) {",
+  writer->WriteLine("input.ReadEnum(ref this.$0$);",
                     name());
-  if (SupportFieldPresence(descriptor_->file())) {
-    writer->WriteLine("  result.has$0$ = true;", property_name());
-  }
-  writer->WriteLine("} else if(unknown is int) {");
-  writer->WriteLine("}");
 }
 
 }  // namespace csharp

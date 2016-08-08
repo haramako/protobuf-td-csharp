@@ -3,6 +3,7 @@
 #pragma warning disable 1591, 0612, 3021
 #region Designer generated code
 
+using System.Collections.Generic;
 using pb = global::Google.ProtocolBuffers;
 using scg = global::System.Collections.Generic;
 namespace Master {
@@ -317,6 +318,102 @@ namespace Master {
 
       }
 
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+      public sealed partial class Armament : pb.IMessage {
+        public Armament() { }
+        private static readonly Armament defaultInstance = new Armament();
+        public static Armament DefaultInstance {
+          get { return defaultInstance; }
+        }
+
+        public int ArmId;
+
+        public int Level;
+
+        public int FixedHp;
+
+        public int FixedAttack;
+
+        public int FixedDefense;
+
+        public int SoulId0;
+
+        public int SoulLevel0;
+
+        public int SlotNum;
+
+        public int Num;
+
+        #region Lite runtime methods
+        public override int GetHashCode() {
+          int hash = GetType().GetHashCode();
+          return hash;
+        }
+
+        public override bool Equals(object obj) {
+          Armament other = obj as Armament;
+          if (other == null) return false;
+          return true;
+        }
+
+        #endregion
+
+        public void MergeFrom(pb::CodedInputStream input) {
+          uint tag;
+          string field_name;
+          while (input.ReadTag(out tag, out field_name)) {
+            switch (tag) {
+              case 0: {
+                throw pb::InvalidProtocolBufferException.InvalidTag();
+              }
+              default: {
+                if (pb::WireFormat.IsEndGroupTag(tag)) {
+                  return;
+                }
+                break;
+              }
+              case 8: {
+                input.ReadInt32(ref this.ArmId);
+                break;
+              }
+              case 16: {
+                input.ReadInt32(ref this.Level);
+                break;
+              }
+              case 24: {
+                input.ReadInt32(ref this.FixedHp);
+                break;
+              }
+              case 32: {
+                input.ReadInt32(ref this.FixedAttack);
+                break;
+              }
+              case 40: {
+                input.ReadInt32(ref this.FixedDefense);
+                break;
+              }
+              case 48: {
+                input.ReadInt32(ref this.SoulId0);
+                break;
+              }
+              case 56: {
+                input.ReadInt32(ref this.SoulLevel0);
+                break;
+              }
+              case 64: {
+                input.ReadInt32(ref this.SlotNum);
+                break;
+              }
+              case 72: {
+                input.ReadInt32(ref this.Num);
+                break;
+              }
+            }
+          }
+        }
+
+      }
+
     }
     #endregion
 
@@ -329,6 +426,8 @@ namespace Master {
     public global::Master.PresentCommand.Types.StackItem[] StackItems;
 
     public global::Master.PresentCommand.Types.Fang[] Cards;
+
+    public global::Master.PresentCommand.Types.Armament[] Arms;
 
     #region Lite runtime methods
     public override int GetHashCode() {
@@ -376,6 +475,10 @@ namespace Master {
           }
           case 42: {
             input.ReadMessageArray(tag, out this.Cards);
+            break;
+          }
+          case 50: {
+            input.ReadMessageArray(tag, out this.Arms);
             break;
           }
         }
@@ -604,7 +707,7 @@ namespace Master {
 
     public bool Unuse;
 
-    public string[] LimitBreakType;
+    public List<string> LimitBreakType = new List<string>();
 
     public int LimitBreakItem;
 
@@ -622,15 +725,35 @@ namespace Master {
 
     public bool NoPlusSkillPropertyBonus;
 
-    public string[] Attribute;
+    public List<string> Attribute = new List<string>();
 
     public global::Master.FangTemplate.Types.StackItemBonusEntry[] StackItemBonus;
 
     public global::Master.FangTemplate.Types.DropStackItemBonusEntry[] DropStackItemBonus;
 
+    public string OpenAt = "";
+
     public string SpecialLabel = "";
 
     public int PlusLuck;
+
+    public int WeaponAbilityId;
+
+    public int ShieldAbilityId;
+
+    public int Point;
+
+    public string PvpAttribute0 = "";
+
+    public string PvpAttribute1 = "";
+
+    public string PvpAttribute2 = "";
+
+    public string PvpAttribute3 = "";
+
+    public string PvpAttribute4 = "";
+
+    public List<string> AutoType = new List<string>();
 
     #region Lite runtime methods
     public override int GetHashCode() {
@@ -761,7 +884,7 @@ namespace Master {
             break;
           }
           case 210: {
-            input.ReadStringArray(tag, out this.LimitBreakType);
+            input.ReadStringArray(tag, this.LimitBreakType);
             break;
           }
           case 216: {
@@ -797,7 +920,7 @@ namespace Master {
             break;
           }
           case 282: {
-            input.ReadStringArray(tag, out this.Attribute);
+            input.ReadStringArray(tag, this.Attribute);
             break;
           }
           case 290: {
@@ -808,12 +931,52 @@ namespace Master {
             input.ReadMessageArray(tag, out this.DropStackItemBonus);
             break;
           }
+          case 306: {
+            input.ReadString(ref this.OpenAt);
+            break;
+          }
           case 314: {
             input.ReadString(ref this.SpecialLabel);
             break;
           }
           case 320: {
             input.ReadInt32(ref this.PlusLuck);
+            break;
+          }
+          case 328: {
+            input.ReadInt32(ref this.WeaponAbilityId);
+            break;
+          }
+          case 336: {
+            input.ReadInt32(ref this.ShieldAbilityId);
+            break;
+          }
+          case 344: {
+            input.ReadInt32(ref this.Point);
+            break;
+          }
+          case 354: {
+            input.ReadString(ref this.PvpAttribute0);
+            break;
+          }
+          case 362: {
+            input.ReadString(ref this.PvpAttribute1);
+            break;
+          }
+          case 370: {
+            input.ReadString(ref this.PvpAttribute2);
+            break;
+          }
+          case 378: {
+            input.ReadString(ref this.PvpAttribute3);
+            break;
+          }
+          case 386: {
+            input.ReadString(ref this.PvpAttribute4);
+            break;
+          }
+          case 394: {
+            input.ReadStringArray(tag, this.AutoType);
             break;
           }
         }
@@ -1446,6 +1609,8 @@ namespace Master {
 
     public int Exp;
 
+    public int Dummy;
+
     #region Lite runtime methods
     public override int GetHashCode() {
       int hash = GetType().GetHashCode();
@@ -1482,6 +1647,148 @@ namespace Master {
             input.ReadInt32(ref this.Exp);
             break;
           }
+          case 24: {
+            input.ReadInt32(ref this.Dummy);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class FangDrop : pb.IMessage {
+    public FangDrop() { }
+    private static readonly FangDrop defaultInstance = new FangDrop();
+    public static FangDrop DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public string EnemyId0 = "";
+
+    public int Level0;
+
+    public int Rate0;
+
+    public string EnemyId1 = "";
+
+    public int Level1;
+
+    public int Rate1;
+
+    public string EnemyId2 = "";
+
+    public int Level2;
+
+    public int Rate2;
+
+    public string EnemyId3 = "";
+
+    public int Level3;
+
+    public int Rate3;
+
+    public string EnemyId4 = "";
+
+    public int Level4;
+
+    public int Rate4;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      FangDrop other = obj as FangDrop;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadString(ref this.EnemyId0);
+            break;
+          }
+          case 24: {
+            input.ReadInt32(ref this.Level0);
+            break;
+          }
+          case 32: {
+            input.ReadInt32(ref this.Rate0);
+            break;
+          }
+          case 42: {
+            input.ReadString(ref this.EnemyId1);
+            break;
+          }
+          case 48: {
+            input.ReadInt32(ref this.Level1);
+            break;
+          }
+          case 56: {
+            input.ReadInt32(ref this.Rate1);
+            break;
+          }
+          case 66: {
+            input.ReadString(ref this.EnemyId2);
+            break;
+          }
+          case 72: {
+            input.ReadInt32(ref this.Level2);
+            break;
+          }
+          case 80: {
+            input.ReadInt32(ref this.Rate2);
+            break;
+          }
+          case 90: {
+            input.ReadString(ref this.EnemyId3);
+            break;
+          }
+          case 96: {
+            input.ReadInt32(ref this.Level3);
+            break;
+          }
+          case 104: {
+            input.ReadInt32(ref this.Rate3);
+            break;
+          }
+          case 114: {
+            input.ReadString(ref this.EnemyId4);
+            break;
+          }
+          case 120: {
+            input.ReadInt32(ref this.Level4);
+            break;
+          }
+          case 128: {
+            input.ReadInt32(ref this.Rate4);
+            break;
+          }
         }
       }
     }
@@ -1500,23 +1807,23 @@ namespace Master {
 
     public string Name = "";
 
-    public int[] Hp;
+    public List<int> Hp = new List<int>();
 
-    public int[] Attack;
+    public List<int> Attack = new List<int>();
 
-    public int[] Defense;
+    public List<int> Defense = new List<int>();
 
-    public int[] Items0;
+    public List<int> Items0 = new List<int>();
 
-    public int[] Items1;
+    public List<int> Items1 = new List<int>();
 
-    public int[] Items2;
+    public List<int> Items2 = new List<int>();
 
-    public int[] Items3;
+    public List<int> Items3 = new List<int>();
 
-    public int[] Items4;
+    public List<int> Items4 = new List<int>();
 
-    public int[] Items5;
+    public List<int> Items5 = new List<int>();
 
     #region Lite runtime methods
     public override int GetHashCode() {
@@ -1556,47 +1863,47 @@ namespace Master {
           }
           case 26:
           case 24: {
-            input.ReadInt32Array(tag, out this.Hp);
+            input.ReadInt32Array(tag, this.Hp);
             break;
           }
           case 34:
           case 32: {
-            input.ReadInt32Array(tag, out this.Attack);
+            input.ReadInt32Array(tag, this.Attack);
             break;
           }
           case 42:
           case 40: {
-            input.ReadInt32Array(tag, out this.Defense);
+            input.ReadInt32Array(tag, this.Defense);
             break;
           }
           case 50:
           case 48: {
-            input.ReadInt32Array(tag, out this.Items0);
+            input.ReadInt32Array(tag, this.Items0);
             break;
           }
           case 58:
           case 56: {
-            input.ReadInt32Array(tag, out this.Items1);
+            input.ReadInt32Array(tag, this.Items1);
             break;
           }
           case 66:
           case 64: {
-            input.ReadInt32Array(tag, out this.Items2);
+            input.ReadInt32Array(tag, this.Items2);
             break;
           }
           case 74:
           case 72: {
-            input.ReadInt32Array(tag, out this.Items3);
+            input.ReadInt32Array(tag, this.Items3);
             break;
           }
           case 82:
           case 80: {
-            input.ReadInt32Array(tag, out this.Items4);
+            input.ReadInt32Array(tag, this.Items4);
             break;
           }
           case 90:
           case 88: {
-            input.ReadInt32Array(tag, out this.Items5);
+            input.ReadInt32Array(tag, this.Items5);
             break;
           }
         }
@@ -1681,6 +1988,168 @@ namespace Master {
           }
           case 56: {
             input.ReadInt32(ref this.Order);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class ExchangeShop : pb.IMessage {
+    public ExchangeShop() { }
+    private static readonly ExchangeShop defaultInstance = new ExchangeShop();
+    public static ExchangeShop DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public int Season;
+
+    public string Name = "";
+
+    public int StackItemId;
+
+    public string Desc = "";
+
+    public string Option = "";
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      ExchangeShop other = obj as ExchangeShop;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 16: {
+            input.ReadInt32(ref this.Season);
+            break;
+          }
+          case 26: {
+            input.ReadString(ref this.Name);
+            break;
+          }
+          case 32: {
+            input.ReadInt32(ref this.StackItemId);
+            break;
+          }
+          case 42: {
+            input.ReadString(ref this.Desc);
+            break;
+          }
+          case 50: {
+            input.ReadString(ref this.Option);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class ExchangeItem : pb.IMessage {
+    public ExchangeItem() { }
+    private static readonly ExchangeItem defaultInstance = new ExchangeItem();
+    public static ExchangeItem DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public int ExchangeShopId;
+
+    public string Name = "";
+
+    public string Image = "";
+
+    public string Action = "";
+
+    public int Price;
+
+    public int Limit;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      ExchangeItem other = obj as ExchangeItem;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 16: {
+            input.ReadInt32(ref this.ExchangeShopId);
+            break;
+          }
+          case 26: {
+            input.ReadString(ref this.Name);
+            break;
+          }
+          case 34: {
+            input.ReadString(ref this.Image);
+            break;
+          }
+          case 42: {
+            input.ReadString(ref this.Action);
+            break;
+          }
+          case 48: {
+            input.ReadInt32(ref this.Price);
+            break;
+          }
+          case 56: {
+            input.ReadInt32(ref this.Limit);
             break;
           }
         }
@@ -1852,6 +2321,72 @@ namespace Master {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class PresentTemplate : pb.IMessage {
+    public PresentTemplate() { }
+    private static readonly PresentTemplate defaultInstance = new PresentTemplate();
+    public static PresentTemplate DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public string Id = "";
+
+    public string Name = "";
+
+    public string Message = "";
+
+    public string Action = "";
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      PresentTemplate other = obj as PresentTemplate;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 10: {
+            input.ReadString(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadString(ref this.Name);
+            break;
+          }
+          case 26: {
+            input.ReadString(ref this.Message);
+            break;
+          }
+          case 34: {
+            input.ReadString(ref this.Action);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class PvpLeague : pb.IMessage {
     public PvpLeague() { }
     private static readonly PvpLeague defaultInstance = new PvpLeague();
@@ -1927,6 +2462,12 @@ namespace Master {
 
     public string RewardDesc = "";
 
+    public int MatchingUp;
+
+    public int CoinWin;
+
+    public int CoinLose;
+
     #region Lite runtime methods
     public override int GetHashCode() {
       int hash = GetType().GetHashCode();
@@ -1977,12 +2518,24 @@ namespace Master {
           }
           case 50: {
             global::Master.PresentCommand builder = new global::Master.PresentCommand();
-            input.ReadMessage(builder, extensionRegistry);
+            input.ReadMessage(builder);
             Reward = builder;
             break;
           }
           case 58: {
             input.ReadString(ref this.RewardDesc);
+            break;
+          }
+          case 64: {
+            input.ReadInt32(ref this.MatchingUp);
+            break;
+          }
+          case 72: {
+            input.ReadInt32(ref this.CoinWin);
+            break;
+          }
+          case 80: {
+            input.ReadInt32(ref this.CoinLose);
             break;
           }
         }
@@ -2175,7 +2728,7 @@ namespace Master {
           }
           case 90: {
             global::Master.PresentCommand builder = new global::Master.PresentCommand();
-            input.ReadMessage(builder, extensionRegistry);
+            input.ReadMessage(builder);
             Reward = builder;
             break;
           }
@@ -2375,7 +2928,7 @@ namespace Master {
           }
           case 34: {
             global::Master.PresentCommand builder = new global::Master.PresentCommand();
-            input.ReadMessage(builder, extensionRegistry);
+            input.ReadMessage(builder);
             Action = builder;
             break;
           }
@@ -3288,7 +3841,7 @@ namespace Master {
               }
               case 18: {
                 global::Master.ItemNameDict.Types.List builder = new global::Master.ItemNameDict.Types.List();
-                input.ReadMessage(builder, extensionRegistry);
+                input.ReadMessage(builder);
                 Value = builder;
                 break;
               }
@@ -3633,6 +4186,1611 @@ namespace Master {
           }
           case 40: {
             input.ReadInt32(ref this.Direction);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class EnemyAnim : pb.IMessage {
+    public EnemyAnim() { }
+    private static readonly EnemyAnim defaultInstance = new EnemyAnim();
+    public static EnemyAnim DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public int AttackDistanceId;
+
+    public int AttackAnimId;
+
+    public int SpecialDistanceId;
+
+    public int SpecialAnimId;
+
+    public float Duration;
+
+    public int HeightOffset;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      EnemyAnim other = obj as EnemyAnim;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 16: {
+            input.ReadInt32(ref this.AttackDistanceId);
+            break;
+          }
+          case 24: {
+            input.ReadInt32(ref this.AttackAnimId);
+            break;
+          }
+          case 32: {
+            input.ReadInt32(ref this.SpecialDistanceId);
+            break;
+          }
+          case 40: {
+            input.ReadInt32(ref this.SpecialAnimId);
+            break;
+          }
+          case 53: {
+            input.ReadFloat(ref this.Duration);
+            break;
+          }
+          case 56: {
+            input.ReadInt32(ref this.HeightOffset);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class EnemyAnimDistance : pb.IMessage {
+    public EnemyAnimDistance() { }
+    private static readonly EnemyAnimDistance defaultInstance = new EnemyAnimDistance();
+    public static EnemyAnimDistance DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public List<int> Table = new List<int>();
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      EnemyAnimDistance other = obj as EnemyAnimDistance;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18:
+          case 16: {
+            input.ReadInt32Array(tag, this.Table);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class EnemyAnimSprite : pb.IMessage {
+    public EnemyAnimSprite() { }
+    private static readonly EnemyAnimSprite defaultInstance = new EnemyAnimSprite();
+    public static EnemyAnimSprite DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public List<string> Table = new List<string>();
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      EnemyAnimSprite other = obj as EnemyAnimSprite;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadStringArray(tag, this.Table);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class ArmamentTemplate : pb.IMessage {
+    public ArmamentTemplate() { }
+    private static readonly ArmamentTemplate defaultInstance = new ArmamentTemplate();
+    public static ArmamentTemplate DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public string Name = "";
+
+    public int Rarity;
+
+    public string Kind = "";
+
+    public string Property = "";
+
+    public int MaxLevel;
+
+    public int BaseHp;
+
+    public int BaseAttack;
+
+    public int BaseDefense;
+
+    public string SoulPattern = "";
+
+    public int OpenSlotRate;
+
+    public int Point;
+
+    public int Gold;
+
+    public int StatusDistribute;
+
+    public int ImageId;
+
+    public string HitEffect = "";
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      ArmamentTemplate other = obj as ArmamentTemplate;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadString(ref this.Name);
+            break;
+          }
+          case 24: {
+            input.ReadInt32(ref this.Rarity);
+            break;
+          }
+          case 34: {
+            input.ReadString(ref this.Kind);
+            break;
+          }
+          case 42: {
+            input.ReadString(ref this.Property);
+            break;
+          }
+          case 48: {
+            input.ReadInt32(ref this.MaxLevel);
+            break;
+          }
+          case 56: {
+            input.ReadInt32(ref this.BaseHp);
+            break;
+          }
+          case 64: {
+            input.ReadInt32(ref this.BaseAttack);
+            break;
+          }
+          case 72: {
+            input.ReadInt32(ref this.BaseDefense);
+            break;
+          }
+          case 82: {
+            input.ReadString(ref this.SoulPattern);
+            break;
+          }
+          case 88: {
+            input.ReadInt32(ref this.OpenSlotRate);
+            break;
+          }
+          case 96: {
+            input.ReadInt32(ref this.Point);
+            break;
+          }
+          case 104: {
+            input.ReadInt32(ref this.Gold);
+            break;
+          }
+          case 112: {
+            input.ReadInt32(ref this.StatusDistribute);
+            break;
+          }
+          case 120: {
+            input.ReadInt32(ref this.ImageId);
+            break;
+          }
+          case 130: {
+            input.ReadString(ref this.HitEffect);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class AbilityTemplate : pb.IMessage {
+    public AbilityTemplate() { }
+    private static readonly AbilityTemplate defaultInstance = new AbilityTemplate();
+    public static AbilityTemplate DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    #region Nested types
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    public static partial class Types {
+      public enum Special {
+        NONE_TYPE = 0,
+        ATTACK_UP = 1,
+        ON_ATTACK = 2,
+        ON_KILLED = 3,
+        ATTACK_UP_ABS = 4,
+        DEFENSE_UP = 11,
+        GUARD = 12,
+        PROTECT = 13,
+        ON_DAMAGE = 14,
+        DEFENSE_UP_ABS = 15,
+      }
+
+      public enum Param {
+        NONE_TARGET = 0,
+        FIRE = 1,
+        WATER = 2,
+        TREE = 3,
+        LIGHT = 4,
+        DARK = 5,
+        DEMON = 6,
+        GOD = 7,
+        DEMIHUMAN = 8,
+        DRAGON = 9,
+        SPIRIT = 10,
+        HEAL = 11,
+        BURST = 12,
+        CHARGE_SKILLL = 13,
+        SLEEP = 14,
+        CONFUSE = 15,
+        BLIND = 16,
+        BIND = 17,
+        POISON = 18,
+        ACID = 19,
+        SLOW = 20,
+        SLEEP_PARALYSIS = 21,
+        ALL = 22,
+      }
+
+    }
+    #endregion
+
+    public int Id;
+
+    public string Name = "";
+
+    public int Rarity;
+
+    public string Type = "";
+
+    public float BaseNum;
+
+    public float MaxNum;
+
+    public int MaxLevel;
+
+    public string Desc = "";
+
+    public string Desc2 = "";
+
+    public global::Master.AbilityTemplate.Types.Special Special = global::Master.AbilityTemplate.Types.Special.NONE_TYPE;
+
+    public global::Master.AbilityTemplate.Types.Param Param = global::Master.AbilityTemplate.Types.Param.NONE_TARGET;
+
+    public string LogTextId = "";
+
+    public int Turn;
+
+    public string Json = "";
+
+    public string Kind = "";
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      AbilityTemplate other = obj as AbilityTemplate;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadString(ref this.Name);
+            break;
+          }
+          case 24: {
+            input.ReadInt32(ref this.Rarity);
+            break;
+          }
+          case 34: {
+            input.ReadString(ref this.Type);
+            break;
+          }
+          case 61: {
+            input.ReadFloat(ref this.BaseNum);
+            break;
+          }
+          case 69: {
+            input.ReadFloat(ref this.MaxNum);
+            break;
+          }
+          case 72: {
+            input.ReadInt32(ref this.MaxLevel);
+            break;
+          }
+          case 82: {
+            input.ReadString(ref this.Desc);
+            break;
+          }
+          case 90: {
+            input.ReadString(ref this.Desc2);
+            break;
+          }
+          case 96: {
+            input.ReadEnum(ref this.Special);
+            break;
+          }
+          case 104: {
+            input.ReadEnum(ref this.Param);
+            break;
+          }
+          case 114: {
+            input.ReadString(ref this.LogTextId);
+            break;
+          }
+          case 120: {
+            input.ReadInt32(ref this.Turn);
+            break;
+          }
+          case 130: {
+            input.ReadString(ref this.Json);
+            break;
+          }
+          case 138: {
+            input.ReadString(ref this.Kind);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class MapAnimation : pb.IMessage {
+    public MapAnimation() { }
+    private static readonly MapAnimation defaultInstance = new MapAnimation();
+    public static MapAnimation DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    #region Nested types
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    public static partial class Types {
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+      public sealed partial class Anim : pb.IMessage {
+        public Anim() { }
+        private static readonly Anim defaultInstance = new Anim();
+        public static Anim DefaultInstance {
+          get { return defaultInstance; }
+        }
+
+        public List<int> Items = new List<int>();
+
+        #region Lite runtime methods
+        public override int GetHashCode() {
+          int hash = GetType().GetHashCode();
+          return hash;
+        }
+
+        public override bool Equals(object obj) {
+          Anim other = obj as Anim;
+          if (other == null) return false;
+          return true;
+        }
+
+        #endregion
+
+        public void MergeFrom(pb::CodedInputStream input) {
+          uint tag;
+          string field_name;
+          while (input.ReadTag(out tag, out field_name)) {
+            switch (tag) {
+              case 0: {
+                throw pb::InvalidProtocolBufferException.InvalidTag();
+              }
+              default: {
+                if (pb::WireFormat.IsEndGroupTag(tag)) {
+                  return;
+                }
+                break;
+              }
+              case 10:
+              case 8: {
+                input.ReadInt32Array(tag, this.Items);
+                break;
+              }
+            }
+          }
+        }
+
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+      public sealed partial class AnimationEntry : pb.IMessage {
+        public AnimationEntry() { }
+        private static readonly AnimationEntry defaultInstance = new AnimationEntry();
+        public static AnimationEntry DefaultInstance {
+          get { return defaultInstance; }
+        }
+
+        public int Key;
+
+        public global::Master.MapAnimation.Types.Anim Value;
+
+        #region Lite runtime methods
+        public override int GetHashCode() {
+          int hash = GetType().GetHashCode();
+          return hash;
+        }
+
+        public override bool Equals(object obj) {
+          AnimationEntry other = obj as AnimationEntry;
+          if (other == null) return false;
+          return true;
+        }
+
+        #endregion
+
+        public void MergeFrom(pb::CodedInputStream input) {
+          uint tag;
+          string field_name;
+          while (input.ReadTag(out tag, out field_name)) {
+            switch (tag) {
+              case 0: {
+                throw pb::InvalidProtocolBufferException.InvalidTag();
+              }
+              default: {
+                if (pb::WireFormat.IsEndGroupTag(tag)) {
+                  return;
+                }
+                break;
+              }
+              case 8: {
+                input.ReadInt32(ref this.Key);
+                break;
+              }
+              case 18: {
+                global::Master.MapAnimation.Types.Anim builder = new global::Master.MapAnimation.Types.Anim();
+                input.ReadMessage(builder);
+                Value = builder;
+                break;
+              }
+            }
+          }
+        }
+
+      }
+
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+      public sealed partial class EventAnimationEntry : pb.IMessage {
+        public EventAnimationEntry() { }
+        private static readonly EventAnimationEntry defaultInstance = new EventAnimationEntry();
+        public static EventAnimationEntry DefaultInstance {
+          get { return defaultInstance; }
+        }
+
+        public int Key;
+
+        public global::Master.MapAnimation.Types.Anim Value;
+
+        #region Lite runtime methods
+        public override int GetHashCode() {
+          int hash = GetType().GetHashCode();
+          return hash;
+        }
+
+        public override bool Equals(object obj) {
+          EventAnimationEntry other = obj as EventAnimationEntry;
+          if (other == null) return false;
+          return true;
+        }
+
+        #endregion
+
+        public void MergeFrom(pb::CodedInputStream input) {
+          uint tag;
+          string field_name;
+          while (input.ReadTag(out tag, out field_name)) {
+            switch (tag) {
+              case 0: {
+                throw pb::InvalidProtocolBufferException.InvalidTag();
+              }
+              default: {
+                if (pb::WireFormat.IsEndGroupTag(tag)) {
+                  return;
+                }
+                break;
+              }
+              case 8: {
+                input.ReadInt32(ref this.Key);
+                break;
+              }
+              case 18: {
+                global::Master.MapAnimation.Types.Anim builder = new global::Master.MapAnimation.Types.Anim();
+                input.ReadMessage(builder);
+                Value = builder;
+                break;
+              }
+            }
+          }
+        }
+
+      }
+
+    }
+    #endregion
+
+    public string Id = "";
+
+    public global::Master.MapAnimation.Types.AnimationEntry[] Animation;
+
+    public global::Master.MapAnimation.Types.EventAnimationEntry[] EventAnimation;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      MapAnimation other = obj as MapAnimation;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 10: {
+            input.ReadString(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadMessageArray(tag, out this.Animation);
+            break;
+          }
+          case 26: {
+            input.ReadMessageArray(tag, out this.EventAnimation);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class MapIndex : pb.IMessage {
+    public MapIndex() { }
+    private static readonly MapIndex defaultInstance = new MapIndex();
+    public static MapIndex DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int StageId;
+
+    public List<string> Filename = new List<string>();
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      MapIndex other = obj as MapIndex;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.StageId);
+            break;
+          }
+          case 18: {
+            input.ReadStringArray(tag, this.Filename);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class AreaData : pb.IMessage {
+    public AreaData() { }
+    private static readonly AreaData defaultInstance = new AreaData();
+    public static AreaData DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public string Name = "";
+
+    public int MaxDungeon;
+
+    public int StartDungeonId;
+
+    public string Property = "";
+
+    public string Kind = "";
+
+    public int StackItemId;
+
+    public int UnlockStackItemId;
+
+    public int UnlockStackItemNum;
+
+    public int RequireStackItemId;
+
+    public int UnlockTime;
+
+    public int UnlockHomeLevel;
+
+    public int ExchangeId;
+
+    public string InfoUrl = "";
+
+    public int BannerHeight;
+
+    public int Season;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      AreaData other = obj as AreaData;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadString(ref this.Name);
+            break;
+          }
+          case 24: {
+            input.ReadInt32(ref this.MaxDungeon);
+            break;
+          }
+          case 32: {
+            input.ReadInt32(ref this.StartDungeonId);
+            break;
+          }
+          case 42: {
+            input.ReadString(ref this.Property);
+            break;
+          }
+          case 50: {
+            input.ReadString(ref this.Kind);
+            break;
+          }
+          case 56: {
+            input.ReadInt32(ref this.StackItemId);
+            break;
+          }
+          case 64: {
+            input.ReadInt32(ref this.UnlockStackItemId);
+            break;
+          }
+          case 72: {
+            input.ReadInt32(ref this.UnlockStackItemNum);
+            break;
+          }
+          case 80: {
+            input.ReadInt32(ref this.RequireStackItemId);
+            break;
+          }
+          case 88: {
+            input.ReadInt32(ref this.UnlockTime);
+            break;
+          }
+          case 96: {
+            input.ReadInt32(ref this.UnlockHomeLevel);
+            break;
+          }
+          case 104: {
+            input.ReadInt32(ref this.ExchangeId);
+            break;
+          }
+          case 114: {
+            input.ReadString(ref this.InfoUrl);
+            break;
+          }
+          case 120: {
+            input.ReadInt32(ref this.BannerHeight);
+            break;
+          }
+          case 128: {
+            input.ReadInt32(ref this.Season);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class DungeonData : pb.IMessage {
+    public DungeonData() { }
+    private static readonly DungeonData defaultInstance = new DungeonData();
+    public static DungeonData DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public string Description = "";
+
+    public int NextDungeonId;
+
+    public int MaxStage;
+
+    public int StartStageId;
+
+    public string Property = "";
+
+    public int Stamina;
+
+    public int Exp;
+
+    public int GoldRate;
+
+    public int StepRate;
+
+    public int BurstRate;
+
+    public int MaxGold;
+
+    public int MaxExp;
+
+    public int Difficulty;
+
+    public int RecommendLevel;
+
+    public int PvpUnificationType;
+
+    public string Mission = "";
+
+    public bool NoContinue;
+
+    public string Stair = "";
+
+    public int Satiety;
+
+    public int MaxSatiety;
+
+    public string ButtonName = "";
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      DungeonData other = obj as DungeonData;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadString(ref this.Description);
+            break;
+          }
+          case 24: {
+            input.ReadInt32(ref this.NextDungeonId);
+            break;
+          }
+          case 32: {
+            input.ReadInt32(ref this.MaxStage);
+            break;
+          }
+          case 40: {
+            input.ReadInt32(ref this.StartStageId);
+            break;
+          }
+          case 50: {
+            input.ReadString(ref this.Property);
+            break;
+          }
+          case 56: {
+            input.ReadInt32(ref this.Stamina);
+            break;
+          }
+          case 64: {
+            input.ReadInt32(ref this.Exp);
+            break;
+          }
+          case 72: {
+            input.ReadInt32(ref this.GoldRate);
+            break;
+          }
+          case 80: {
+            input.ReadInt32(ref this.StepRate);
+            break;
+          }
+          case 88: {
+            input.ReadInt32(ref this.BurstRate);
+            break;
+          }
+          case 96: {
+            input.ReadInt32(ref this.MaxGold);
+            break;
+          }
+          case 104: {
+            input.ReadInt32(ref this.MaxExp);
+            break;
+          }
+          case 112: {
+            input.ReadInt32(ref this.Difficulty);
+            break;
+          }
+          case 120: {
+            input.ReadInt32(ref this.RecommendLevel);
+            break;
+          }
+          case 128: {
+            input.ReadInt32(ref this.PvpUnificationType);
+            break;
+          }
+          case 138: {
+            input.ReadString(ref this.Mission);
+            break;
+          }
+          case 144: {
+            input.ReadBool(ref this.NoContinue);
+            break;
+          }
+          case 154: {
+            input.ReadString(ref this.Stair);
+            break;
+          }
+          case 160: {
+            input.ReadInt32(ref this.Satiety);
+            break;
+          }
+          case 168: {
+            input.ReadInt32(ref this.MaxSatiety);
+            break;
+          }
+          case 178: {
+            input.ReadString(ref this.ButtonName);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class StageData : pb.IMessage {
+    public StageData() { }
+    private static readonly StageData defaultInstance = new StageData();
+    public static StageData DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public int DungeonId;
+
+    public int FloorNo;
+
+    public int EnemySetId;
+
+    public int ItemSetId;
+
+    public int TrapSetId;
+
+    public int GoalSetId;
+
+    public int GoalCount;
+
+    public int MaskType;
+
+    public string NextStageParam = "";
+
+    public string StageTitle = "";
+
+    public string DriverName = "";
+
+    public string DriverParam = "";
+
+    public string FixedRoomGroupId = "";
+
+    public string RandomRoomGroupId = "";
+
+    public string Seeds = "";
+
+    public string BaseName = "";
+
+    public string MapchipName = "";
+
+    public string AnimationName = "";
+
+    public string TextureName = "";
+
+    public string BgmName = "";
+
+    public string StepSoundName = "";
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      StageData other = obj as StageData;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 16: {
+            input.ReadInt32(ref this.DungeonId);
+            break;
+          }
+          case 24: {
+            input.ReadInt32(ref this.FloorNo);
+            break;
+          }
+          case 32: {
+            input.ReadInt32(ref this.EnemySetId);
+            break;
+          }
+          case 40: {
+            input.ReadInt32(ref this.ItemSetId);
+            break;
+          }
+          case 48: {
+            input.ReadInt32(ref this.TrapSetId);
+            break;
+          }
+          case 56: {
+            input.ReadInt32(ref this.GoalSetId);
+            break;
+          }
+          case 64: {
+            input.ReadInt32(ref this.GoalCount);
+            break;
+          }
+          case 72: {
+            input.ReadInt32(ref this.MaskType);
+            break;
+          }
+          case 82: {
+            input.ReadString(ref this.NextStageParam);
+            break;
+          }
+          case 90: {
+            input.ReadString(ref this.StageTitle);
+            break;
+          }
+          case 98: {
+            input.ReadString(ref this.DriverName);
+            break;
+          }
+          case 106: {
+            input.ReadString(ref this.DriverParam);
+            break;
+          }
+          case 114: {
+            input.ReadString(ref this.FixedRoomGroupId);
+            break;
+          }
+          case 122: {
+            input.ReadString(ref this.RandomRoomGroupId);
+            break;
+          }
+          case 130: {
+            input.ReadString(ref this.Seeds);
+            break;
+          }
+          case 138: {
+            input.ReadString(ref this.BaseName);
+            break;
+          }
+          case 146: {
+            input.ReadString(ref this.MapchipName);
+            break;
+          }
+          case 154: {
+            input.ReadString(ref this.AnimationName);
+            break;
+          }
+          case 162: {
+            input.ReadString(ref this.TextureName);
+            break;
+          }
+          case 170: {
+            input.ReadString(ref this.BgmName);
+            break;
+          }
+          case 178: {
+            input.ReadString(ref this.StepSoundName);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class RoomData : pb.IMessage {
+    public RoomData() { }
+    private static readonly RoomData defaultInstance = new RoomData();
+    public static RoomData DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int GroupId;
+
+    public string TmxFileName = "";
+
+    public int EnemyLotsCount;
+
+    public int ItemLotsCount;
+
+    public int TrapLotsCount;
+
+    public int Width;
+
+    public int Height;
+
+    public string EventCommand = "";
+
+    public int Direction;
+
+    public int Attribute;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      RoomData other = obj as RoomData;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.GroupId);
+            break;
+          }
+          case 18: {
+            input.ReadString(ref this.TmxFileName);
+            break;
+          }
+          case 24: {
+            input.ReadInt32(ref this.EnemyLotsCount);
+            break;
+          }
+          case 32: {
+            input.ReadInt32(ref this.ItemLotsCount);
+            break;
+          }
+          case 40: {
+            input.ReadInt32(ref this.TrapLotsCount);
+            break;
+          }
+          case 48: {
+            input.ReadInt32(ref this.Width);
+            break;
+          }
+          case 56: {
+            input.ReadInt32(ref this.Height);
+            break;
+          }
+          case 66: {
+            input.ReadString(ref this.EventCommand);
+            break;
+          }
+          case 72: {
+            input.ReadInt32(ref this.Direction);
+            break;
+          }
+          case 80: {
+            input.ReadInt32(ref this.Attribute);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class GoalSetData : pb.IMessage {
+    public GoalSetData() { }
+    private static readonly GoalSetData defaultInstance = new GoalSetData();
+    public static GoalSetData DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public List<string> Params = new List<string>();
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      GoalSetData other = obj as GoalSetData;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadStringArray(tag, this.Params);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class StageSetItem : pb.IMessage {
+    public StageSetItem() { }
+    private static readonly StageSetItem defaultInstance = new StageSetItem();
+    public static StageSetItem DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public string Id = "";
+
+    public int Num;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      StageSetItem other = obj as StageSetItem;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 10: {
+            input.ReadString(ref this.Id);
+            break;
+          }
+          case 16: {
+            input.ReadInt32(ref this.Num);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class StageSetList : pb.IMessage {
+    public StageSetList() { }
+    private static readonly StageSetList defaultInstance = new StageSetList();
+    public static StageSetList DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Total;
+
+    public global::Master.StageSetItem[] Items;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      StageSetList other = obj as StageSetList;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Total);
+            break;
+          }
+          case 18: {
+            input.ReadMessageArray(tag, out this.Items);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class StageSetData : pb.IMessage {
+    public StageSetData() { }
+    private static readonly StageSetData defaultInstance = new StageSetData();
+    public static StageSetData DefaultInstance {
+      get { return defaultInstance; }
+    }
+
+    public int Id;
+
+    public global::Master.StageSetList[] EnemySets;
+
+    public global::Master.StageSetList[] ItemSets;
+
+    public global::Master.StageSetList[] TrapSets;
+
+    #region Lite runtime methods
+    public override int GetHashCode() {
+      int hash = GetType().GetHashCode();
+      return hash;
+    }
+
+    public override bool Equals(object obj) {
+      StageSetData other = obj as StageSetData;
+      if (other == null) return false;
+      return true;
+    }
+
+    #endregion
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      string field_name;
+      while (input.ReadTag(out tag, out field_name)) {
+        switch (tag) {
+          case 0: {
+            throw pb::InvalidProtocolBufferException.InvalidTag();
+          }
+          default: {
+            if (pb::WireFormat.IsEndGroupTag(tag)) {
+              return;
+            }
+            break;
+          }
+          case 8: {
+            input.ReadInt32(ref this.Id);
+            break;
+          }
+          case 18: {
+            input.ReadMessageArray(tag, out this.EnemySets);
+            break;
+          }
+          case 26: {
+            input.ReadMessageArray(tag, out this.ItemSets);
+            break;
+          }
+          case 34: {
+            input.ReadMessageArray(tag, out this.TrapSets);
             break;
           }
         }

@@ -58,12 +58,12 @@ RepeatedPrimitiveFieldGenerator::~RepeatedPrimitiveFieldGenerator() {
 
 void RepeatedPrimitiveFieldGenerator::GenerateMembers(Writer* writer) {
   AddPublicMemberAttributes(writer);
-  writer->WriteLine("public $0$[] $1$;", type_name(),
+  writer->WriteLine("public List<$0$> $1$ = new List<$0$>();", type_name(),
                     property_name());
 }
 
 void RepeatedPrimitiveFieldGenerator::GenerateParsingCode(Writer* writer) {
-  writer->WriteLine("input.Read$0$Array(tag, out this.$1$);",
+  writer->WriteLine("input.Read$0$Array(tag, this.$1$);",
                     capitalized_type_name(), name());
 }
 

@@ -438,12 +438,11 @@ namespace Google.ProtocolBuffers
         /// then the ref value is set and it returns true.  Otherwise the unknown output
         /// value is set and this method returns false.
         /// </summary>   
-        public bool ReadEnum<T>(ref T value, out object unknown)
+        public bool ReadEnum<T>(ref T value)
             where T : struct
         {
             int number = (int) ReadRawVarint32();
 		    value = (T)(object)number;
-			unknown = null;
             return true;
         }
 					  
@@ -549,18 +548,17 @@ namespace Google.ProtocolBuffers
             return false;
         }
 
-        public void ReadStringArray(uint fieldTag, out string[] list)
+        public void ReadStringArray(uint fieldTag, ICollection<string> list)
         {
-			list = new string[0]; // TODO: add 
             string tmp = null;
             do
             {
                 ReadString(ref tmp);
-                // list.Add(tmp); // TODO: add
+                list.Add(tmp);
             } while (ContinueArray(fieldTag));
         }
 
-        public void ReadBoolArray(uint fieldTag, string fieldName, ICollection<bool> list)
+        public void ReadBoolArray(uint fieldTag, ICollection<bool> list)
         {
             bool isPacked;
             int holdLimit;
@@ -575,7 +573,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadInt32Array(uint fieldTag, string fieldName, ICollection<int> list)
+        public void ReadInt32Array(uint fieldTag, ICollection<int> list)
         {
             bool isPacked;
             int holdLimit;
@@ -755,12 +753,9 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadEnumArray<T>(uint fieldTag, string fieldName, ICollection<T> list,
-                                     out ICollection<object> unknown)
+        public void ReadEnumArray<T>(uint fieldTag, string fieldName, ICollection<T> list)
             where T : struct, IComparable, IFormattable
         {
-            unknown = null;
-            object unkval;
             T value = default(T);
             WireFormat.WireType wformat = WireFormat.GetTagWireType(fieldTag);
 
@@ -771,17 +766,9 @@ namespace Google.ProtocolBuffers
                 int limit = PushLimit(length);
                 while (!ReachedLimit)
                 {
-                    if (ReadEnum<T>(ref value, out unkval))
+                    if (ReadEnum<T>(ref value))
                     {
                         list.Add(value);
-                    }
-                    else
-                    {
-                        if (unknown == null)
-                        {
-                            unknown = new List<object>();
-                        }
-                        unknown.Add(unkval);
                     }
                 }
                 PopLimit(limit);
@@ -790,17 +777,9 @@ namespace Google.ProtocolBuffers
             {
                 do
                 {
-                    if (ReadEnum(ref value, out unkval))
+                    if (ReadEnum(ref value))
                     {
                         list.Add(value);
-                    }
-                    else
-                    {
-                        if (unknown == null)
-                        {
-                            unknown = new List<object>();
-                        }
-                        unknown.Add(unkval);
                     }
                 } while (ContinueArray(fieldTag));
             }

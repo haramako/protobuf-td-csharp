@@ -65,10 +65,10 @@ void MessageFieldGenerator::GenerateParsingCode(Writer* writer) {
   writer->WriteLine("$0$ builder = new $0$();",
                     type_name());
   if (descriptor_->type() == FieldDescriptor::TYPE_GROUP) {
-    writer->WriteLine("input.ReadGroup($0$, builder, extensionRegistry);",
+    writer->WriteLine("input.ReadGroup($0$, builder);",
                       number());
   } else {
-    writer->WriteLine("input.ReadMessage(builder, extensionRegistry);");
+    writer->WriteLine("input.ReadMessage(builder);");
   }
   writer->WriteLine("$0$ = builder;", property_name());
 }

@@ -126,6 +126,7 @@ void UmbrellaClassGenerator::WriteIntroduction(Writer* writer) {
   writer->WriteLine("#region Designer generated code");
 
   writer->WriteLine();
+  writer->WriteLine("using System.Collections.Generic;");
   writer->WriteLine("using pb = global::Google.ProtocolBuffers;");
   writer->WriteLine("using scg = global::System.Collections.Generic;");
 
