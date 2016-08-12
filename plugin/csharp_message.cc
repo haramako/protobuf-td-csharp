@@ -137,7 +137,7 @@ void MessageGenerator::Generate(Writer* writer) {
       "[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]");
   WriteGeneratedCodeAttributes(writer);
   writer->WriteLine(
-      "$0$ sealed partial class $1$ : pb.IMessage {",
+      "$0$ sealed partial class $1$ : pb.Message {",
       class_access_level(), class_name());
   writer->Indent();
 #if 0
@@ -186,9 +186,7 @@ void MessageGenerator::Generate(Writer* writer) {
     writer->WriteLine();
   }
 
-  if (optimize_speed()) {
-    GenerateMessageSerializationMethods(writer);
-  }
+  GenerateMessageSerializationMethods(writer);
   GenerateLiteRuntimeMethods(writer);
 
   GenerateParseFromMethods(writer);
@@ -303,72 +301,23 @@ void MessageGenerator::GenerateParseFromMethods(Writer* writer) {
   //   because they need to be generated even for messages that are optimized
   //   for code size.
 
-#if 0
-  writer->WriteLine("public static $0$ ParseFrom(pb::ByteString data) {",
-                    class_name());
-  writer->WriteLine(
-      "  return ((Builder) CreateBuilder().MergeFrom(data)).BuildParsed();");
-  writer->WriteLine("}");
-  writer->WriteLine(
-      "public static $0$ ParseFrom(pb::ByteString data, pb::ExtensionRegistry extensionRegistry) {",
-      class_name());
-  writer->WriteLine(
-      "  return ((Builder) CreateBuilder().MergeFrom(data, extensionRegistry)).BuildParsed();");
+  writer->WriteLine("public static $0$ CreateInstance() {", class_name());
+  writer->WriteLine("  return new $0$();", class_name());
   writer->WriteLine("}");
   writer->WriteLine("public static $0$ ParseFrom(byte[] data) {", class_name());
-  writer->WriteLine(
-      "  return ((Builder) CreateBuilder().MergeFrom(data)).BuildParsed();");
+  writer->WriteLine("  var mes = CreateInstance(); mes.MergeFrom(data); return mes;");
   writer->WriteLine("}");
-  writer->WriteLine(
-      "public static $0$ ParseFrom(byte[] data, pb::ExtensionRegistry extensionRegistry) {",
-      class_name());
-  writer->WriteLine(
-      "  return ((Builder) CreateBuilder().MergeFrom(data, extensionRegistry)).BuildParsed();");
+  writer->WriteLine("public static $0$ ParseFrom(global::System.IO.Stream input) {", class_name());
+  writer->WriteLine("  var mes = CreateInstance(); mes.MergeFrom(input); return mes;");
   writer->WriteLine("}");
-  writer->WriteLine(
-      "public static $0$ ParseFrom(global::System.IO.Stream input) {",
-      class_name());
-  writer->WriteLine(
-      "  return ((Builder) CreateBuilder().MergeFrom(input)).BuildParsed();");
+  writer->WriteLine("public static $0$ ParseFrom(pb::CodedInputStream input) {", class_name());
+  writer->WriteLine("  var mes = CreateInstance(); mes.MergeFrom(input); return mes;");
   writer->WriteLine("}");
-  writer->WriteLine(
-      "public static $0$ ParseFrom(global::System.IO.Stream input, pb::ExtensionRegistry extensionRegistry) {",
-      class_name());
-  writer->WriteLine(
-      "  return ((Builder) CreateBuilder().MergeFrom(input, extensionRegistry)).BuildParsed();");
-  writer->WriteLine("}");
-  writer->WriteLine(
-      "public static $0$ ParseDelimitedFrom(global::System.IO.Stream input) {",
-      class_name());
-  writer->WriteLine(
-      "  return CreateBuilder().MergeDelimitedFrom(input).BuildParsed();");
-  writer->WriteLine("}");
-  writer->WriteLine(
-      "public static $0$ ParseDelimitedFrom(global::System.IO.Stream input, pb::ExtensionRegistry extensionRegistry) {",
-      class_name());
-  writer->WriteLine(
-      "  return CreateBuilder().MergeDelimitedFrom(input, extensionRegistry).BuildParsed();");
-  writer->WriteLine("}");
-  writer->WriteLine(
-      "public static $0$ ParseFrom(pb::CodedInputStream input) {",
-      class_name());
-  writer->WriteLine(
-      "  return ((Builder) CreateBuilder().MergeFrom(input)).BuildParsed();");
-  writer->WriteLine("}");
-  writer->WriteLine(
-      "public static $0$ ParseFrom(pb::CodedInputStream input, pb::ExtensionRegistry extensionRegistry) {",
-      class_name());
-  writer->WriteLine(
-      "  return ((Builder) CreateBuilder().MergeFrom(input, extensionRegistry)).BuildParsed();");
-  writer->WriteLine("}");
-#endif
 }
 
 void MessageGenerator::GenerateBuilder(Writer* writer) {
   GenerateCommonBuilderMethods(writer);
-  if (optimize_speed()) {
-    GenerateBuilderParsingMethods(writer);
-  }
+  GenerateBuilderParsingMethods(writer);
 }
 
 	
@@ -376,8 +325,7 @@ void MessageGenerator::GenerateCommonBuilderMethods(Writer* writer) {
 }
 
 void MessageGenerator::GenerateBuilderParsingMethods(Writer* writer) {
-  writer->WriteLine(
-					"public void MergeFrom(pb::CodedInputStream input) {");
+  writer->WriteLine("public override void MergeFrom(pb::CodedInputStream input) {", class_name());
   writer->Indent();
   writer->WriteLine("uint tag;");
   writer->WriteLine("string field_name;");

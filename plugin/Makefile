@@ -27,5 +27,5 @@ depends:
 	$(CXX) -MM $(CXXFLAGS) $(SRC) > .depends
 
 test:
-	protoc --plugin=./protoc-gen-dfcsharp --dfcsharp_out=../cs_test/ master.proto
+	protoc --plugin=./protoc-gen-dfcsharp --dfcsharp_out=../cs_test/ --ruby_out=../cs_test test.proto
 	make -C ../cs_test test

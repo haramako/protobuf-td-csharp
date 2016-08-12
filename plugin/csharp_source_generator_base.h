@@ -49,14 +49,8 @@ class SourceGeneratorBase {
 
   std::string class_access_level();
 
-  bool optimize_size() {
-    return optimizeSize_;
-  }
   bool optimize_speed() {
     return optimizeSpeed_;
-  }
-  bool use_lite_runtime() {
-    return true;
   }
   std::string runtime_suffix() {
     return runtimeSuffix_;

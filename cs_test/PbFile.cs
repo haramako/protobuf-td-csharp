@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Master;
 using Google.ProtocolBuffers;
 
 public class PbFile {
 
 	public static byte[] buf = new byte[1024 * 1024];
 
-	public static IEnumerable<T> ReadPbList<T>(byte[] buf) where T: IMessage, new()
+	public static IEnumerable<T> ReadPbList<T>(byte[] buf) where T: Message, new()
 	{
 		//var len = s.Read (buf, 0, buf.Length);
 		var cis = CodedInputStream.CreateInstance (buf,0,buf.Length);

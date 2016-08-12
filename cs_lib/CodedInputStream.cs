@@ -363,28 +363,11 @@ namespace Google.ProtocolBuffers
             value = Encoding.UTF8.GetString(ReadRawBytes(size), 0, size);
             return true;
         }
-#if false
-        /// <summary>
-        /// Reads a group field value from the stream.
-        /// </summary>    
-        public void ReadGroup(int fieldNumber, IBuilderLite builder,
-                              ExtensionRegistry extensionRegistry)
-        {
-            if (recursionDepth >= recursionLimit)
-            {
-                throw InvalidProtocolBufferException.RecursionLimitExceeded();
-            }
-            ++recursionDepth;
-            builder.WeakMergeFrom(this, extensionRegistry);
-            CheckLastTagWas(WireFormat.MakeTag(fieldNumber, WireFormat.WireType.EndGroup));
-            --recursionDepth;
-        }
-#endif
 
         /// <summary>
         /// Reads an embedded message field value from the stream.
         /// </summary>   
-        public void ReadMessage(IMessage builder)
+        public void ReadMessage(Message builder)
         {
             int length = (int) ReadRawVarint32();
             if (recursionDepth >= recursionLimit)
@@ -399,31 +382,6 @@ namespace Google.ProtocolBuffers
             PopLimit(oldLimit);
         }
 
-#if false		
-        /// <summary>
-        /// Reads a bytes field value from the stream.
-        /// </summary>   
-        public bool ReadBytes(ref ByteString value)
-        {
-            int size = (int) ReadRawVarint32();
-            if (size <= bufferSize - bufferPos && size > 0)
-            {
-                // Fast path:  We already have the bytes in a contiguous buffer, so
-                //   just copy directly from it.
-                ByteString result = ByteString.CopyFrom(buffer, bufferPos, size);
-                bufferPos += size;
-                value = result;
-                return true;
-            }
-            else
-            {
-                // Slow path:  Build a byte array and attach it to a new ByteString.
-                value = ByteString.AttachBytes(ReadRawBytes(size));
-                return true;
-            }
-        }
-#endif
-		
         /// <summary>
         /// Reads a uint32 field value from the stream.
         /// </summary>   
@@ -785,7 +743,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadMessageArray<T>(uint fieldTag, out T[] list) where T : IMessage, new()
+        public void ReadMessageArray<T>(uint fieldTag, out T[] list) where T : Message, new()
         {
 			list = new T[0];
             do
@@ -796,191 +754,6 @@ namespace Google.ProtocolBuffers
             } while (ContinueArray(fieldTag));
         }
 
-#if false		
-		public void ReadGroupArray<T>(uint fieldTag, out T[] list) where T : IMessage, new()
-        {
-            do
-            {
-                IBuilderLite builder = messageType.WeakCreateBuilderForType();
-                ReadGroup(WireFormat.GetTagFieldNumber(fieldTag), builder, registry);
-                list.Add((T) builder.WeakBuildPartial());
-            } while (ContinueArray(fieldTag));
-        }
-#endif
-		
-#if false																			
-        /// <summary>
-        /// Reads a field of any primitive type. Enums, groups and embedded
-        /// messages are not handled by this method.
-        /// </summary>
-        public bool ReadPrimitiveField(FieldType fieldType, ref object value)
-        {
-            switch (fieldType)
-            {
-                case FieldType.Double:
-                    {
-                        double tmp = 0;
-                        if (ReadDouble(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.Float:
-                    {
-                        float tmp = 0;
-                        if (ReadFloat(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.Int64:
-                    {
-                        long tmp = 0;
-                        if (ReadInt64(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.UInt64:
-                    {
-                        ulong tmp = 0;
-                        if (ReadUInt64(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.Int32:
-                    {
-                        int tmp = 0;
-                        if (ReadInt32(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.Fixed64:
-                    {
-                        ulong tmp = 0;
-                        if (ReadFixed64(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.Fixed32:
-                    {
-                        uint tmp = 0;
-                        if (ReadFixed32(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.Bool:
-                    {
-                        bool tmp = false;
-                        if (ReadBool(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.String:
-                    {
-                        string tmp = null;
-                        if (ReadString(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.Bytes:
-                    {
-                        ByteString tmp = null;
-                        if (ReadBytes(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.UInt32:
-                    {
-                        uint tmp = 0;
-                        if (ReadUInt32(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.SFixed32:
-                    {
-                        int tmp = 0;
-                        if (ReadSFixed32(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.SFixed64:
-                    {
-                        long tmp = 0;
-                        if (ReadSFixed64(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.SInt32:
-                    {
-                        int tmp = 0;
-                        if (ReadSInt32(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.SInt64:
-                    {
-                        long tmp = 0;
-                        if (ReadSInt64(ref tmp))
-                        {
-                            value = tmp;
-                            return true;
-                        }
-                        return false;
-                    }
-                case FieldType.Group:
-                    throw new ArgumentException("ReadPrimitiveField() cannot handle nested groups.");
-                case FieldType.Message:
-                    throw new ArgumentException("ReadPrimitiveField() cannot handle embedded messages.");
-                    // We don't handle enums because we don't know what to do if the
-                    // value is not recognized.
-                case FieldType.Enum:
-                    throw new ArgumentException("ReadPrimitiveField() cannot handle enums.");
-                default:
-                    throw new ArgumentOutOfRangeException("Invalid field type " + fieldType);
-            }
-        }
-#endif
-		
         #endregion
 
         #region Underlying reading primitives

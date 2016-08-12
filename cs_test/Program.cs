@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Diagnostics;
+using Google.ProtocolBuffers;
 
 namespace cs_test
 {
@@ -9,17 +8,16 @@ namespace cs_test
 	{
 		public static void Main (string[] args)
 		{
-			Console.WriteLine ("Hello World!");
-			var buf = File.ReadAllBytes ("/Users/makoto/u5/dragonfangdata/UploadFiles/master-fang_template.pb");
-
-			var watch = new Stopwatch();
-			watch.Start();
-			for (var i = 0; i < 100; i++) {
-				var fangs = PbFile.ReadPbList<Master.FangTemplate> (buf).ToList ();
-				//Console.WriteLine ("" + fangs.Count);
+			if( args.Length != 1 ){
+				Console.WriteLine("Invalid args");
+				System.Environment.Exit(1);
 			}
-			watch.Stop();
-			Console.WriteLine(" Time Elapsed {0} ms", watch.ElapsedMilliseconds);
+			var buf = File.ReadAllBytes (args[0]);
+
+			var mes = Test.TestMessage.ParseFrom(buf);
+
+			Console.WriteLine(""+mes.Int32Value);
+			Console.WriteLine(""+mes.Int64Value);
 		}
 	}
 }
