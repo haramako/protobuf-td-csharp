@@ -1,0 +1,34 @@
+PROTOBUF_DIR=..\vendor\protobuf
+
+CXX=g++
+SRC=$(wildcard *.cc) 
+OBJ=$(SRC:%.cc=%.o)
+CXXFLAGS=-I $(PROTOBUF_DIR)/include -O2 -I . -std=c++11 -DNDEBUG
+LDFLAGS=-L $(PROTOBUF_DIR)/lib
+LIBS=-l protoc -l protobuf
+PROG=protoc-gen-dfcsharp.exe
+
+.PHONY: default test clean distclean
+default: $(PROG)
+
+-include .depends
+
+.cc.o:
+	$(CXX) -c $< $(CXXFLAGS)
+
+
+$(PROG): $(OBJ)
+	$(CXX) -o $(PROG) $(LDFLAGS) $(OBJ) $(LIBS)
+
+clean:
+	cmd /c DEL *.o 
+# rm -rf *.o $(PROG)
+
+distclean: clean
+	cmd /c DEL $(PROG)
+
+depends:
+	$(CXX) -MM $(CXXFLAGS) $(SRC) > .depends
+
+test:
+	$(PROTOBUF_DIR)\bin\protoc --plugin=./$(PROG) --dfcsharp_out=. master.proto
