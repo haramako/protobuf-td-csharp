@@ -71,7 +71,6 @@ class MessageGenerator : public SourceGeneratorBase {
   void GenerateBuilder(Writer* writer);
   void GenerateCommonBuilderMethods(Writer* writer);
   void GenerateBuilderParsingMethods(Writer* writer);
-  void GenerateIsInitialized(Writer* writer);
 
   int GetFieldOrdinal(const FieldDescriptor* descriptor);
   FieldGeneratorBase* CreateFieldGeneratorInternal(

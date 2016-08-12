@@ -130,10 +130,6 @@ void MessageGenerator::GenerateStaticVariableInitializers(Writer* writer) {
     messageGenerator.GenerateStaticVariableInitializers(writer);
   }
 
-  for (int i = 0; i < descriptor_->extension_count(); i++) {
-    ExtensionGenerator extensionGenerator(descriptor_->extension(i));
-    extensionGenerator.GenerateStaticVariableInitializers(writer);
-  }
 }
 
 void MessageGenerator::Generate(Writer* writer) {
@@ -158,12 +154,6 @@ void MessageGenerator::Generate(Writer* writer) {
   writer->WriteLine("  get { return defaultInstance; }");
   writer->WriteLine("}");
   writer->WriteLine();
-
-  // Extensions don't need to go in an extra nested type
-  for (int i = 0; i < descriptor_->extension_count(); i++) {
-    ExtensionGenerator extensionGenerator(descriptor_->extension(i));
-    extensionGenerator.Generate(writer);
-  }
 
   if (descriptor_->enum_type_count() + descriptor_->nested_type_count() > 0) {
     writer->WriteLine("#region Nested types");
@@ -197,9 +187,6 @@ void MessageGenerator::Generate(Writer* writer) {
   }
 
   if (optimize_speed()) {
-    if (SupportFieldPresence(descriptor_->file())) {
-      GenerateIsInitialized(writer);
-    }
     GenerateMessageSerializationMethods(writer);
   }
   GenerateLiteRuntimeMethods(writer);
@@ -445,69 +432,7 @@ void MessageGenerator::GenerateBuilderParsingMethods(Writer* writer) {
   writer->WriteLine();
 }
 
-void MessageGenerator::GenerateIsInitialized(Writer* writer) {
-  writer->WriteLine("public override bool IsInitialized {");
-  writer->Indent();
-  writer->WriteLine("get {");
-  writer->Indent();
-
-  // Check that all required fields in this message are set.
-  // TODO(kenton):  We can optimize this when we switch to putting all the
-  // "has" fields into a single bitfield.
-  for (int i = 0; i < descriptor_->field_count(); i++) {
-    if (descriptor_->field(i)->is_required()) {
-      writer->WriteLine("if (!has$0$) return false;",
-                        GetPropertyName(descriptor_->field(i)));
-    }
-  }
-
-  // Now check that all embedded messages are initialized.
-  for (int i = 0; i < descriptor_->field_count(); i++) {
-    const FieldDescriptor* field = descriptor_->field(i);
-
-      if (field->type() != FieldDescriptor::TYPE_MESSAGE ||
-          !HasRequiredFields(field->message_type()))
-      {
-          continue;
-      }
-      // TODO(jtattermusch): shouldn't we use GetPropertyName here?
-      string propertyName = UnderscoresToPascalCase(GetFieldName(field));
-      if (field->is_repeated())
-      {
-          writer->WriteLine("foreach ($0$ element in $1$List) {",
-                           GetClassName(field->message_type()),
-                           propertyName);
-          writer->WriteLine("  if (!element.IsInitialized) return false;");
-          writer->WriteLine("}");
-      }
-      else if (field->is_optional())
-      {
-          writer->WriteLine("if (Has$0$) {", propertyName);
-          writer->WriteLine("  if (!$0$.IsInitialized) return false;", propertyName);
-          writer->WriteLine("}");
-      }
-      else
-      {
-          writer->WriteLine("if (!$0$.IsInitialized) return false;", propertyName);
-      }
-  }
-
-  if (descriptor_->extension_range_count() > 0) {
-    writer->WriteLine("if (!ExtensionsAreInitialized) return false;");
-  }
-  writer->WriteLine("return true;");
-  writer->Outdent();
-  writer->WriteLine("}");
-  writer->Outdent();
-  writer->WriteLine("}");
-  writer->WriteLine();
-}
-
 void MessageGenerator::GenerateExtensionRegistrationCode(Writer* writer) {
-  for (int i = 0; i < descriptor_->extension_count(); i++) {
-    ExtensionGenerator extensionGenerator(descriptor_->extension(i));
-    extensionGenerator.GenerateExtensionRegistrationCode(writer);
-  }
   for (int i = 0; i < descriptor_->nested_type_count(); i++) {
     MessageGenerator messageGenerator(descriptor_->nested_type(i));
     messageGenerator.GenerateExtensionRegistrationCode(writer);

@@ -243,11 +243,7 @@ std::string GetClassName(const EnumDescriptor* descriptor) {
 // of the group type.  In C#, though, we would like to retain the original
 // capitalization of the type name.
 std::string GetFieldName(const FieldDescriptor* descriptor) {
-  if (descriptor->type() == FieldDescriptor::TYPE_GROUP) {
-    return descriptor->message_type()->name();
-  } else {
-    return descriptor->name();
-  }
+  return descriptor->name();
 }
 
 std::string GetFieldConstantName(const FieldDescriptor* field) {

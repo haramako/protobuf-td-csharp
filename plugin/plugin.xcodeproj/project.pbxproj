@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0ED404D01D5DF95C0041FFAB /* csharp_enum_field.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0ED404BF1D5DF95C0041FFAB /* csharp_enum_field.cc */; };
 		0ED404D11D5DF95C0041FFAB /* csharp_enum.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0ED404C01D5DF95C0041FFAB /* csharp_enum.cc */; };
-		0ED404D21D5DF95C0041FFAB /* csharp_extension.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0ED404C11D5DF95C0041FFAB /* csharp_extension.cc */; };
 		0ED404D31D5DF95C0041FFAB /* csharp_field_base.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0ED404C21D5DF95C0041FFAB /* csharp_field_base.cc */; };
 		0ED404D41D5DF95C0041FFAB /* csharp_generator.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0ED404C31D5DF95C0041FFAB /* csharp_generator.cc */; };
 		0ED404D51D5DF95C0041FFAB /* csharp_helpers.cc in Sources */ = {isa = PBXBuildFile; fileRef = 0ED404C41D5DF95C0041FFAB /* csharp_helpers.cc */; };
@@ -44,7 +43,6 @@
 		0ED404B51D5DF8B10041FFAB /* plugin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ED404BF1D5DF95C0041FFAB /* csharp_enum_field.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csharp_enum_field.cc; sourceTree = "<group>"; };
 		0ED404C01D5DF95C0041FFAB /* csharp_enum.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csharp_enum.cc; sourceTree = "<group>"; };
-		0ED404C11D5DF95C0041FFAB /* csharp_extension.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csharp_extension.cc; sourceTree = "<group>"; };
 		0ED404C21D5DF95C0041FFAB /* csharp_field_base.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csharp_field_base.cc; sourceTree = "<group>"; };
 		0ED404C31D5DF95C0041FFAB /* csharp_generator.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csharp_generator.cc; sourceTree = "<group>"; };
 		0ED404C41D5DF95C0041FFAB /* csharp_helpers.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csharp_helpers.cc; sourceTree = "<group>"; };
@@ -61,7 +59,6 @@
 		0ED404CF1D5DF95C0041FFAB /* substitute.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = substitute.cc; sourceTree = "<group>"; };
 		0ED404E11D5DF9720041FFAB /* csharp_enum_field.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csharp_enum_field.h; sourceTree = "<group>"; };
 		0ED404E21D5DF9730041FFAB /* csharp_enum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csharp_enum.h; sourceTree = "<group>"; };
-		0ED404E31D5DF9730041FFAB /* csharp_extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csharp_extension.h; sourceTree = "<group>"; };
 		0ED404E41D5DF9730041FFAB /* csharp_field_base.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csharp_field_base.h; sourceTree = "<group>"; };
 		0ED404E51D5DF9730041FFAB /* csharp_generator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csharp_generator.h; sourceTree = "<group>"; };
 		0ED404E61D5DF9730041FFAB /* csharp_helpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csharp_helpers.h; sourceTree = "<group>"; };
@@ -117,7 +114,6 @@
 			children = (
 				0ED404E11D5DF9720041FFAB /* csharp_enum_field.h */,
 				0ED404E21D5DF9730041FFAB /* csharp_enum.h */,
-				0ED404E31D5DF9730041FFAB /* csharp_extension.h */,
 				0ED404E41D5DF9730041FFAB /* csharp_field_base.h */,
 				0ED404E51D5DF9730041FFAB /* csharp_generator.h */,
 				0ED404E61D5DF9730041FFAB /* csharp_helpers.h */,
@@ -141,7 +137,6 @@
 			children = (
 				0ED404BF1D5DF95C0041FFAB /* csharp_enum_field.cc */,
 				0ED404C01D5DF95C0041FFAB /* csharp_enum.cc */,
-				0ED404C11D5DF95C0041FFAB /* csharp_extension.cc */,
 				0ED404C21D5DF95C0041FFAB /* csharp_field_base.cc */,
 				0ED404C31D5DF95C0041FFAB /* csharp_generator.cc */,
 				0ED404C41D5DF95C0041FFAB /* csharp_helpers.cc */,
@@ -224,7 +219,6 @@
 				0ED404DC1D5DF95C0041FFAB /* csharp_source_generator_base.cc in Sources */,
 				0ED404DB1D5DF95C0041FFAB /* csharp_repeated_primitive_field.cc in Sources */,
 				0ED404D71D5DF95C0041FFAB /* csharp_message.cc in Sources */,
-				0ED404D21D5DF95C0041FFAB /* csharp_extension.cc in Sources */,
 				0ED404DA1D5DF95C0041FFAB /* csharp_repeated_message_field.cc in Sources */,
 				0ED404DE1D5DF95C0041FFAB /* csharp_writer.cc in Sources */,
 				0ED404E01D5DF95C0041FFAB /* substitute.cc in Sources */,

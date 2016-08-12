@@ -64,17 +64,6 @@ void UmbrellaClassGenerator::Generate(Writer* writer) {
   WriteIntroduction(writer);
   WriteExtensionRegistration(writer);
 
-  // write children: Extensions
-  if (file_->extension_count() > 0) {
-    writer->WriteLine("#region Extensions");
-    for (int i = 0; i < file_->extension_count(); i++) {
-      ExtensionGenerator extensionGenerator(file_->extension(i));
-      extensionGenerator.Generate(writer);
-    }
-    writer->WriteLine("#endregion");
-    writer->WriteLine();
-  }
-
   WriteLiteExtensions(writer);
   // Close the class declaration.
   writer->Outdent();
