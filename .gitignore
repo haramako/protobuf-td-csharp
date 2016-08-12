@@ -4,3 +4,4 @@ protoc-gen-dfcsharp
 *.exe
 bin
 obj
+xcuserdata
