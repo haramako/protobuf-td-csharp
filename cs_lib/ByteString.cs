@@ -246,7 +246,6 @@ namespace Google.ProtocolBuffers
             return true;
         }
 
-#if false
         /// <summary>
         /// Builder for ByteStrings which allows them to be created without extra
         /// copying being involved. This has to be a nested type in order to have access
@@ -302,6 +301,5 @@ namespace Google.ProtocolBuffers
         {
             outputStream.Write(bytes, 0, bytes.Length);
         }
-#endif
     }
 }

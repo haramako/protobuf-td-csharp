@@ -50,7 +50,11 @@ class EnumFieldGenerator : public FieldGeneratorBase {
 
   virtual void GenerateMembers(Writer* writer);
   virtual void GenerateParsingCode(Writer* writer);
-
+  virtual void GenerateSerializationCode(Writer* writer);
+  virtual void GenerateSerializedSizeCode(Writer* writer);
+  virtual void GenerateInitCode(Writer* writer);
+  virtual void GenerateFinishCode(Writer* writer);
+  
  private:
   GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(EnumFieldGenerator);
 };

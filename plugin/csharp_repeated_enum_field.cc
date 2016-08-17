@@ -64,9 +64,59 @@ void RepeatedEnumFieldGenerator::GenerateMembers(Writer* writer) {
 
 void RepeatedEnumFieldGenerator::GenerateParsingCode(Writer* writer) {
   writer->WriteLine(
-      "input.ReadEnumArray<$0$>(tag, field_name, this.$1$);",
+      "input.ReadEnumArray<$0$>(tag, this.$1$);",
       type_name(), name());
 }
+
+void RepeatedEnumFieldGenerator::GenerateSerializationCode(Writer* writer) {
+  writer->WriteLine("if ($0$.Count > 0) {", name());
+  writer->Indent();
+  if (descriptor_->is_packed()) {
+    writer->WriteLine(
+        "output.WritePackedEnumArray($0$, $1$);",
+        number(), name(), field_ordinal());
+  } else {
+    writer->WriteLine("output.WriteEnumArray($0$, $1$);",
+                      number(), name(), field_ordinal());
+  }
+  writer->Outdent();
+  writer->WriteLine("}");
+}
+
+void RepeatedEnumFieldGenerator::GenerateSerializedSizeCode(Writer* writer) {
+  writer->WriteLine("{");
+  writer->Indent();
+  writer->WriteLine("int dataSize = 0;");
+  writer->WriteLine("if ($0$.Count > 0) {", name());
+  writer->Indent();
+  writer->WriteLine("foreach ($0$ element in $1$) {", type_name(), name());
+  writer->WriteLine(
+      "  dataSize += pb::CodedOutputStream.ComputeEnumSizeNoTag((int) element);");
+  writer->WriteLine("}");
+  writer->WriteLine("size += dataSize;");
+  int tagSize = internal::WireFormat::TagSize(descriptor_->number(), descriptor_->type());
+  if (descriptor_->is_packed()) {
+    writer->WriteLine("size += $0$;", SimpleItoa(tagSize));
+    writer->WriteLine(
+        "size += pb::CodedOutputStream.ComputeRawVarint32Size((uint) dataSize);");
+  } else {
+    writer->WriteLine("size += $0$ * $1$.Count;", SimpleItoa(tagSize), name());
+  }
+  writer->Outdent();
+  writer->WriteLine("}");
+  // cache the data size for packed fields.
+  writer->Outdent();
+  writer->WriteLine("}");
+}
+
+void RepeatedEnumFieldGenerator::GenerateInitCode(Writer* writer) {
+}	
+
+void RepeatedEnumFieldGenerator::GenerateFinishCode(Writer* writer) {
+  writer->WriteLine("if( $0$ == null ){", property_name());
+  writer->WriteLine("  $0$ = new List<$1$>();", property_name(), type_name());
+  writer->WriteLine("}");
+}	
 
 }  // namespace csharp
 }  // namespace compiler

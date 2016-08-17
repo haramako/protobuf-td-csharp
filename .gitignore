@@ -2,6 +2,13 @@
 .depends
 protoc-gen-dfcsharp
 *.exe
+*.mdb
 bin
 obj
 xcuserdata
+test.dll
+GTAGS
+GPATH
+GRTAGS
+[#]*
+*~

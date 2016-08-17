@@ -201,17 +201,16 @@ namespace Google.ProtocolBuffers
         /// <summary>
         /// Attempt to peek at the next field tag.
         /// </summary>
-        public bool PeekNextTag(out uint fieldTag, out string fieldName)
+        public bool PeekNextTag(out uint fieldTag)
         {
             if (hasNextTag)
             {
-                fieldName = null;
                 fieldTag = nextTag;
                 return true;
             }
 
             uint savedLast = lastTag;
-            hasNextTag = ReadTag(out nextTag, out fieldName);
+            hasNextTag = ReadTag(out nextTag);
             lastTag = savedLast;
             fieldTag = nextTag;
             return hasNextTag;
@@ -224,10 +223,8 @@ namespace Google.ProtocolBuffers
         /// <param name="fieldTag">The 'tag' of the field (id * 8 + wire-format)</param>
         /// <param name="fieldName">Not Supported - For protobuffer streams, this parameter is always null</param>
         /// <returns>true if the next fieldTag was read</returns>
-        public bool ReadTag(out uint fieldTag, out string fieldName)
+        public bool ReadTag(out uint fieldTag)
         {
-            fieldName = null;
-
             if (hasNextTag)
             {
                 fieldTag = nextTag;
@@ -465,9 +462,8 @@ namespace Google.ProtocolBuffers
         /// </summary>
         private bool ContinueArray(uint currentTag)
         {
-            string ignore;
             uint next;
-            if (PeekNextTag(out next, out ignore))
+            if (PeekNextTag(out next))
             {
                 if (next == currentTag)
                 {
@@ -493,9 +489,8 @@ namespace Google.ProtocolBuffers
                 return true;
             }
 
-            string ignore;
             uint next;
-            if (PeekNextTag(out next, out ignore))
+            if (PeekNextTag(out next))
             {
                 if (next == currentTag)
                 {
@@ -546,7 +541,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadSInt32Array(uint fieldTag, string fieldName, ICollection<int> list)
+        public void ReadSInt32Array(uint fieldTag, ICollection<int> list)
         {
             bool isPacked;
             int holdLimit;
@@ -561,7 +556,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadUInt32Array(uint fieldTag, string fieldName, ICollection<uint> list)
+        public void ReadUInt32Array(uint fieldTag, ICollection<uint> list)
         {
             bool isPacked;
             int holdLimit;
@@ -576,7 +571,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadFixed32Array(uint fieldTag, string fieldName, ICollection<uint> list)
+        public void ReadFixed32Array(uint fieldTag, ICollection<uint> list)
         {
             bool isPacked;
             int holdLimit;
@@ -591,7 +586,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadSFixed32Array(uint fieldTag, string fieldName, ICollection<int> list)
+        public void ReadSFixed32Array(uint fieldTag, ICollection<int> list)
         {
             bool isPacked;
             int holdLimit;
@@ -606,7 +601,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadInt64Array(uint fieldTag, string fieldName, ICollection<long> list)
+        public void ReadInt64Array(uint fieldTag, ICollection<long> list)
         {
             bool isPacked;
             int holdLimit;
@@ -621,7 +616,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadSInt64Array(uint fieldTag, string fieldName, ICollection<long> list)
+        public void ReadSInt64Array(uint fieldTag, ICollection<long> list)
         {
             bool isPacked;
             int holdLimit;
@@ -636,7 +631,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadUInt64Array(uint fieldTag, string fieldName, ICollection<ulong> list)
+        public void ReadUInt64Array(uint fieldTag, ICollection<ulong> list)
         {
             bool isPacked;
             int holdLimit;
@@ -651,7 +646,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadFixed64Array(uint fieldTag, string fieldName, ICollection<ulong> list)
+        public void ReadFixed64Array(uint fieldTag, ICollection<ulong> list)
         {
             bool isPacked;
             int holdLimit;
@@ -666,7 +661,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadSFixed64Array(uint fieldTag, string fieldName, ICollection<long> list)
+        public void ReadSFixed64Array(uint fieldTag, ICollection<long> list)
         {
             bool isPacked;
             int holdLimit;
@@ -681,7 +676,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadDoubleArray(uint fieldTag, string fieldName, ICollection<double> list)
+        public void ReadDoubleArray(uint fieldTag, ICollection<double> list)
         {
             bool isPacked;
             int holdLimit;
@@ -696,7 +691,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadFloatArray(uint fieldTag, string fieldName, ICollection<float> list)
+        public void ReadFloatArray(uint fieldTag, ICollection<float> list)
         {
             bool isPacked;
             int holdLimit;
@@ -711,7 +706,7 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadEnumArray<T>(uint fieldTag, string fieldName, ICollection<T> list)
+        public void ReadEnumArray<T>(uint fieldTag, ICollection<T> list)
             where T : struct, IComparable, IFormattable
         {
             T value = default(T);
@@ -743,14 +738,14 @@ namespace Google.ProtocolBuffers
             }
         }
 
-        public void ReadMessageArray<T>(uint fieldTag, out T[] list) where T : Message, new()
+        public void ReadMessageArray<T>(uint fieldTag, IList<T> list) where T : Message, new()
         {
 			list = new T[0];
             do
             {
                 T builder = new T();
                 ReadMessage(builder);
-                // list.Add(builder); // TODO: Add
+                list.Add(builder); // TODO: Add
             } while (ContinueArray(fieldTag));
         }
 
@@ -1361,8 +1356,7 @@ namespace Google.ProtocolBuffers
         public void SkipMessage()
         {
             uint tag;
-            string name;
-            while (ReadTag(out tag, out name))
+            while (ReadTag(out tag))
             {
                 if (!SkipField())
                 {

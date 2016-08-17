@@ -65,12 +65,11 @@ class MessageGenerator : public SourceGeneratorBase {
   void GenerateMessageSerializationMethods(Writer* writer);
   void GenerateSerializeOneField(Writer* writer,
                                  const FieldDescriptor* fieldDescriptor);
-  void GenerateSerializeOneExtensionRange(
-      Writer* writer, const Descriptor::ExtensionRange* extendsionRange);
   void GenerateParseFromMethods(Writer* writer);
   void GenerateBuilder(Writer* writer);
   void GenerateCommonBuilderMethods(Writer* writer);
   void GenerateBuilderParsingMethods(Writer* writer);
+  void GenerateInitMethods(Writer* writer);
 
   int GetFieldOrdinal(const FieldDescriptor* descriptor);
   FieldGeneratorBase* CreateFieldGeneratorInternal(

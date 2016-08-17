@@ -140,11 +140,9 @@ void MessageGenerator::Generate(Writer* writer) {
       "$0$ sealed partial class $1$ : pb.Message {",
       class_access_level(), class_name());
   writer->Indent();
-#if 0
-  writer->WriteLine("private $0$() { }", class_name());  // Private ctor.
-#else
-  writer->WriteLine("public $0$() { }", class_name());  // Private ctor. MEMO: コンストラクタをpublicに harada@toydea.com
-#endif
+  writer->WriteLine("public $0$() { }", class_name());
+  writer->WriteLine("public static $0$ CreateInstance() { var obj = new $0$(); obj.Finish(); return obj; }", class_name());
+  writer->WriteLine("public static $0$ CreateEmpty() { return new $0$(); }", class_name());
   // Must call MakeReadOnly() to make sure all lists are made read-only
   writer->WriteLine(
       "private static readonly $0$ defaultInstance = new $0$();",
@@ -186,25 +184,12 @@ void MessageGenerator::Generate(Writer* writer) {
     writer->WriteLine();
   }
 
-  GenerateMessageSerializationMethods(writer);
   GenerateLiteRuntimeMethods(writer);
 
+  GenerateMessageSerializationMethods(writer);
   GenerateParseFromMethods(writer);
   GenerateBuilder(writer);
-
-  // MEMO: リフレクションを使うので排除
-#if 0
-  // Force the static initialization code for the file to run, since it may
-  // initialize static variables declared in this class.
-  writer->WriteLine("static $0$() {", class_name());
-  // We call object.ReferenceEquals() just to make it a valid statement on its own.
-  // Another option would be GetType(), but that causes problems in DescriptorProtoFile,
-  // where the bootstrapping is somewhat recursive - type initializers call
-  // each other, effectively. We temporarily see Descriptor as null.
-  writer->WriteLine("  object.ReferenceEquals($0$.Descriptor, null);",
-                    GetFullUmbrellaClassName(descriptor_->file()));
-  writer->WriteLine("}");
-#endif
+  GenerateInitMethods(writer);
 
   writer->Outdent();
   writer->WriteLine("}");
@@ -212,45 +197,7 @@ void MessageGenerator::Generate(Writer* writer) {
 }
 
 void MessageGenerator::GenerateLiteRuntimeMethods(Writer* writer) {
-  bool callbase = descriptor_->extension_range_count() > 0;
   writer->WriteLine("#region Lite runtime methods");
-  writer->WriteLine("public override int GetHashCode() {");
-  writer->Indent();
-  writer->WriteLine("int hash = GetType().GetHashCode();");
-#if 0
-  for (int i = 0; i < descriptor_->field_count(); i++) {
-    scoped_ptr<FieldGeneratorBase> generator(
-        CreateFieldGeneratorInternal(descriptor_->field(i)));
-    generator->WriteHash(writer);
-  }
-#endif  
-  if (callbase) {
-    writer->WriteLine("hash ^= base.GetHashCode();");
-  }
-  writer->WriteLine("return hash;");
-  writer->Outdent();
-  writer->WriteLine("}");
-  writer->WriteLine();
-
-  writer->WriteLine("public override bool Equals(object obj) {");
-  writer->Indent();
-  writer->WriteLine("$0$ other = obj as $0$;", class_name());
-  writer->WriteLine("if (other == null) return false;");
-#if 0  
-  for (int i = 0; i < descriptor_->field_count(); i++) {
-    scoped_ptr<FieldGeneratorBase> generator(
-        CreateFieldGeneratorInternal(descriptor_->field(i)));
-    generator->WriteEquals(writer);
-  }
-  if (callbase) {
-    writer->WriteLine("if (!base.Equals(other)) return false;");
-  }
-#endif
-  writer->WriteLine("return true;");
-  writer->Outdent();
-  writer->WriteLine("}");
-  writer->WriteLine();
-
 #if 0
   writer->WriteLine(
       "public override void PrintTo(global::System.IO.TextWriter writer) {");
@@ -284,16 +231,66 @@ void MessageGenerator::GenerateMessageSerializationMethods(Writer* writer) {
   }
   std::sort(extension_ranges_sorted.begin(), extension_ranges_sorted.end(),
             CompareExtensionRangesStart);
+
+  writer->WriteLine(
+      "public override void WriteTo(pb::CodedOutputStream output) {");
+  writer->Indent();
+  // Make sure we've computed the serialized length, so that packed fields are generated correctly.
+  writer->WriteLine("CalcSerializedSize();");
+  if (descriptor_->extension_range_count()) {
+    writer->WriteLine(
+        "pb::ExtendableMessage$1$<$0$, $0$.Builder>.ExtensionWriter extensionWriter = CreateExtensionWriter(this);",
+        class_name(), runtime_suffix());
+  }
+
+  // Merge the fields and the extension ranges, both sorted by field number.
+  for (int i = 0, j = 0;
+      i < fields_by_number().size() || j < extension_ranges_sorted.size();) {
+    if (i == fields_by_number().size()) {
+		//GenerateSerializeOneExtensionRange(writer, extension_ranges_sorted[j++]);
+    } else if (j == extension_ranges_sorted.size()) {
+      GenerateSerializeOneField(writer, fields_by_number()[i++]);
+    } else if (fields_by_number()[i]->number()
+        < extension_ranges_sorted[j]->start) {
+      GenerateSerializeOneField(writer, fields_by_number()[i++]);
+    } else {
+		//GenerateSerializeOneExtensionRange(writer, extension_ranges_sorted[j++]);
+    }
+  }
+
+  writer->Outdent();
+  writer->WriteLine("}");
+  writer->WriteLine();
+  writer->WriteLine("public override int SerializedSize {");
+  writer->Indent();
+  writer->WriteLine("get {");
+  writer->Indent();
+  writer->WriteLine("return CalcSerializedSize();");
+  writer->Outdent();
+  writer->WriteLine("}");
+  writer->Outdent();
+  writer->WriteLine("}");
+  writer->WriteLine();
+
+  writer->WriteLine("private int CalcSerializedSize() {");
+  writer->Indent();
+  writer->WriteLine("int size = 0;");
+  for (int i = 0; i < descriptor_->field_count(); i++) {
+    scoped_ptr<FieldGeneratorBase> generator(
+        CreateFieldGeneratorInternal(descriptor_->field(i)));
+    generator->GenerateSerializedSizeCode(writer);
+  }
+  writer->WriteLine("return size;");
+  writer->Outdent();
+  writer->WriteLine("}");
+  
 }
 
 void MessageGenerator::GenerateSerializeOneField(
     Writer* writer, const FieldDescriptor* fieldDescriptor) {
-}
-
-void MessageGenerator::GenerateSerializeOneExtensionRange(
-    Writer* writer, const Descriptor::ExtensionRange* extensionRange) {
-  writer->WriteLine("extensionWriter.WriteUntil($0$, output);",
-                    SimpleItoa(extensionRange->end));
+  scoped_ptr<FieldGeneratorBase> generator(
+      CreateFieldGeneratorInternal(fieldDescriptor));
+  generator->GenerateSerializationCode(writer);
 }
 
 void MessageGenerator::GenerateParseFromMethods(Writer* writer) {
@@ -301,9 +298,6 @@ void MessageGenerator::GenerateParseFromMethods(Writer* writer) {
   //   because they need to be generated even for messages that are optimized
   //   for code size.
 
-  writer->WriteLine("public static $0$ CreateInstance() {", class_name());
-  writer->WriteLine("  return new $0$();", class_name());
-  writer->WriteLine("}");
   writer->WriteLine("public static $0$ ParseFrom(byte[] data) {", class_name());
   writer->WriteLine("  var mes = CreateInstance(); mes.MergeFrom(data); return mes;");
   writer->WriteLine("}");
@@ -328,8 +322,7 @@ void MessageGenerator::GenerateBuilderParsingMethods(Writer* writer) {
   writer->WriteLine("public override void MergeFrom(pb::CodedInputStream input) {", class_name());
   writer->Indent();
   writer->WriteLine("uint tag;");
-  writer->WriteLine("string field_name;");
-  writer->WriteLine("while (input.ReadTag(out tag, out field_name)) {");
+  writer->WriteLine("while (input.ReadTag(out tag)) {");
   writer->Indent();
 
   writer->WriteLine("switch (tag) {");
@@ -378,6 +371,25 @@ void MessageGenerator::GenerateBuilderParsingMethods(Writer* writer) {
   writer->Outdent();
   writer->WriteLine("}");
   writer->WriteLine();
+}
+
+void MessageGenerator::GenerateInitMethods(Writer* writer) {
+	
+	writer->WriteLine("public override void Init() {");
+	for (int i = 0; i < descriptor_->field_count(); i++) {
+		scoped_ptr<FieldGeneratorBase> generator(
+            CreateFieldGeneratorInternal(descriptor_->field(i)));
+		generator->GenerateInitCode(writer);
+	}
+	writer->WriteLine("}");
+	
+	writer->WriteLine("public override void Finish() {");
+	for (int i = 0; i < descriptor_->field_count(); i++) {
+		scoped_ptr<FieldGeneratorBase> generator(
+            CreateFieldGeneratorInternal(descriptor_->field(i)));
+		generator->GenerateInitCode(writer);
+	}
+	writer->WriteLine("}");
 }
 
 void MessageGenerator::GenerateExtensionRegistrationCode(Writer* writer) {

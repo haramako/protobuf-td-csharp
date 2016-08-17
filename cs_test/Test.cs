@@ -25,10 +25,101 @@ namespace Test {
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class TestMessage : pb.Message {
     public TestMessage() { }
+    public static TestMessage CreateInstance() { var obj = new TestMessage(); obj.Finish(); return obj; }
+    public static TestMessage CreateEmpty() { return new TestMessage(); }
     private static readonly TestMessage defaultInstance = new TestMessage();
     public static TestMessage DefaultInstance {
       get { return defaultInstance; }
     }
+
+    #region Nested types
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    public static partial class Types {
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+      public sealed partial class MapValueEntry : pb.Message {
+        public MapValueEntry() { }
+        public static MapValueEntry CreateInstance() { var obj = new MapValueEntry(); obj.Finish(); return obj; }
+        public static MapValueEntry CreateEmpty() { return new MapValueEntry(); }
+        private static readonly MapValueEntry defaultInstance = new MapValueEntry();
+        public static MapValueEntry DefaultInstance {
+          get { return defaultInstance; }
+        }
+
+        public int Key;
+
+        public string Value = "";
+
+        #region Lite runtime methods
+        #endregion
+
+        public override void WriteTo(pb::CodedOutputStream output) {
+          CalcSerializedSize();
+          if (Key != 0) {
+            output.WriteInt32(1, Key);
+          }
+          if (Value != "") {
+            output.WriteString(2, Value);
+          }
+        }
+
+        public override int SerializedSize {
+          get {
+            return CalcSerializedSize();
+          }
+        }
+
+        private int CalcSerializedSize() {
+          int size = 0;
+          if (Key != 0) {
+            size += pb::CodedOutputStream.ComputeInt32Size(1, Key);
+          }
+          if (Value != "") {
+            size += pb::CodedOutputStream.ComputeStringSize(2, Value);
+          }
+          return size;
+        }
+        public static MapValueEntry ParseFrom(byte[] data) {
+          var mes = CreateInstance(); mes.MergeFrom(data); return mes;
+        }
+        public static MapValueEntry ParseFrom(global::System.IO.Stream input) {
+          var mes = CreateInstance(); mes.MergeFrom(input); return mes;
+        }
+        public static MapValueEntry ParseFrom(pb::CodedInputStream input) {
+          var mes = CreateInstance(); mes.MergeFrom(input); return mes;
+        }
+        public override void MergeFrom(pb::CodedInputStream input) {
+          uint tag;
+          while (input.ReadTag(out tag)) {
+            switch (tag) {
+              case 0: {
+                throw pb::InvalidProtocolBufferException.InvalidTag();
+              }
+              default: {
+                if (pb::WireFormat.IsEndGroupTag(tag)) {
+                  return;
+                }
+                break;
+              }
+              case 8: {
+                input.ReadInt32(ref this.Key);
+                break;
+              }
+              case 18: {
+                input.ReadString(ref this.Value);
+                break;
+              }
+            }
+          }
+        }
+
+        public override void Init() {
+        }
+        public override void Finish() {
+        }
+      }
+
+    }
+    #endregion
 
     public int Int32Value;
 
@@ -40,22 +131,138 @@ namespace Test {
 
     public global::Test.EmbedMessage MessageValue;
 
+    public int Sint32Value;
+
+    public long Sint64Value;
+
+    public List<int> RepeatedInt32 = new List<int>();
+
+    public List<long> RepeatedInt64 = new List<long>();
+
+    public List<int> PackedInt32 = new List<int>();
+
+    public List<long> PackedInt64 = new List<long>();
+
+    public List<global::Test.TestMessage.Types.MapValueEntry> MapValue;
+
     #region Lite runtime methods
-    public override int GetHashCode() {
-      int hash = GetType().GetHashCode();
-      return hash;
-    }
-
-    public override bool Equals(object obj) {
-      TestMessage other = obj as TestMessage;
-      if (other == null) return false;
-      return true;
-    }
-
     #endregion
 
-    public static TestMessage CreateInstance() {
-      return new TestMessage();
+    public override void WriteTo(pb::CodedOutputStream output) {
+      CalcSerializedSize();
+      if (Int32Value != 0) {
+        output.WriteInt32(1, Int32Value);
+      }
+      if (Int64Value != 0L) {
+        output.WriteInt64(2, Int64Value);
+      }
+      if (StringValue != "") {
+        output.WriteString(3, StringValue);
+      }
+      if (EnumValue != global::Test.TestEnum.FOO) {
+        output.WriteEnum(4, (int) EnumValue, EnumValue);
+      }
+      if( MessageValue != null ){
+        output.WriteMessage(5, MessageValue);
+      }
+      if (Sint32Value != 0) {
+        output.WriteSInt32(6, Sint32Value);
+      }
+      if (Sint64Value != 0L) {
+        output.WriteSInt64(7, Sint64Value);
+      }
+      if (RepeatedInt32.Count > 0) {
+        output.WritePackedInt32Array(10, RepeatedInt32);
+      }
+      if (RepeatedInt64.Count > 0) {
+        output.WritePackedInt64Array(11, RepeatedInt64);
+      }
+      if (PackedInt32.Count > 0) {
+        output.WritePackedInt32Array(20, PackedInt32);
+      }
+      if (PackedInt64.Count > 0) {
+        output.WritePackedInt64Array(21, PackedInt64);
+      }
+      if (MapValue != null && MapValue.Count > 0) {
+        output.WriteMessageArray(30, MapValue);
+      }
+    }
+
+    public override int SerializedSize {
+      get {
+        return CalcSerializedSize();
+      }
+    }
+
+    private int CalcSerializedSize() {
+      int size = 0;
+      if (Int32Value != 0) {
+        size += pb::CodedOutputStream.ComputeInt32Size(1, Int32Value);
+      }
+      if (Int64Value != 0L) {
+        size += pb::CodedOutputStream.ComputeInt64Size(2, Int64Value);
+      }
+      if (StringValue != "") {
+        size += pb::CodedOutputStream.ComputeStringSize(3, StringValue);
+      }
+      if (EnumValue != global::Test.TestEnum.FOO) {
+        size += pb::CodedOutputStream.ComputeEnumSize(4, (int) EnumValue);
+      }
+      if( MessageValue != null ){
+        size += pb::CodedOutputStream.ComputeMessageSize(5, MessageValue);
+      }
+      if (Sint32Value != 0) {
+        size += pb::CodedOutputStream.ComputeSInt32Size(6, Sint32Value);
+      }
+      if (Sint64Value != 0L) {
+        size += pb::CodedOutputStream.ComputeSInt64Size(7, Sint64Value);
+      }
+      {
+        int dataSize = 0;
+        foreach (int element in RepeatedInt32) {
+          dataSize += pb::CodedOutputStream.ComputeInt32SizeNoTag(element);
+        }
+        size += dataSize;
+        if (RepeatedInt32.Count != 0) {
+          size += 1 + pb::CodedOutputStream.ComputeInt32SizeNoTag(dataSize);
+        }
+      }
+      {
+        int dataSize = 0;
+        foreach (long element in RepeatedInt64) {
+          dataSize += pb::CodedOutputStream.ComputeInt64SizeNoTag(element);
+        }
+        size += dataSize;
+        if (RepeatedInt64.Count != 0) {
+          size += 1 + pb::CodedOutputStream.ComputeInt32SizeNoTag(dataSize);
+        }
+      }
+      {
+        int dataSize = 0;
+        foreach (int element in PackedInt32) {
+          dataSize += pb::CodedOutputStream.ComputeInt32SizeNoTag(element);
+        }
+        size += dataSize;
+        if (PackedInt32.Count != 0) {
+          size += 2 + pb::CodedOutputStream.ComputeInt32SizeNoTag(dataSize);
+        }
+      }
+      {
+        int dataSize = 0;
+        foreach (long element in PackedInt64) {
+          dataSize += pb::CodedOutputStream.ComputeInt64SizeNoTag(element);
+        }
+        size += dataSize;
+        if (PackedInt64.Count != 0) {
+          size += 2 + pb::CodedOutputStream.ComputeInt32SizeNoTag(dataSize);
+        }
+      }
+      if( MapValue != null ) {
+        foreach (global::Test.TestMessage.Types.MapValueEntry element in MapValue) {
+          size += pb::CodedOutputStream.ComputeMessageSize(30, element);
+        }
+      }
+      return size;
     }
     public static TestMessage ParseFrom(byte[] data) {
       var mes = CreateInstance(); mes.MergeFrom(data); return mes;
@@ -68,8 +275,7 @@ namespace Test {
     }
     public override void MergeFrom(pb::CodedInputStream input) {
       uint tag;
-      string field_name;
-      while (input.ReadTag(out tag, out field_name)) {
+      while (input.ReadTag(out tag)) {
         switch (tag) {
           case 0: {
             throw pb::InvalidProtocolBufferException.InvalidTag();
@@ -102,15 +308,53 @@ namespace Test {
             MessageValue = builder;
             break;
           }
+          case 48: {
+            input.ReadSInt32(ref this.Sint32Value);
+            break;
+          }
+          case 56: {
+            input.ReadSInt64(ref this.Sint64Value);
+            break;
+          }
+          case 82:
+          case 80: {
+            input.ReadInt32Array(tag, this.RepeatedInt32);
+            break;
+          }
+          case 90:
+          case 88: {
+            input.ReadInt64Array(tag, this.RepeatedInt64);
+            break;
+          }
+          case 162:
+          case 160: {
+            input.ReadInt32Array(tag, this.PackedInt32);
+            break;
+          }
+          case 170:
+          case 168: {
+            input.ReadInt64Array(tag, this.PackedInt64);
+            break;
+          }
+          case 242: {
+            input.ReadMessageArray(tag, this.MapValue);
+            break;
+          }
         }
       }
     }
 
+    public override void Init() {
+    }
+    public override void Finish() {
+    }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class EmbedMessage : pb.Message {
     public EmbedMessage() { }
+    public static EmbedMessage CreateInstance() { var obj = new EmbedMessage(); obj.Finish(); return obj; }
+    public static EmbedMessage CreateEmpty() { return new EmbedMessage(); }
     private static readonly EmbedMessage defaultInstance = new EmbedMessage();
     public static EmbedMessage DefaultInstance {
       get { return defaultInstance; }
@@ -119,21 +363,27 @@ namespace Test {
     public int Val;
 
     #region Lite runtime methods
-    public override int GetHashCode() {
-      int hash = GetType().GetHashCode();
-      return hash;
-    }
-
-    public override bool Equals(object obj) {
-      EmbedMessage other = obj as EmbedMessage;
-      if (other == null) return false;
-      return true;
-    }
-
     #endregion
 
-    public static EmbedMessage CreateInstance() {
-      return new EmbedMessage();
+    public override void WriteTo(pb::CodedOutputStream output) {
+      CalcSerializedSize();
+      if (Val != 0) {
+        output.WriteInt32(1, Val);
+      }
+    }
+
+    public override int SerializedSize {
+      get {
+        return CalcSerializedSize();
+      }
+    }
+
+    private int CalcSerializedSize() {
+      int size = 0;
+      if (Val != 0) {
+        size += pb::CodedOutputStream.ComputeInt32Size(1, Val);
+      }
+      return size;
     }
     public static EmbedMessage ParseFrom(byte[] data) {
       var mes = CreateInstance(); mes.MergeFrom(data); return mes;
@@ -146,8 +396,7 @@ namespace Test {
     }
     public override void MergeFrom(pb::CodedInputStream input) {
       uint tag;
-      string field_name;
-      while (input.ReadTag(out tag, out field_name)) {
+      while (input.ReadTag(out tag)) {
         switch (tag) {
           case 0: {
             throw pb::InvalidProtocolBufferException.InvalidTag();
@@ -166,6 +415,10 @@ namespace Test {
       }
     }
 
+    public override void Init() {
+    }
+    public override void Finish() {
+    }
   }
 
   #endregion

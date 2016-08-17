@@ -9,13 +9,10 @@ SMCS=/Applications/Unity5.3.4p3/Unity.app/Contents/Frameworks/Mono/bin/smcs
 .PHONY: default test
 default: $(PROG)
 
-ifeq (,$(wildcard .depends))
-	include .depends
-endif
+-include .depends
 
 .cc.o:
 	$(CXX) -c $< $(CXXFLAGS)
-
 
 $(PROG): $(OBJ)
 	$(CXX) -o $(PROG) $(CXXFLAGS) $(LDFLAGS) $(OBJ)

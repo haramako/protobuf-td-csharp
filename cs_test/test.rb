@@ -10,6 +10,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :string_value, :string, 3
     optional :enum_value, :enum, 4, "Test.TestEnum"
     optional :message_value, :message, 5, "Test.EmbedMessage"
+    optional :sint32_value, :sint32, 6
+    optional :sint64_value, :sint64, 7
+    repeated :repeated_int32, :int32, 10
+    repeated :repeated_int64, :int64, 11
+    repeated :packed_int32, :int32, 20
+    repeated :packed_int64, :int64, 21
+    map :map_value, :int32, :string, 30
   end
   add_message "Test.EmbedMessage" do
     optional :val, :int32, 1

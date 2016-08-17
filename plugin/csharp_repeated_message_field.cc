@@ -57,16 +57,44 @@ RepeatedMessageFieldGenerator::~RepeatedMessageFieldGenerator() {
 
 void RepeatedMessageFieldGenerator::GenerateMembers(Writer* writer) {
   writer->WriteLine(
-      "public $0$[] $1$;",
+      "public List<$0$> $1$;",
       type_name(), name());
   AddDeprecatedFlag(writer);
 }
 
 void RepeatedMessageFieldGenerator::GenerateParsingCode(Writer* writer) {
   writer->WriteLine(
-      "input.Read$0$Array(tag, out this.$1$);",
+      "input.Read$0$Array(tag, this.$1$);",
       message_or_group(), name(), type_name());
 }
+
+void RepeatedMessageFieldGenerator::GenerateSerializationCode(Writer* writer) {
+  writer->WriteLine("if ($0$ != null && $0$.Count > 0) {", name());
+  writer->Indent();
+  writer->WriteLine("output.Write$0$Array($1$, $2$);",
+                    message_or_group(), number(), name(), field_ordinal());
+  writer->Outdent();
+  writer->WriteLine("}");
+}
+
+void RepeatedMessageFieldGenerator::GenerateSerializedSizeCode(Writer* writer) {
+  writer->WriteLine("if( $0$ != null ) {", property_name());
+  writer->Indent();
+  writer->WriteLine("foreach ($0$ element in $1$) {", type_name(), property_name());
+  writer->WriteLine("  size += pb::CodedOutputStream.Compute$0$Size($1$, element);", message_or_group(), number());
+  writer->WriteLine("}");
+  writer->Outdent();
+  writer->WriteLine("}");
+}
+
+void RepeatedMessageFieldGenerator::GenerateInitCode(Writer* writer) {
+}	
+
+void RepeatedMessageFieldGenerator::GenerateFinishCode(Writer* writer) {
+  writer->WriteLine("if( $0$ == null ){", property_name());
+  writer->WriteLine("  $0$ = new List<$1$>();", property_name(), type_name());
+  writer->WriteLine("}");
+}	
 
 }  // namespace csharp
 }  // namespace compiler

@@ -67,6 +67,64 @@ void RepeatedPrimitiveFieldGenerator::GenerateParsingCode(Writer* writer) {
                     capitalized_type_name(), name());
 }
 
+void RepeatedPrimitiveFieldGenerator::GenerateSerializationCode(
+    Writer* writer) {
+  writer->WriteLine("if ($0$.Count > 0) {", name());
+  writer->Indent();
+  if (descriptor_->is_packed()) {
+    writer->WriteLine(
+        "output.WritePacked$0$Array($1$, $2$);",
+        capitalized_type_name(), number(), name(), field_ordinal());
+  } else {
+    writer->WriteLine("output.Write$0$Array($1$, $2$);",
+                      capitalized_type_name(), number(), name(),
+                      field_ordinal());
+  }
+  writer->Outdent();
+  writer->WriteLine("}");
+}
+
+void RepeatedPrimitiveFieldGenerator::GenerateSerializedSizeCode(
+    Writer* writer) {
+  writer->WriteLine("{");
+  writer->Indent();
+  writer->WriteLine("int dataSize = 0;");
+  int fixedSize = GetFixedSize(descriptor_->type());
+  if (fixedSize == -1) {
+    writer->WriteLine("foreach ($0$ element in $1$) {", type_name(),
+                      property_name());
+    writer->WriteLine(
+        "  dataSize += pb::CodedOutputStream.Compute$0$SizeNoTag(element);",
+        capitalized_type_name(), number());
+    writer->WriteLine("}");
+  } else {
+    writer->WriteLine("dataSize = $0$ * $1$.Count;", SimpleItoa(fixedSize), name());
+  }
+  writer->WriteLine("size += dataSize;");
+  int tagSize = internal::WireFormat::TagSize(descriptor_->number(), descriptor_->type());
+  if (descriptor_->is_packed()) {
+    writer->WriteLine("if ($0$.Count != 0) {", name());
+    writer->WriteLine(
+        "  size += $0$ + pb::CodedOutputStream.ComputeInt32SizeNoTag(dataSize);",
+        SimpleItoa(tagSize));
+    writer->WriteLine("}");
+  } else {
+    writer->WriteLine("size += $0$ * $1$.Count;", SimpleItoa(tagSize), name());
+  }
+  writer->Outdent();
+  writer->WriteLine("}");
+}
+
+void RepeatedPrimitiveFieldGenerator::GenerateInitCode(Writer* writer) {
+}	
+
+void RepeatedPrimitiveFieldGenerator::GenerateFinishCode(Writer* writer) {
+  writer->WriteLine("if( $0$ == null ){", property_name());
+  writer->WriteLine("  $0$ = new List<$1$>();", property_name(), type_name());
+  writer->WriteLine("}");
+}	
+	
+
 }  // namespace csharp
 }  // namespace compiler
 }  // namespace protobuf

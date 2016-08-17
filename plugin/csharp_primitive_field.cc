@@ -64,14 +64,30 @@ void PrimitiveFieldGenerator::GenerateMembers(Writer* writer) {
 }
 
 void PrimitiveFieldGenerator::GenerateParsingCode(Writer* writer) {
-  if (SupportFieldPresence(descriptor_->file())) {
-    writer->WriteLine("result.has$0$ = input.Read$1$(ref this.$2$);",
-                      property_name(), capitalized_type_name(), name());
-  } else {
-    writer->WriteLine("input.Read$0$(ref this.$1$);",
-                      capitalized_type_name(), name());
-  }
+  writer->WriteLine("input.Read$0$(ref this.$1$);",
+					capitalized_type_name(), name());
 }
+	
+void PrimitiveFieldGenerator::GenerateSerializationCode(Writer* writer) {
+  writer->WriteLine("if ($0$ != $1$) {", property_name(), default_value());
+  writer->WriteLine("  output.Write$0$($1$, $2$);",
+                    capitalized_type_name(), number(), property_name(),
+                    field_ordinal());
+  writer->WriteLine("}");
+}
+
+void PrimitiveFieldGenerator::GenerateSerializedSizeCode(Writer* writer) {
+  writer->WriteLine("if ($0$ != $1$) {", property_name(), default_value());
+  writer->WriteLine("  size += pb::CodedOutputStream.Compute$0$Size($1$, $2$);",
+                    capitalized_type_name(), number(), property_name());
+  writer->WriteLine("}");
+}
+
+void PrimitiveFieldGenerator::GenerateInitCode(Writer* writer) {
+}	
+
+void PrimitiveFieldGenerator::GenerateFinishCode(Writer* writer) {
+}	
 
 }  // namespace csharp
 }  // namespace compiler

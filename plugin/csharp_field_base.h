@@ -51,7 +51,11 @@ class FieldGeneratorBase : public SourceGeneratorBase {
 
   virtual void GenerateMembers(Writer* writer) = 0;
   virtual void GenerateParsingCode(Writer* writer) = 0;
-
+  virtual void GenerateSerializationCode(Writer* writer) = 0;
+  virtual void GenerateSerializedSizeCode(Writer* writer) = 0;
+  virtual void GenerateInitCode(Writer* writer) = 0;
+  virtual void GenerateFinishCode(Writer* writer) = 0;
+  
  protected:
   const FieldDescriptor* descriptor_;
   const int fieldOrdinal_;

@@ -67,6 +67,28 @@ void EnumFieldGenerator::GenerateParsingCode(Writer* writer) {
                     name());
 }
 
+void EnumFieldGenerator::GenerateSerializationCode(Writer* writer) {
+  writer->WriteLine("if ($0$ != $1$) {", property_name(), default_value());
+  writer->WriteLine(
+      "  output.WriteEnum($0$, (int) $1$, $1$);", number(),
+      property_name(), field_ordinal());
+  writer->WriteLine("}");
+}
+
+void EnumFieldGenerator::GenerateSerializedSizeCode(Writer* writer) {
+  writer->WriteLine("if ($0$ != $1$) {", property_name(), default_value());
+  writer->WriteLine(
+      "  size += pb::CodedOutputStream.ComputeEnumSize($0$, (int) $1$);",
+      number(), property_name());
+  writer->WriteLine("}");
+}
+
+void EnumFieldGenerator::GenerateInitCode(Writer* writer) {
+}	
+
+void EnumFieldGenerator::GenerateFinishCode(Writer* writer) {
+}	
+	
 }  // namespace csharp
 }  // namespace compiler
 }  // namespace protobuf

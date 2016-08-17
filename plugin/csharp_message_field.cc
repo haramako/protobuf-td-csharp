@@ -68,6 +68,30 @@ void MessageFieldGenerator::GenerateParsingCode(Writer* writer) {
   writer->WriteLine("$0$ = builder;", property_name());
 }
 
+void MessageFieldGenerator::GenerateSerializationCode(Writer* writer) {
+  writer->WriteLine("if( $0$ != null ){", property_name());
+  writer->WriteLine("  output.Write$0$($1$, $2$);",
+                    message_or_group(), number(), property_name(),
+                    field_ordinal());
+  writer->WriteLine("}");
+}
+
+void MessageFieldGenerator::GenerateSerializedSizeCode(Writer* writer) {
+  writer->WriteLine("if( $0$ != null ){", property_name());
+  writer->WriteLine("  size += pb::CodedOutputStream.Compute$0$Size($1$, $2$);",
+                    message_or_group(), number(), property_name());
+  writer->WriteLine("}");
+}
+
+void MessageFieldGenerator::GenerateInitCode(Writer* writer) {
+}	
+
+void MessageFieldGenerator::GenerateFinishCode(Writer* writer) {
+  writer->WriteLine("if( $0$ == null ){", property_name());
+  writer->WriteLine("  $0$ = $1$.CreateInstance();", property_name(), type_name());
+  writer->WriteLine("}");
+}	
+
 }  // namespace csharp
 }  // namespace compiler
 }  // namespace protobuf

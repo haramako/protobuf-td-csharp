@@ -11,10 +11,19 @@ message TestMessage {
 	int32 int32_value = 1;
 	int64 int64_value = 2;
 	string string_value = 3;
-
 	TestEnum enum_value = 4;
-
 	EmbedMessage message_value = 5;
+	sint32 sint32_value = 6;
+	sint64 sint64_value = 7;
+
+	repeated int32 repeated_int32 = 10;
+	repeated int64 repeated_int64 = 11;
+
+	repeated int32 packed_int32 = 20 [packed=true];
+	repeated int64 packed_int64 = 21 [packed=true];
+
+	map<int32,string> map_value = 30;
+	
 }
 
 message EmbedMessage {
