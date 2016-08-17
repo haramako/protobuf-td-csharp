@@ -62,7 +62,7 @@ void MessageFieldGenerator::GenerateMembers(Writer* writer) {
 }
 
 void MessageFieldGenerator::GenerateParsingCode(Writer* writer) {
-  writer->WriteLine("$0$ builder = new $0$();",
+  writer->WriteLine("$0$ builder = $0$.CreateEmpty();",
                     type_name());
   writer->WriteLine("input.ReadMessage(builder);");
   writer->WriteLine("$0$ = builder;", property_name());

@@ -24,7 +24,7 @@ namespace Test {
   #region Messages
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class TestMessage : pb.Message {
-    public TestMessage() { }
+    private TestMessage() { }
     public static TestMessage CreateInstance() { var obj = new TestMessage(); obj.Finish(); return obj; }
     public static TestMessage CreateEmpty() { return new TestMessage(); }
     private static readonly TestMessage defaultInstance = new TestMessage();
@@ -37,7 +37,7 @@ namespace Test {
     public static partial class Types {
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
       public sealed partial class MapValueEntry : pb.Message {
-        public MapValueEntry() { }
+        private MapValueEntry() { }
         public static MapValueEntry CreateInstance() { var obj = new MapValueEntry(); obj.Finish(); return obj; }
         public static MapValueEntry CreateEmpty() { return new MapValueEntry(); }
         private static readonly MapValueEntry defaultInstance = new MapValueEntry();
@@ -303,7 +303,7 @@ namespace Test {
             break;
           }
           case 42: {
-            global::Test.EmbedMessage builder = new global::Test.EmbedMessage();
+            global::Test.EmbedMessage builder = global::Test.EmbedMessage.CreateEmpty();
             input.ReadMessage(builder);
             MessageValue = builder;
             break;
@@ -337,7 +337,7 @@ namespace Test {
             break;
           }
           case 242: {
-            input.ReadMessageArray(tag, this.MapValue);
+            input.ReadMessageArray(tag, this.MapValue, global::Test.TestMessage.Types.MapValueEntry.CreateEmpty);
             break;
           }
         }
@@ -352,7 +352,7 @@ namespace Test {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class EmbedMessage : pb.Message {
-    public EmbedMessage() { }
+    private EmbedMessage() { }
     public static EmbedMessage CreateInstance() { var obj = new EmbedMessage(); obj.Finish(); return obj; }
     public static EmbedMessage CreateEmpty() { return new EmbedMessage(); }
     private static readonly EmbedMessage defaultInstance = new EmbedMessage();
