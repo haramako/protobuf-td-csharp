@@ -140,7 +140,7 @@ void MessageGenerator::Generate(Writer* writer) {
       "$0$ sealed partial class $1$ : pb.Message {",
       class_access_level(), class_name());
   writer->Indent();
-  writer->WriteLine("private $0$() { }", class_name());
+  writer->WriteLine("public $0$() { }", class_name());
   writer->WriteLine("public static $0$ CreateInstance() { var obj = new $0$(); obj.Finish(); return obj; }", class_name());
   writer->WriteLine("public static $0$ CreateEmpty() { return new $0$(); }", class_name());
   // Must call MakeReadOnly() to make sure all lists are made read-only
@@ -387,7 +387,7 @@ void MessageGenerator::GenerateInitMethods(Writer* writer) {
 	for (int i = 0; i < descriptor_->field_count(); i++) {
 		scoped_ptr<FieldGeneratorBase> generator(
             CreateFieldGeneratorInternal(descriptor_->field(i)));
-		generator->GenerateInitCode(writer);
+		generator->GenerateFinishCode(writer);
 	}
 	writer->WriteLine("}");
 }

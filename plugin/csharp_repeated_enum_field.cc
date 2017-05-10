@@ -58,7 +58,7 @@ RepeatedEnumFieldGenerator::~RepeatedEnumFieldGenerator() {
 
 void RepeatedEnumFieldGenerator::GenerateMembers(Writer* writer) {
   AddDeprecatedFlag(writer);
-  writer->WriteLine("public $0$[] $1$;", type_name(),
+  writer->WriteLine("public List<$0$> $1$ = new List<$0$>();", type_name(),
                     property_name());
 }
 
@@ -71,6 +71,7 @@ void RepeatedEnumFieldGenerator::GenerateParsingCode(Writer* writer) {
 void RepeatedEnumFieldGenerator::GenerateSerializationCode(Writer* writer) {
   writer->WriteLine("if ($0$.Count > 0) {", name());
   writer->Indent();
+#if 0 // TODO: 一時的に無効化
   if (descriptor_->is_packed()) {
     writer->WriteLine(
         "output.WritePackedEnumArray($0$, $1$);",
@@ -79,6 +80,7 @@ void RepeatedEnumFieldGenerator::GenerateSerializationCode(Writer* writer) {
     writer->WriteLine("output.WriteEnumArray($0$, $1$);",
                       number(), name(), field_ordinal());
   }
+#endif
   writer->Outdent();
   writer->WriteLine("}");
 }

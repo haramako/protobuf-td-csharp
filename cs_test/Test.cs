@@ -139,6 +139,8 @@ namespace Test {
 
     public List<long> RepeatedInt64 = new List<long>();
 
+    public List<global::Test.EmbedMessage> RepeatedMessage;
+
     public List<int> PackedInt32 = new List<int>();
 
     public List<long> PackedInt64 = new List<long>();
@@ -176,6 +178,9 @@ namespace Test {
       }
       if (RepeatedInt64.Count > 0) {
         output.WritePackedInt64Array(11, RepeatedInt64);
+      }
+      if (RepeatedMessage != null && RepeatedMessage.Count > 0) {
+        output.WriteMessageArray(12, RepeatedMessage);
       }
       if (PackedInt32.Count > 0) {
         output.WritePackedInt32Array(20, PackedInt32);
@@ -235,6 +240,11 @@ namespace Test {
         size += dataSize;
         if (RepeatedInt64.Count != 0) {
           size += 1 + pb::CodedOutputStream.ComputeInt32SizeNoTag(dataSize);
+        }
+      }
+      if( RepeatedMessage != null ) {
+        foreach (global::Test.EmbedMessage element in RepeatedMessage) {
+          size += pb::CodedOutputStream.ComputeMessageSize(12, element);
         }
       }
       {
@@ -326,6 +336,10 @@ namespace Test {
             input.ReadInt64Array(tag, this.RepeatedInt64);
             break;
           }
+          case 98: {
+            input.ReadMessageArray(tag, this.RepeatedMessage, global::Test.EmbedMessage.CreateEmpty);
+            break;
+          }
           case 162:
           case 160: {
             input.ReadInt32Array(tag, this.PackedInt32);
@@ -347,6 +361,27 @@ namespace Test {
     public override void Init() {
     }
     public override void Finish() {
+    if( MessageValue == null ){
+      MessageValue = global::Test.EmbedMessage.CreateInstance();
+    }
+    if( RepeatedInt32 == null ){
+      RepeatedInt32 = new List<int>();
+    }
+    if( RepeatedInt64 == null ){
+      RepeatedInt64 = new List<long>();
+    }
+    if( RepeatedMessage == null ){
+      RepeatedMessage = new List<global::Test.EmbedMessage>();
+    }
+    if( PackedInt32 == null ){
+      PackedInt32 = new List<int>();
+    }
+    if( PackedInt64 == null ){
+      PackedInt64 = new List<long>();
+    }
+    if( MapValue == null ){
+      MapValue = new List<global::Test.TestMessage.Types.MapValueEntry>();
+    }
     }
   }
 

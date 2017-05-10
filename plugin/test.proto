@@ -18,6 +18,7 @@ message TestMessage {
 
 	repeated int32 repeated_int32 = 10;
 	repeated int64 repeated_int64 = 11;
+	repeated EmbedMessage repeated_message = 12;
 
 	repeated int32 packed_int32 = 20 [packed=true];
 	repeated int64 packed_int64 = 21 [packed=true];

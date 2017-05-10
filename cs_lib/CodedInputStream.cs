@@ -740,7 +740,6 @@ namespace Google.ProtocolBuffers
 
         public void ReadMessageArray<T>(uint fieldTag, IList<T> list, System.Func<T> constructor) where T : Message
         {
-			list = new T[0];
             do
             {
                 T builder = constructor();

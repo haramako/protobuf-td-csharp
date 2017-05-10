@@ -57,7 +57,7 @@ RepeatedMessageFieldGenerator::~RepeatedMessageFieldGenerator() {
 
 void RepeatedMessageFieldGenerator::GenerateMembers(Writer* writer) {
   writer->WriteLine(
-      "public List<$0$> $1$;",
+      "public List<$0$> $1$ = new List<$0$>();",
       type_name(), name());
   AddDeprecatedFlag(writer);
 }

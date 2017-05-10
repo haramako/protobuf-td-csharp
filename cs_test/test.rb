@@ -14,6 +14,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :sint64_value, :sint64, 7
     repeated :repeated_int32, :int32, 10
     repeated :repeated_int64, :int64, 11
+    repeated :repeated_message, :message, 12, "Test.EmbedMessage"
     repeated :packed_int32, :int32, 20
     repeated :packed_int64, :int64, 21
     map :map_value, :int32, :string, 30

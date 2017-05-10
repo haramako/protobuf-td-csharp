@@ -4,7 +4,6 @@ MONO=mono
 .PHONY: test make_test_data
 
 test: test.dll test_data.bin 
-	# $(MONO) test.exe test_data.bin
 	nunit-console4 -nologo test.dll 
 
 test.dll: *.cs ../cs_lib/*.cs
