@@ -1,8 +1,9 @@
 CXX=g++
 SRC=$(wildcard *.cc) 
 OBJ=$(SRC:%.cc=%.o)
-CXXFLAGS=-O2 -I . -I /usr/local/Homebrew/include
-LDFLAGS=-l protobuf -l protoc -L /usr/local/Homebrew/lib
+CXXFLAGS=-O2 -I . -I /usr/local/Homebrew/include -I ../../protobuf/src
+LDFLAGS=-L /usr/local/Homebrew/lib -L ../../protobuf/src
+LIBS=-l protobuf -l protoc 
 PROG=protoc-gen-dfcsharp
 SMCS=/Applications/Unity5.3.4p3/Unity.app/Contents/Frameworks/Mono/bin/smcs
 
@@ -15,7 +16,7 @@ default: $(PROG)
 	$(CXX) -c $< $(CXXFLAGS)
 
 $(PROG): $(OBJ)
-	$(CXX) -o $(PROG) $(CXXFLAGS) $(LDFLAGS) $(OBJ)
+	$(CXX) -o $(PROG) $(CXXFLAGS) $(LDFLAGS) $(OBJ) $(LIBS)
 
 clean:
 	rm -rf *.o $(PROG)
