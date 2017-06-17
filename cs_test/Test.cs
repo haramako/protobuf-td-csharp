@@ -24,7 +24,7 @@ namespace Test {
   #region Messages
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class TestMessage : pb.Message {
-    private TestMessage() { }
+    public TestMessage() { }
     public static TestMessage CreateInstance() { var obj = new TestMessage(); obj.Finish(); return obj; }
     public static TestMessage CreateEmpty() { return new TestMessage(); }
     private static readonly TestMessage defaultInstance = new TestMessage();
@@ -37,7 +37,7 @@ namespace Test {
     public static partial class Types {
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
       public sealed partial class MapValueEntry : pb.Message {
-        private MapValueEntry() { }
+        public MapValueEntry() { }
         public static MapValueEntry CreateInstance() { var obj = new MapValueEntry(); obj.Finish(); return obj; }
         public static MapValueEntry CreateEmpty() { return new MapValueEntry(); }
         private static readonly MapValueEntry defaultInstance = new MapValueEntry();
@@ -135,17 +135,19 @@ namespace Test {
 
     public long Sint64Value;
 
+    public pb::ByteString BytesValue = pb::ByteString.Empty;
+
     public List<int> RepeatedInt32 = new List<int>();
 
     public List<long> RepeatedInt64 = new List<long>();
 
-    public List<global::Test.EmbedMessage> RepeatedMessage;
+    public List<global::Test.EmbedMessage> RepeatedMessage = new List<global::Test.EmbedMessage>();
 
     public List<int> PackedInt32 = new List<int>();
 
     public List<long> PackedInt64 = new List<long>();
 
-    public List<global::Test.TestMessage.Types.MapValueEntry> MapValue;
+    public List<global::Test.TestMessage.Types.MapValueEntry> MapValue = new List<global::Test.TestMessage.Types.MapValueEntry>();
 
     #region Lite runtime methods
     #endregion
@@ -172,6 +174,9 @@ namespace Test {
       }
       if (Sint64Value != 0L) {
         output.WriteSInt64(7, Sint64Value);
+      }
+      if (BytesValue != pb::ByteString.Empty) {
+        output.WriteBytes(8, BytesValue);
       }
       if (RepeatedInt32.Count > 0) {
         output.WritePackedInt32Array(10, RepeatedInt32);
@@ -221,6 +226,9 @@ namespace Test {
       }
       if (Sint64Value != 0L) {
         size += pb::CodedOutputStream.ComputeSInt64Size(7, Sint64Value);
+      }
+      if (BytesValue != pb::ByteString.Empty) {
+        size += pb::CodedOutputStream.ComputeBytesSize(8, BytesValue);
       }
       {
         int dataSize = 0;
@@ -326,6 +334,10 @@ namespace Test {
             input.ReadSInt64(ref this.Sint64Value);
             break;
           }
+          case 66: {
+            input.ReadBytes(ref this.BytesValue);
+            break;
+          }
           case 82:
           case 80: {
             input.ReadInt32Array(tag, this.RepeatedInt32);
@@ -387,7 +399,7 @@ namespace Test {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class EmbedMessage : pb.Message {
-    private EmbedMessage() { }
+    public EmbedMessage() { }
     public static EmbedMessage CreateInstance() { var obj = new EmbedMessage(); obj.Finish(); return obj; }
     public static EmbedMessage CreateEmpty() { return new EmbedMessage(); }
     private static readonly EmbedMessage defaultInstance = new EmbedMessage();

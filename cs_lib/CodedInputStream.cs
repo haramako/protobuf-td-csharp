@@ -362,6 +362,30 @@ namespace Google.ProtocolBuffers
         }
 
         /// <summary>
+        /// Reads a bytes field value from the stream.
+        /// </summary>   
+        public bool ReadBytes(ref ByteString value)
+        {
+            int length = (int) ReadRawVarint32();
+            if (length <= bufferSize - bufferPos && length > 0)
+            {
+                // Fast path:  We already have the bytes in a contiguous buffer, so
+                //   just copy directly from it.
+                ByteString result = ByteString.CopyFrom(buffer, bufferPos, length);
+                bufferPos += length;
+				value = result;
+				return true;
+            }
+            else
+            {
+                // Slow path:  Build a byte array and attach it to a new ByteString.
+                var result = ByteString.AttachBytes(ReadRawBytes(length));
+				value = result;
+				return true;
+            }
+        }
+
+        /// <summary>
         /// Reads an embedded message field value from the stream.
         /// </summary>   
         public void ReadMessage(Message builder)

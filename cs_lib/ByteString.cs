@@ -301,5 +301,22 @@ namespace Google.ProtocolBuffers
         {
             outputStream.Write(bytes, 0, bytes.Length);
         }
+
+
+		// ====================================
+		// JSONFormater用に足したメソッド群
+		// これがないとコンパイルが通らないため作成したもので、実際に使うことはないはずのもの
+		// ====================================
+		
+		// TODO: そのうちちゃんとする
+        public void Add(byte value)
+        {
+			throw new Exception("not implemented");
+        }
+		
+		public ByteString()
+        {
+            this.bytes = new byte[0];
+        }
     }
 }

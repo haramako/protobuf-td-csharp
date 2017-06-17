@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="test.dll" total="2" failures="0" not-run="0" date="2016-09-03" time="20:11:27">
-  <environment nunit-version="2.4.8.0" clr-version="4.0.30319.17020" os-version="Unix 15.6.0.0" platform="Unix" cwd="/Users/makoto/protobuf-td-csharp/cs_test" machine-name="macoto2.local" user="makoto" user-domain="macoto2.local" />
+<test-results name="test.dll" total="2" failures="0" not-run="0" date="2017-06-17" time="19:49:08">
+  <environment nunit-version="2.4.8.0" clr-version="4.0.30319.42000" os-version="Unix 16.5.0.0" platform="Unix" cwd="/Users/makoto/protobuf-td-csharp/cs_test" machine-name="macoto2.local" user="makoto" user-domain="macoto2.local" />
   <culture-info current-culture="ja-JP" current-uiculture="ja-JP" />
-  <test-suite name="test.dll" success="True" time="0.120" asserts="0">
+  <test-suite name="test.dll" success="True" time="0.408" asserts="0">
     <results>
-      <test-suite name="Test" success="True" time="0.117" asserts="0">
+      <test-suite name="Test" success="True" time="0.386" asserts="0">
         <results>
-          <test-suite name="ProgocolBufferTest" success="True" time="0.110" asserts="0">
+          <test-suite name="ProgocolBufferTest" success="True" time="0.368" asserts="0">
             <results>
-              <test-case name="Test.ProgocolBufferTest.EmptyMessage" executed="True" success="True" time="0.099" asserts="1" />
-              <test-case name="Test.ProgocolBufferTest.SimpleMessage" executed="True" success="True" time="0.006" asserts="1" />
+              <test-case name="Test.ProgocolBufferTest.EmptyMessage" executed="True" success="True" time="0.320" asserts="1" />
+              <test-case name="Test.ProgocolBufferTest.SimpleMessage" executed="True" success="True" time="0.030" asserts="1" />
             </results>
           </test-suite>
         </results>

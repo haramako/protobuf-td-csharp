@@ -58,6 +58,8 @@ namespace Test
 			mes.Sint32Value = -5;
 			mes.Sint64Value = -6;
 
+			mes.BytesValue = ByteString.CopyFrom(new byte[]{1,2,3});
+
 			mes.MessageValue = EmbedMessage.CreateInstance();
 
 			mes.RepeatedInt32 = new List<int>(){11,12,13};
