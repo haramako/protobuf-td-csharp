@@ -334,6 +334,7 @@ void MessageGenerator::GenerateBuilderParsingMethods(Writer* writer) {
   writer->WriteLine("  if (pb::WireFormat.IsEndGroupTag(tag)) {");
   writer->WriteLine("    return;");  // it's an endgroup tag
   writer->WriteLine("  }");
+  writer->WriteLine("  input.SkipField(); // unknown field");
   writer->WriteLine("  break;");
   writer->WriteLine("}");
 

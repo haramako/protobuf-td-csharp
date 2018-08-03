@@ -1,6 +1,6 @@
 # SMCS=/Applications/Unity5.3.4p3/Unity.app/Contents/Frameworks/Mono/bin/smcs
 SMCS2=/Applications/Unity5.5.0p1/Unity.app/Contents/Mono/bin/smcs
-SMCS=mcs
+SMCS=C:/Windows/Microsoft.NET/Framework/v4.0.30319/csc.exe
 
 test:
 	$(SMCS) cs_test/*.cs
