@@ -58,7 +58,7 @@ func TestGolden(t *testing.T) {
 
 	// Compile each package, using this binary as protoc-gen-go.
 	for _, sources := range packages {
-		args := []string{"-Itestdata2", "--go_out=plugins=grpc,paths=source_relative:" + workdir}
+		args := []string{"-Itestdata", "--go_out=plugins=grpc,paths=source_relative:" + workdir}
 		args = append(args, sources...)
 		protoc(t, args)
 	}
