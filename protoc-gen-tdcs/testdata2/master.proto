@@ -1,748 +1,2470 @@
-syntax = "proto3";
 /**
- * ドラゴンファング マスターデータ定義
+ * マスターデータ定義
+ *
+ * このファイルは、Tools/Protocols/master.proto で定義されている。
+ *
+ * ドキュメントを補足したい場合は、このファイルを編集すること
+ *
+ *
+ *
+ * ここで定義されたデータは、マスターデータに入る、もしくは、他のプロトコルから参照されるものである。
  */
-package Master;
+syntax = "proto3";
 
-enum Property {
-	NONE = 0;
-	FIRE = 1;
-	WATER = 2;
-	TREE = 3;
-	LIGHT = 4;
-	DARK = 5;
-}
+package Master;
 
 message PbxHeader {
 	map<int32,int32> int_index = 1;
 	map<string,int32> string_index = 2;
 }
 
-message PresentCommand {
-	message StackItem {
-		int32 id = 1;
-		int32 num = 2;
-	}
-
-	message Fang {
-		int32 card_id = 1;
-		int32 level = 2;
-		int32 num = 3;
-	}
-
-	message Armament {
-		int32 arm_id = 1;
-		int32 level = 2;
-		int32 fixed_hp = 3;
-		int32 fixed_attack = 4;
-		int32 fixed_defense = 5;
-		int32 soul_id0 = 6;
-		int32 soul_level0 = 7;
-		int32 slot_num = 8;
-		int32 num = 9;
-	}
-
-	int32 emerald = 1;
-	int32 gold = 2;
-	int32 scale = 3;
-	repeated StackItem stack_items = 4;
-	repeated Fang cards = 5;
-	repeated Armament arms = 6;
-}
-
-// ファング情報
-message FangTemplate {
-
-	message StackItemBonus {
-		int32 dummy = 1;
-	}
-
-	int32 id = 1;
-	string name = 2;
-	int32 rarity = 3;
-	int32 growth_type = 4;
-	int32 enemy_no = 5;
-	string property = 6; // TODO
-	int32 brave_guage = 7;
-	int32 base_hp = 8;
-	int32 base_attack = 9;
-	int32 base_defense = 10;
-	int32 max_level = 11;
-	int32 max_hp = 12;
-	int32 max_attack = 13;
-	int32 max_defense = 14;
-	int32 burst_hp_rate = 15;
-	int32 skill_id = 16;
-	int32 pskill_id = 17;
-	int32 pvp_skill_id = 18;
-	int32 pvp_soul_id = 19;
-	int32 gold = 20;
-	int32 plus_exp = 21;
-	string serif = 22;
-	int32 cost = 23;
-	int32 burst_cost = 24;
-	bool unuse = 25;
-	repeated string limit_break_type = 26;
-	int32 limit_break_item = 27;
-	int32 default_plus_hp = 28;
-	int32 default_plus_attack = 29;
-	int32 default_plus_defense = 30;
-	string special_text = 31;
-	int32 plus_skill_exp = 32;
-	int32 plus_skill_rarity = 33;
-	bool no_plus_skill_property_bonus = 34;
-	repeated string attribute = 35;
-	map<string,float> stack_item_bonus = 36;
-	map<string,float> drop_stack_item_bonus = 37;
-	string open_at = 38;
-	string special_label = 39;
-	int32 plus_luck = 40;
-
-	int32 weapon_ability_id = 41;
-	int32 shield_ability_id = 42;
-	int32 point = 43;
-
-	string pvp_attribute0 = 44;
-	string pvp_attribute1 = 45;
-	string pvp_attribute2 = 46;
-	string pvp_attribute3 = 47;
-	string pvp_attribute4 = 48;
-	repeated string auto_type = 49;
-}
-
-message ActionSkill {
-	int32 id = 1;
-	string name = 2;
-	string param = 3;
-	string burst_param = 4;
-	int32 base_turn = 5;
-	int32 level_max = 6;
-	int32 skill_level_rate = 7;
-	int32 skill_level_rate2 = 8;
-	string desc = 9;
-	string burst_desc = 10;
-	string desc2 = 11;
-	string burst_desc2 = 12;
-	string memo1 = 13;
-	string memo2 = 14;
-}
-
-message PassiveSkill {
-	int32 id = 1;
-	string name = 2;
-	bool is_json = 3;
-	string type = 4;
-	string param = 5;
-	int32 pow = 6;
-	string burst_param = 7;
-	int32 burst_pow = 8;
-	int32 pvp_soul_no = 9;
-	string desc = 10;
-	string burst_desc = 11;
-	string desc2 = 12;
-	string burst_desc2 = 13;
-	string memo1 = 14;
-	string memo2 = 15;
-}
-
-message PvpSkill {
-	int32 id = 1;
-	string name = 2;
-	string param = 3;
-	int32 charge = 4;
-	int32 charge_turn = 5;
-	string skill_type_icon = 6;
-	string skill_type = 7;
-	string give_target = 8;
-	int32 give_amount = 9;
-	string desc = 10;
-	string desc2 = 11;
-	string memo1 = 12;
-}
-
-message PvpSoul {
-	int32 id = 1;
-	string name = 2;
-	string param = 3;
-	string target = 4;
-	int32 prob = 5;
-	bool is_jewel = 6;
-	string desc = 7;
-	string desc2 = 8;
-	string game_desc = 9;
-}
-
-message PvpAttribute {
-	string id = 1;
-	string name = 2;
-	string desc = 3;
-	string image = 4;
-}
-
-message HomeLevel {
-	int32 level = 1;
-	int32 exp = 2;
-	int32 stamina_max = 3;
-	int32 cost_max = 4;
-	int32 image_base = 5;
-	int32 image_object = 6;
-}
-
-message MonsterLevel {
-	int32 level = 1;
-	int32 exp = 2;
-	int32 dummy = 3; /// サイズ0のデータがあると問題があるため、その対策に入れただけのフィールド
-}
-
-message FangDrop {
-	int32 id = 1;
-	string enemy_id0 = 2;
-	int32 level0 = 3;
-	int32 rate0 = 4;
-	string enemy_id1 = 5;
-	int32 level1 = 6;
-	int32 rate1 = 7;
-	string enemy_id2 = 8;
-	int32 level2 = 9;
-	int32 rate2 = 10;
-	string enemy_id3 = 11;
-	int32 level3 = 12;
-	int32 rate3 = 13;
-	string enemy_id4 = 14;
-	int32 level4 = 15;
-	int32 rate4 = 16;
-}
-
-message LimitBreakType {
-	string id = 1;
-	string name = 2;
-	repeated int32 hp = 3;
-	repeated int32 attack = 4;
-	repeated int32 defense = 5;
-	repeated int32 items0 = 6;
-	repeated int32 items1 = 7;
-	repeated int32 items2 = 8;
-	repeated int32 items3 = 9;
-	repeated int32 items4 = 10;
-	repeated int32 items5 = 11;
-}
-
-message StackItemTemplate {
-	int32 id = 1;
-	string type = 2;
-	string special = 3;
-	int32 param = 4;
-	string name = 5;
-	string desc = 6;
-	int32 order = 7;
-}
-
-message ExchangeShop {
-	int32 id = 1;
-	int32 season = 2;
-	string name = 3;
-	int32 stack_item_id = 4;
-	string desc = 5;
-	string option = 6; 
-}
-
-message ExchangeItem {
-	int32 id = 1;
-	int32 exchange_shop_id = 2;
-	string name = 3;
-	string image = 4;
-	string action = 5;
-	int32 price = 6;
-	int32 limit =  7;
-}
-
-message EmeraldShopItem {
-	string id = 1;
-	string name = 2;
-	string desc = 3;
-	int32 stack_item_id = 4;
-	int32 order = 5;
-	int32 price = 6;
-	int32 require_home_level = 7;
-	string action = 8;
-}
-
-message PackItem {
-	string id = 1;
-	string product_id = 2;
-	string name = 3;
-	string image = 4;
-	int32 price = 5;
-}
-
-message PresentTemplate {
-	string id = 1;
-	string name = 2;
-	string message = 3;
-	string action = 4;
-}
-
-
-message PvpLeague {
-	int32 id = 1;
-	string name = 2;
-}
-
-message PvpGrade {
-	int32 id = 1;
-	string name = 2;
-	int32 plate = 3;
-	int32 promote_point = 4;
-	int32 depromote_point = 5;
-	PresentCommand reward = 6;
-	string reward_desc = 7;
-	int32 matching_up = 8;
-	int32 coin_win = 9;
-	int32 coin_lose = 10;
-}
-
-message PvpUnificationRule {
-	int32 id = 1;
-	string name = 2;
-	string cond = 3;
-	int32 pvp_soul_no = 4;
-	string effect = 5;
-	int32 override_id = 6;
-	bool anywhere = 7;
-}
-
-message QuestTemplate {
-	int32 id = 1;
-	string kind = 2;
-	string title = 3;
-	string desc = 4;
-	string cond_stat = 5;
-	int32 cond_num = 6;
-	int32 require_id = 7;
-	int32 effect = 8;
-	string override_url = 9;
-	bool jump_anytime = 10;
-	PresentCommand reward = 11;
-}
-
-message UserStatTemplate {
-	int32 id = 1;
-	string name = 2;
-	string desc = 3;
-	string url = 4;
-}
-
-message LoginSheet {
-	string id = 1;
-	string name = 2;
-	int32 order = 3;
-	string disabled_at = 4;
-}
-
-message LoginBonus {
-	int32 id = 1;
-	string sheet_id = 2;
-	string message_ = 3;
-	PresentCommand action = 4;
-}
-
-message SpecialCutinOption {
-	string id = 1;
-	string title = 2;
-	string message = 3;
-	string move_to = 4;
-	int32 pose = 5;
-	string next_url = 6;
-	string option_str = 7;
-}
-
-message SoundList {
-	string name = 1;
-	string filename = 2;
-	string volume_type = 3;
-	int32 volume = 4;
-	int32 pitch = 5;
-	bool preload = 6;
-	bool loop = 7;
-	string destroy_type = 8;
-	string overlap_type = 9;
-	bool preload_scene_title = 10;
-	bool preload_scene_home = 11;
-	bool preload_scene_game = 12;
-	bool preload_scene_result = 13;
-	bool preload_scene_pvp = 14;
-}
-
-message Enemy {
-	int32 id = 1;
-	string name = 2;
-	int32 card_id = 3;
-	string race_type = 4;
-	string attribute = 5;
-	string driver_param = 6;
-	int32 hit_point = 7;
-	int32 agility = 8;
-	int32 attack_rate = 9;
-	int32 attack_dice = 10;
-	int32 attack_count = 11;
-	int32 attack_adjust = 12;
-	string attack_sound_name = 13;
-	int32 critical_damage_rate = 14;
-	string enchant_attack_name = 15;
-	int32 enchant_attack_status_rate = 16;
-	string enchant_attack_command = 17;
-	string enchant_attack_sound_name = 18;
-	string skill_attack_name = 19;
-	int32 skill_attack_rate = 20;
-	string skill_attack_command = 21;
-	string skill_attack_sound_name = 22;
-	int32 defense_dice = 23;
-	int32 defense_count = 24;
-	int32 defense_adjust = 25;
-	string defense_sound_name = 26;
-	string enchant_defense_name = 27;
-	int32 enchant_defense_status_rate = 28;
-	string enchant_defense_command = 29;
-	string enchant_defense_sound_name = 30;
-	int32 critical_lots_count = 31;
-	int32 critical_hit_rate = 32;
-	int32 experience = 33;
-	string dead_sound_name = 34;
-	string drop_item255 = 35;
-	string drop_fang255 = 36;
-	string drop_gold = 37;
-	int32 sleep_rate = 38;
-	int32 deepsleep_rate = 39;
-	int32 move_wait_counter = 40;
-	int32 move_additonal_tactical_point = 41;
-	int32 attack_additional_tactical_point = 42;
-	int32 prefab_id = 43;
-	string property = 44;
-	string extra_data = 45;
-	int32 have_item_no = 46;
-}
-
-message Item {
-	int32 id = 1;
-	int32 sort_id = 2;
-	string item_code = 3;
-	string mapchip = 4;
-	string name = 5;
-	string type = 6;
-	string fitting_type = 7;
-	string attribute = 8;
-	string param = 9;
-	int32 attack_adjust = 10;
-	int32 defense_adjust = 11;
-	int32 cirtical_hit_rate = 12;
-	int32 durability = 13;
-	int32 merge_count = 14;
-	int32 rarity = 15;
-	int32 price = 16;
-	string sound_name = 17;
-	bool is_pickup = 18;
-	bool is_swing = 19;
-	bool is_use = 20;
-	bool is_drop = 21;
-	bool is_exclusive = 22;
-	string extra_type = 23;
-	string description = 24;
-	int32 stack_item_id = 25;
-	int32 stack_item_num = 26;
-	int32 dummy_item_name_no = 27;
-	bool is_in_ex_item = 28;
-	bool is_shot = 29;
-}
-
-message ItemName {
-	int32 id = 1;
-	string name = 2;
-}
-
-message ItemNameDict {
-	message List {
-		repeated ItemName list= 1;
-	}
-	map<string,List> dict = 1;
-}
-
-message Trap {
-	int32 id = 1;
-	string trap_code = 3;
-	string name = 2;
-	string driver_name = 4;
-	string driver_parameter = 5;
-	int32 probability = 6;
-	string soundName = 7;
-	// string memo = 8;
-}
-
-message StringData {
+/**
+ * 変換メッセージ
+ */
+message I18nMessage {
 	string id = 1;
 	string text = 2;
-}
-
-message SoloDuel {
-	int32 stage_id = 1;
-	int32 enemy_no = 2;
-	int32 level = 3;
-	int32 fang_id = 4;
-	int32 hp = 5;
-	int32 attack = 6;
-	int32 defense = 7;
-	int32 exp = 8;
-}
-
-message RoomInfo {
-	string id = 1;
-	int32 width = 2;
-	int32 height = 3;
-	int32 attribute = 4;
-	int32 direction = 5;
-}
-
-message EnemyAnim {
-	int32 id = 1;
-	int32 attack_distance_id = 2;
-	int32 attack_anim_id = 3;
-	int32 special_distance_id = 4;
-	int32 special_anim_id = 5;
-	float duration = 6;
-	int32 height_offset = 7;
-}
-
-message EnemyAnimDistance {
-	int32 id = 1;
-	repeated int32 table = 2;
-}
-
-message EnemyAnimSprite {
-	int32 id = 1;
-	repeated string table = 2;
-}
-
-message ArmamentTemplate {
-	int32 id = 1;
-	string name = 2;
-	int32 rarity = 3;
-	string kind = 4;
-	string property = 5;
-	int32 max_level = 6;
-	int32 base_hp = 7;
-	int32 base_attack = 8;
-	int32 base_defense = 9;
-	string soul_pattern = 10;
-	int32 open_slot_rate = 11;
-	int32 point = 12;
-	int32 gold = 13;
-	int32 status_distribute = 14;
-	int32 image_id = 15;
-	string hit_effect = 16;
-}
-
-message AbilityTemplate {
-
-	enum Special {
-		NONE_TYPE = 0; // C++用コード生成のワーニング対策のためユニークな名前にしている
-		// 攻撃
-		ATTACK_UP = 1;     /// 攻撃属性(5属性／5種族) 割合
-		ON_ATTACK = 2;     /// 攻撃した時(状態異常)
-		ON_KILLED = 3;     /// 攻撃して倒した時(回復)
-		ATTACK_UP_ABS = 4; /// 攻撃属性(5属性／5種族) 即値
-		// 防御
-		DEFENSE_UP = 11;      /// 防御属性(5属性／5種族) 割合
-		GUARD = 12;           /// 攻撃される時
-		PROTECT = 13;         /// 攻撃された時(状態異常)
-		ON_DAMAGE = 14;       /// 攻撃されてダメージを受けた時(回復)
-		DEFENSE_UP_ABS = 15; /// 防御属性(5属性／5種族) 即値
-	}
-
-	enum Param {
-		NONE_TARGET = 0; // C++用コード生成のワーニング対策のためユニークな名前にしている
-		// 5属性
-		FIRE = 1;
-		WATER = 2;
-		TREE = 3;
-		LIGHT = 4;
-		DARK = 5;
-		// 5種族
-		DEMON = 6;
-		GOD = 7;
-		DEMIHUMAN = 8;
-		DRAGON = 9;
-		SPIRIT = 10;
-		// 回復
-		HEAL = 11;
-		BURST = 12;
-		CHARGE_SKILLL = 13;
-		// 状態異常
-		SLEEP = 14;
-		CONFUSE = 15;
-		BLIND = 16;
-		BIND = 17;
-		POISON = 18;
-		ACID = 19;
-		SLOW = 20;
-		SLEEP_PARALYSIS = 21;
-		ALL = 22;
-	}
-
-	int32 id = 1;
-	string name = 2;
-	int32 rarity = 3;
-	string type = 4;
-	float base_num = 7;
-	float max_num = 8;
-	int32 max_level = 9;
-	string desc = 10;
-	string desc2 = 11;
-	Special special = 12;
-	Param param = 13;
-	string log_text_id = 14;
-	int32 turn = 15;
-	string json = 16;
-	string kind = 17;
-}
-
-// アニメーションデータ
-message MapAnimation {
-	message Anim {
-		repeated int32 items = 1;
-	}
-	string id = 1;
-	map<int32,Anim> animation = 2;
-	map<int32,Anim> eventAnimation = 3;
-}
-
-// Mapデータのインデックス
-message MapIndex {
-	int32 stage_id = 1;
-	repeated string filename = 2;
-}
-
-message AreaData {
-	int32 id = 1;
-	string name = 2;
-	int32 max_dungeon = 3;
-	int32 start_dungeon_id = 4;
-	string property = 5;
-	string kind = 6;
-	int32 stack_item_id = 7;
-	int32 unlock_stack_item_id = 8;
-	int32 unlock_stack_item_num = 9;
-	int32 require_stack_item_id = 10;
-	int32 unlock_time = 11;
-	int32 unlock_home_level = 12;
-	int32 exchange_id = 13;
-	string info_url = 14;
-	int32 banner_height = 15;
-	int32 season = 16;
-}
-
-message DungeonData {
-	int32 id = 1;
-	string description = 2;
-	int32 next_dungeon_id = 3;
-	int32 max_stage = 4;
-	int32 start_stage_id = 5;
-	string property = 6;
-	int32 stamina = 7;
-	int32 exp = 8;
-	int32 gold_rate = 9;
-	int32 step_rate = 10;
-	int32 burst_rate = 11;
-	int32 max_gold = 12;
-	int32 max_exp = 13;
-	int32 difficulty = 14;
-	int32 recommend_level = 15;
-	int32 pvp_unification_type = 16;
-	string mission = 17;
-	bool no_continue = 18;
-	string stair = 19;
-	int32 satiety = 20;
-	int32 max_satiety = 21;
-	string button_name = 22;
-
-	/*
-	int32 box_treasure_id;
-	int32 bag_treasure_id;
-	int32 escape_box_treasure_id;
-	int32 solo_duel_treasure_id;
-	string pvp_type;
-	*/
-}
-
-message StageData {
-	int32 id = 1;
-	int32 dungeon_id = 2;
-	int32 floor_no = 3;
-	int32 enemy_set_id = 4;
-	int32 item_set_id = 5;
-	int32 trap_set_id = 6;
-	int32 goal_set_id = 7;
-	int32 goal_count = 8;
-	int32 mask_type = 9;
-	string next_stage_param = 10;
-	string stage_title = 11;
-	string driver_name = 12;
-	string driver_param = 13;
-	string fixed_room_group_id = 14;
-	string random_room_group_id = 15;
-	string seeds = 16;
-	string base_name = 17;
-	string mapchip_name = 18;
-	string animation_name = 19;
-	string texture_name = 20;
-	string bgm_name = 21;
-	string step_sound_name = 22;
-}
-
-message RoomData {
-	int32 group_id = 1;
-	string tmx_file_name = 2;
-	int32 enemy_lots_count = 3;
-	int32 item_lots_count = 4;
-	int32 trap_lots_count = 5;
-	int32 width = 6;
-	int32 height = 7;
-	string event_command = 8;
-	int32 direction = 9;
-	int32 attribute = 10;
-}
-
-/// ゴールセットデータ
-message GoalSetData {
-	int32 id = 1;
-	repeated string params = 2; /// 各要素(A-Jの１０個まであり得る)
-}
-
-/// セットデータの１要素.
-message StageSetItem {
-	/**
-	 * IDと付加要素を含めた文字列.
-	 * エネミーセットの場合は、"ID" or "ID:倍率"のいずれか形式,
-	 * アイテムセットの場合は、"ID" or "ID,3" or "ID,3~5" のいずれか形式
-	 */
-	string id = 1;
-	int32 num = 2; /// 出現確率
-}
-
-/// エネミー、アイテム、トラップのセットデータ.
-message StageSetList {
-	int32 total = 1; /// 出現確率の分母
-	repeated StageSetItem items = 2; /// 各要素
+	string tag = 3;
+	string variant = 4;
 }
 
 /**
- * エネミー、アイテム、トラップのセットデータ.
+ * メッセージの合成するための情報
  *
- * 一つのステージにだいたい対応する.
- *
- * それぞれの*_setsがA~Jまでの最大１０個のセットデータを格納する。（ない場合は、１０個以下の場合がある）
+ * id1 のメッセージと id2 のメッセージが連続できた場合に、text のメッセージに合成する
  */
-message StageSetData {
+message MessageFusion {
+	string id1 = 1; /// 合成する前段のメッセージ
+	string id2 = 2; /// 合成する後段のメッセージ
+	string text = 3; /// 合成後のメッセージ
+}
+
+enum SettingType {
+	Integer = 0;
+	String = 1;
+	Float = 2;
+}
+
+message ConfigInfo {
+	string id = 1; /// ID
+	string value = 2; /// 値
+	SettingType type = 3; /// 型(int,string)
+	string spec = 4; /// 仕様書用説明
+}
+
+//===========================================
+// キャラクター
+//===========================================
+
+/**
+ * レベルにおける経験値
+ */
+message ExpOfLevel {
+	int32 id = 1; /// レベル
+	int32 exp = 2; /// 次のレベルに必要な経験値
+}
+
+/**
+ * 状態変化.
+ */
+enum CharacterStatus {
+	NoneCharacterStatus = 0; /// なし
+	Snooze = 1; /// 仮眠
+	Semisnooze = 34; /// 半仮眠（部屋に入ったら必ず起きる）
+	Sleep = 2; /// 睡眠
+	Bind = 3; /// 拘束
+	Paralyze = 4; /// かなしばり
+	Confuse = 5; /// 混乱
+	Hallucinate = 6; /// 幻覚
+	Berserk = 7; /// 狂戦士
+	AttackUp = 8; /// 剛力
+	AttackDown = 9; /// 衰弱
+	DefenseUp = 10; /// 強靭
+	DefenseDown = 11; /// 防御ダウン
+	Invincible = 12; /// 無敵
+	Hate = 13; /// 竜香
+	Poison = 14; /// 毒
+	Venom = 15; /// 猛毒
+	Seal = 16; /// 封印
+	Freeze = 17; /// 氷結
+	Waken = 18; /// 覚醒
+	Haste = 19; /// 倍速
+	Bravery = 20; /// 勇敢
+	Slow = 21; /// 鈍足
+	Fang100 = 22; /// 確定牙化
+	ViewTrap = 23; /// 目薬状態
+	ViewAll = 24; /// 千里眼
+	ViewMimic = 25; /// 擬態見破り
+	WaitingBattle = 26; /// 臨戦
+	WaitingPlayer = 27; /// 警備
+	Waiting = 28; /// 待機
+	WaitingFollow = 29; /// 追従準備
+	Follow = 30; /// 追従
+	NoTime = 31; /// 竜の時枯渇
+	Mimic = 32; /// 敵擬態
+	Transparent = 33; /// 透明
+	Regenerate = 35; /// 再生
+	SkillCooldown = 36; /// スキルクールダウン
+	FrogBaloon = 37; /// カエルのプクプク
+	Hide = 38; /// やりすごし
+	Charge = 39; /// ためうち
+}
+
+/**
+ * 複数のステータス
+ */
+enum StatusGroup {
+	NoStatusGroup = 0; /// なにもない
+	AllStatus = 1; /// すべてのステータス
+	GoodStatus = 2; /// よいステータス
+	BadStatus = 3; /// 悪いステータス
+}
+
+/**
+ * 攻撃等の属性
+ */
+enum Element {
+	NoElement = 0; /// 無属性
+	Fire = 1; /// 火属性
+	Water = 2; /// 水属性
+	Wood = 4; /// 木属性
+}
+
+/**
+ * 状態変化の情報
+ */
+message StatusInfo {
 	int32 id = 1;
-	repeated StageSetList enemy_sets = 2; /// エネミーセット(A=0 .. J=9)
-	repeated StageSetList item_sets = 3; /// アイテムセット(A=0 .. J=9)
-	repeated StageSetList trap_sets = 4; /// トラップセット(A=0 .. J=9)
+	string symbol = 2;
+	string name = 3;
+	repeated CharacterStatus overwrite = 4; /// 上書きする状態異常
+	repeated CharacterStatus against = 5; /// 相殺する状態異常	
+	bool decrement = 6; /// 自動減算
+	bool all = 13; /// clear_statusのALLできえる状態異常か（一部の状態異常は、ここにはいれない）
+	bool good = 7; /// 良い状態異常か
+	bool bad = 12; /// 悪い状態異常か
+	bool without_obj = 8; /// 岩無効化
+	string icon = 9; /// （仮）アイコン名
+    bool has_image = 21; /// アイコンがあるかどうか
+	bool inherite = 10; /// 進化/退化の引き継ぎ
+	bool animation_stop = 17;
+	string spec = 11; /// 仕様書の説明文
+	string message_on = 14; /// 状態異常になった時のメッセージ（空の場合は、表示されない）
+	string message_off = 15; /// 状態異常が終了した時のメッセージ（空の場合は、表示されない）
+	string desc = 16; /// 説明文
+	bool without_player = 18; /// プレイヤーには無効
+	bool without_monster = 19; /// モンスターには無効
+	string hit_effect = 20; /// 効果が出たときに再生するエフェクト
+}
+
+/**
+ * アイテムの種類の情報
+ */
+message ItemTypeInfo 
+{
+	int32 id = 1;
+	string symbol = 2;
+	string name = 3;
+	int32 unrevealed_price = 4;
+	string spec = 5;
+}
+
+
+message Ability {
+	int32 type = 1;
+}
+
+/**
+ * ソウルの発動条件タイプ
+ *
+ * データを記述する場合は、スネークケースで記述する必要があるので注意すること。
+ *
+ * "on_" で始まるものは、スキル系ソウルで契機でスキルを発動するもの。
+ * "with_"で始まるものは、フィルタ系ソウルで条件を満たしていると数値や確率が上昇するもの。
+ */
+enum SoulCondType {
+	SouldCondNone = 0; ///
+	
+	/**
+	 * ブレイブウェポン
+	 *
+	 * Ｂ[値1]以上の時に、通常攻撃を指定のスキルに上書く
+	 * (指定の剣カテゴリ、指定の盾カテゴリでのみ発動にも対応)
+	 *
+	 */
+	OnBraveWeapon = 1;
+
+	/**
+	 * ブレイブソウル(シールド)
+	 *
+	 * Ｂ[値1]以上の時に指定のソウル効果を追加する(指定の剣カテゴリ、指定の盾カテゴリでのみ発動にも対応)
+	 *
+	 * [TODO:harada] 未作成
+	 */
+	WithBraveSoul = 2;
+
+	/**
+	 * ブレイブチェイン
+	 * 
+	 * Ｂ[値1]以上にＢが増加したタイミング(1ターン1回)で指定のスキルが発動する
+	 *
+	 * [TODO:harada] 未作成
+	 */
+	OnBraveChain = 3;
+
+	/**
+	 * ブレイブアタッカー
+	 * 
+	 * Ｂ[値1]以上の時に移動時に指定のスキルを発動する	
+	 *
+	 * [TODO:harada] 未作成
+	 */
+	OnBraveAttack = 4;
+
+	/**
+	 * カウンター
+	 *
+	 * 指定の属性の攻撃を受けた際に、指定のスキルを発動する
+	 * 主人公ならＢ[値1]以上の時のみ発動する.
+	 *
+	 */
+	OnCounter = 5;
+
+	/**
+	 * 付与
+	 *
+	 * 通常攻撃の範囲に、指定のスキル効果を付与する
+	 * 主人公ならＢ[値1]以上の時のみ発動する.
+	 *
+	 */
+	OnEnchant = 6;
+
+	/**
+	 * 追撃
+	 *
+	 * 通常攻撃の後に、指定のスキルを発動する	
+	 * 主人公ならＢ[値1]以上の時のみ発動する.
+	 *
+	 * また、素振り（武器の攻撃範囲にキャラクターがいない）場合は、発動しない
+	 */
+	OnAfterAttack = 7;
+
+	/**
+	 * 死亡時発動
+	 *
+	 * 死亡時に指定のスキルを発動する
+	 *
+	 * opt に cancel_dying を指定すると、死亡をキャンセルする
+	 * 
+	 */
+	OnDie = 8;
+
+	/**
+	 * フロア開始時発動
+	 */
+	OnStartFloor = 9;
+
+	/**
+	 * 話しかけられた際に発動するスキル
+	 */
+	OnTalked = 28;
+
+	/**
+	 * フロアに生成された際にスキル発動する
+	 */
+	OnSpawned = 30;
+
+	/**
+	 * 死亡後発動
+	 *
+	 * 消滅したあとに指定のスキルを発動する
+	 */
+	OnAfterDie = 34;
+
+	/**
+	 * 特定のダメージの閾値で発動
+	 *
+	 * [値2]のダメージを超えられた後に、特定のスキルを発動する
+	 * opt: repeat が指定された場合は、特定のダメージ事に発動する
+	 * 
+	 */
+	OnDamageOver = 36;
+	 
+	/**
+	 * 撃破時発動
+	 *
+	 * なにかを殺したあとに指定のスキルを発動する
+	 */
+	OnKill = 37;
+
+	/**
+	 * アイテムのターン経過で発動
+	 */
+	OnItemTurn = 39;
+	 
+	/**
+	 * アイテムのターン経過で発動
+	 */
+	OnItemStep = 44;
+
+	/**
+	 * スキル発動後に発動
+	 */
+	OnAfterSkill = 42;
+	 
+	/**
+	 * 自然治癒力アップ
+	 *
+	 * 指定した数値だけ自然治癒力がアップする。
+	 * 単位は1/10パーセントで、10を指定すると 1% 回復量が上がる
+	 */
+	WithTimeCureUp = 10; /// 自然回復力アップ
+
+	/**
+	 * 耐性
+	 *
+	 * 指定の状態異常(スキル効果)を値１％で無効化する	
+	 */
+	WithProtect = 11;
+
+	/**
+	 * 悪い耐性を防ぐ
+	 *
+	 * 悪い状態異常をBxNum%で防ぐ
+	 */
+	WithProtectBad = 20;
+	
+	/**
+	 * ふき飛ばし耐性
+	 * 
+	 * ふき飛ばしの残距離が1/(値１+1)に変換する
+	 *
+	 * [TODO:harada] 未作成
+	 */
+	WithProtectBlowback = 13;
+
+	/**
+	 * クリティカル率アップ
+	 *
+	 * 指定の確率だけクリティカル確率アップ
+	 */
+	WithCriticalUp = 18;
+	
+	/**
+	 * 罠回避
+	 *
+	 * 指定の確率で罠回避
+	 *
+	 */
+	WithProtectTrap = 14;
+
+	/**
+	 * ダメージカット
+	 *
+	 * 指定の属性の割合だけダメージカット
+	 * 指定の状態異常のターン数を1/(値１+1)に変換する
+	 *
+	 */
+	WithCutDown = 15;
+
+	/**
+	 * ダメージアップ
+	 *
+	 * 発動タイプ: フィルタ
+	 *
+	 * ダメージアップ
+	 */
+	WithDamageUp = 16;
+
+	/**
+	 * ダメージ現象
+	 *
+	 * ダメージダウン
+	 */
+	WithDamageDown = 19;
+	
+	/**
+	 * ブレイブ減少回避
+	 * 
+	 * 値１の確率でブレイブが減少しない
+	 *
+	 * [TODO:harada] 未作成
+	 */
+	WithBraveDown = 17;
+
+	/**
+	 * HP上昇
+	 * 
+	 * 値２の値だけHPが上昇する
+	 */
+	WithHpUp = 21;
+
+	/**
+	 * 攻撃力上昇
+	 * 
+	 * 値２の値だけ攻撃力が上昇する
+	 */
+	WithAttackUp = 22;
+	
+	/**
+	 * 防御力上昇
+	 * 
+	 * 値２の値だけ防御力が上昇する
+	 */
+	WithDefenseUp = 23;
+	
+	/**
+	 * 矢攻撃力上昇
+	 *
+	 * 値２の値だけ矢攻撃力が上昇する
+	 */
+	WithArrowAttackUp = 24;
+	
+	/**
+	 * 矢筒上昇
+	 * 
+	 * 値２の値だけ矢の最大数が上昇する
+	 */
+	WithArrowMaxUp = 26;
+
+	/**
+	 * ダメージを１限定にする
+	 * 
+	 */
+	WithDamageOnlyOne = 27;
+
+	/**
+	 * 窃盗耐性
+	 * 
+	 */
+	WithProtectStealItem = 29;
+
+	/**
+	 * 爆破耐性
+	 * 
+	 */
+	WithProtectExplosion = 31;
+
+	/**
+	 * 杖魔法反射
+	 * 
+	 */
+	WithReflectMagic = 32;
+
+	/**
+	 * 弓矢無効
+	 * 
+	 */
+	WithProtectArrow = 33;
+
+	/**
+	 * 命中率アップ
+	 * 
+	 */
+	WithHitUp = 35;
+
+	/**
+	 * 矢の効果を変える
+	 * 
+	 */
+	WithShotArrow = 38;
+
+	/**
+	 * 一定の確率で再攻撃を行う
+	 */
+	 WithRepeatAttack = 40;
+
+	/**
+	 * 一定の確率で杖の使用回数が減らない
+	 */
+	 WithNoHurtStaff = 43;
+
+	/**
+	 * 忍び足（モンスターを起こしにくくなる）
+	 */
+	 WithSneak = 45;
+
+	/**
+	 * 死んでも生き返る
+	 */
+	 WithResurrection = 46;
+
+	/**
+	 * 炎属性攻撃のダメージをNum％カットする
+	 */
+	 WithProtectFireAttack = 47;
+
+	/**
+	 * 移動系のスキルを無効にする
+	 */
+	 WithProtectMoveSkill = 48;
+
+	/**
+	 * レベルアップ時に発動
+	 */
+	OnLevelUp = 49;
+
+	/**
+	 * レベルダウン時に発動
+	 */
+	OnLevelDown = 50;
+
+	/**
+	 * 生成される装備品が高レベルになる
+	 */
+	WithBlacksmith = 51;
+
+	/**
+	 * アイテムが識別済みになる
+	*/
+	WithAppraiser = 52;
+
+	/**
+	 * ゴールドを拾ったときの取得金額が増える
+	*/
+	WithGoldUp = 53;
+
+	/**
+	 * 武器を振ったあとに発動
+	*/
+	OnSwing = 54;
+
+	/**
+	 * 攻撃が外れたときに発動
+	*/
+	OnAttackMiss = 55;
+
+	/**
+	 * 取得経験値が増える
+	*/
+	WithExpUp = 56;
+
+	/**
+	 * 特定のキャラから受けるスキル効果を増幅する
+	*/
+	WithGreed = 57;
+
+	/**
+	 * モンスターへの毒のダメージを増やす
+	*/
+	WithAssassin = 58;
+
+	/**
+	 * 杖を振ったときに発動
+	*/
+	OnSwingStaff = 59;
+
+	/**
+	 * 薬を飲んだときに発動
+	*/
+	OnDrinkPotion = 60;
+
+	/**
+	 * 書を読んだときに発動
+	*/
+	OnReadBook = 61;
+}
+
+/**
+ * ソウル
+ *
+ *
+ */
+message Soul {
+	enum SoulOption {
+		None = 0; /// 特に指定なし
+		CancelDying = 1; /// OnDieのみで使用、死亡をキャンセルする
+		Repeat = 2; /// OnDamageOverのみで使用する、複数回発動する
+		NoStopDamage = 4; /// OnDamageOverのみで使用する、ダメージの停止を行わない
+	}
+	
+	// 矢系ソウルのスキルパラメータ
+	message ArrowParam {
+		SpecialScope scope = 1; /// スコープ
+		int32 attack_pow = 2; /// 矢スキルのpow
+		repeated SpecialTemplate special =3; /// スキル
+	}
+
+	SoulCondType type = 1; /// スキルの発動条件を指定する
+	int32 brave = 2; /// 発動条件の数値. 内容に関しては、各SoulCondTypeを参照すること。必要ブレイブを表すことが多い
+	int32 num = 3; /// 発動条件の数値. 
+	repeated CharacterStatus status = 4; /// 状態異常に対する場合に指定される
+	Element element = 7; /// 属性("+"でつなげて複数指定可能)
+	string name = 6;
+	SoulOption opt = 10; /// オプション
+	repeated SkillCode codes = 8; /// スキルコード
+	int32 id = 9;
+	int32 prob = 11; /// 諸々の確率を示す
+	int32 over_brave = 12; /// ブレイブが増えたときに上がる発動確率
+	ArrowParam arrow_param = 13; /// 矢系ソウルのスキルパラメータ
+	repeated ItemType item_type = 14; /// WithAppraiserで識別済みとなるアイテムの種類
+	Amplify amplify = 15; /// WithDamageUp のパラメータ
+	Greed greed = 16; /// WithGreed のパラメータ
+	int32 hp_less_than = 17; /// このHP以下のときのみ発動
+}
+
+/**
+ * 移動タイプ
+ */
+enum MoveType {
+	Walk = 0; /// 陸地を歩ける
+	Fly = 1; /// 水場、虚空、溶岩を歩ける
+	Swim = 2; /// 水場を歩ける
+	MoveAny = 3; /// 壁の中に侵入出来る
+}
+
+/**
+ * 視界タイプ
+ */
+enum SightType {
+	Normal = 0; /// 主人公と同じ視界ルール
+	SightAny = 1; /// フロア全体を視界とする
+	Near = 2; /// 距離視界(sight_type_countに距離を指定する)
+}
+
+/**
+ * 思考ルーチンのコード
+ */
+enum ThinkingCodeType {
+	DoWalk = 0;
+	/**
+	 * ターゲットに対して攻撃を行う
+	 *
+	 * param1: 攻撃をする確率[%]、0（つまり指定なし）の場合は、100%攻撃する
+	 */
+	DoAttack = 1;
+	/**
+	 * ターゲットを探して、ターゲットが見つかったらターゲットとして記憶する
+	 *
+	 * target: 対象(player=主人公(デフォルト), monster=近くのモンスター, obj=近くのオブジェ)
+	 */
+	FindTarget = 2;
+	/**
+	 * アイテムを探して、見つかったらターゲットとして記憶する
+	 */
+	FindItem = 14;
+	/**
+	 * ランダム移動を行う
+	 */
+	DoWalkRandom = 3;
+	/**
+	 * 逃げ移動を行う.
+	 *
+	 * [TODO:harada] 未作成
+	 */
+	DoEscape = 5;
+	/**
+	 * ターゲットに対してスキル１の攻撃を行う
+	 *
+	 * param1: 攻撃をする確率[%]、0（つまり指定なし）の場合は、100%攻撃する
+	 *
+	 * ターゲットがスキルの範囲内なら、指定の確立でスキルを打つ.
+	 * ただし、クールダウンタイム中は打たない.
+	 *
+	 * [TODO:harada] 意味のないスキル（すでにに状態異常かかっているときに、同じ状態異常など）は打たないようにする
+	 */
+	DoSkill = 6;
+	
+	/**
+	 * スキルを強制的に使う(ターゲットの有無を参照しない）
+	 *
+	 * param1: 攻撃をする確率[%]、0（つまり指定なし）の場合は、100%攻撃する
+	 *
+	 * ただし、クールダウンタイム中は打たない.
+	 */
+	DoSkillAnytime = 15;
+
+	
+	/**
+	 * ターゲットへの射線上を優先し、距離を保った移動を行う
+	 *
+	 * param1: 射線移動を行う範囲、これ以上ターゲットと離れている場合は、通常の移動を行う
+	 */
+	DoWalkSniper = 7;
+	/**
+	 * ターゲットへの射線上を優先した移動を行う
+	 *
+	 * param1: 射線移動を行う範囲、これ以上ターゲットと離れている場合は、通常の移動を行う
+	 */
+	DoWalkArcher = 8;
+	/**
+	 * 混乱時の攻撃を行う
+	 *
+	 */
+	DoAttackConfuse = 10;
+	/**
+	 * 自動プレイ用のアイテム使用を行う
+	 */
+	DoAutoUseItem = 11;
+	/**
+	 * 自動プレイ用のスキル使用を行う
+	 */
+	DoAutoUseSkill = 12;
+	/**
+	 * 自動プレイ用の移動
+	 */
+	DoAutoWalk = 13;
+	/**
+	 * 自動プレイ用の階段を探す
+	 */
+	AutoFindStair = 16;
+
+	/**
+	 * 二つの思考ルーチンを行き来する
+	 *
+	 * Toggle(101,102) 思考ルーチン101と102を
+	 */
+	Toggle = 17;
+
+	/**
+	 * 現在の経路を確認する(ステートロード時に経路を確認するため)
+	 */
+	FindCurrentPath = 18;
+
+	/**
+	 * ガイドプレイ用の移動
+	 */
+	DoGuideWalk = 19;
+
+	/**
+	 * ガイドプレイ用の攻撃
+	 */
+	DoGuideAttack = 20;
+
+	/**
+	 * ガイドプレイ用のアイテム探索
+	 */
+	DoGuideFindItem = 21;
+
+	/**
+	 * ガイドプレイ用の階段探索
+	 */
+	DoGuideFindStair = 22;
+	
+	/**
+	 * タイトル画面でのオート探索
+	 */
+	DoTitleAutoPlay = 23;
+}
+
+/**
+ * 思考タイプの１モード
+ */
+message ThinkingCode {
+	/**
+	 * ターゲットの種類(FindTargetで使用)
+	 */
+	enum FindType {
+		Player = 0; /// 主人公
+		Monster = 1; /// モンスター
+		Obj = 2; /// 岩
+	}
+	/**
+	 * 思考ルーチンのフラグ
+	 */
+	enum Attribute {
+		None = 0;
+		IsSniper = 1; /// スナイパーかどうか(do_walk_archerのみ内部で使用)
+		OverrideTarget = 2; /// すでにターゲットがいる場合に上書きするかどうか
+		OnlyNearByPlayer = 4; /// プレイヤーの近く(5マス内)にいる場合だけはたらく
+	}
+
+	ThinkingCodeType type = 1;
+	int32 param1 = 2;
+	int32 param2 = 3;
+	FindType find = 5; /// 対象のタイプ(FindTargetで使用)
+	bool pierce = 4; /// straightのスキルが他の奴に当たる状況でも打ってくるかどうか
+	Attribute attribute = 6; /// オプション属性のフラグ
+	repeated int32 without = 7; /// 対象外のID(FindTargetなら、EnemyTemplateId)
+	int32 skill = 8; /// 使用するスキルの番号(未指定 or 1: 1番目のスキル, 2: 2番目のスキル)
+	repeated int32 thinking_ids = 9; /// 対象のThinkingID(Toogleで使用)
+}
+
+enum CharacterType {
+	Monster = 0;
+	PlayerCharacter = 1;
+	Obj = 2;
+	Boss = 3;
+	Npc = 4;
+}
+
+/**
+ * 思考タイプ
+ */
+message ThinkingType {
+	int32 id = 1;
+	string name = 2;
+	repeated ThinkingCode codes = 3;
+}
+
+/**
+ * モンスターの属性
+ */
+enum CharacterAttribute {
+	NoCharacterAttribute = 0;
+	Undead = 1;
+	SpeciesFire = 2;
+	Unclean = 3;
+	BossCharacter = 4;
+	NoChangeDirection = 5; /// 攻撃されても振り向かない（今はon_dieのスキルだけ対応している）
+	RandomPromote = 6; /// 進化先がランダム
+	Imitator = 7; /// 擬態するかどうか
+	TresureBox = 8; /// DieMyself実行時に「宝箱が開いた」と表示される
+	NoJetLag = 9; /// 召喚されたターンに動く
+	Marchant = 10; /// 商人かどうか
+}
+
+message CharacterTemplate {
+	int32 id = 1;
+	CharacterType type = 15;
+	string name = 2;
+	int32 image = 3;
+	int32 hp = 4;
+	int32 attack = 5;
+	int32 defense = 6;
+	int32 level = 7; /// レベル
+	int32 thinking_type_id = 8; /// 思考タイプ
+	MoveType move_type = 9; /// 移動タイプ
+	SightType sight_type = 10; /// 視界タイプ
+	int32 sight_type_num = 11; /// 視界タイプのオプション
+	int32 speed = 12; /// 移動速度(0: 鈍足, 1:通常, 2:倍速)
+	int32 attack_speed = 13; /// 攻撃速度(1: 通常, 2:２回攻撃, 3: ３回攻撃...)
+	int32 exp = 14; /// 経験値
+	int32 skill_prob = 16; /// スキル使用確率[%]
+	int32 fang_item_id = 17; /// ファングになった時のアイテムID
+	int32 skill_cooldown = 18; /// スキルを打った時のクールダウンターン数
+	int32 respawn_skill_cooldown = 19; /// 生まれた時のクールダウンターン数
+	bool no_attack_twice = 20; /// 2回行動のときに２回攻撃しない（倍速１回攻撃）
+	
+	repeated Skill skills = 22; /// 所持スキル(0番が通常のスキル）
+	repeated Soul souls = 24; /// 所持ソウル
+	
+	int32 promote_id = 30; /// 進化先のモンスターのCharacterTemapateのID
+	int32 depromote_id = 31; /// 退化先のモンスターのCharacterTemapateのID
+	int32 rare_id = 32; /// レア出現の際のモンスターのCharacterTemapateのID
+	int32 animation_id = 42; /// アニメーションID
+	bool show_cooldown = 49; /// カウントダウンを表示するかどうか（オベリスクなどが使用する）
+	string desc = 40;
+	string spec = 41;
+	bool show_hitpoint_gauge = 43; /// HPゲージを表示するか
+	bool show_library = 47; /// 図鑑に表示するかどうか
+	
+	string special_character_type = 50; /// 特別なルーチンを持つキャラクタならそれを追加
+
+	string flavor = 44;
+	string skill_name = 45;
+	string soul_name = 46;
+	repeated CharacterAttribute attribute = 48; /// 不死とか不浄とかの属性
+	bool random_spawn = 51; /// ランダム生成するか
+	string category = 52;
+	int32 skill_available = 53; /// スキルの使用回数の制限(0は使用回数制限なし)
+	int32 mimic_item_template_id = 54; /// ミミックの擬態するアイテムのItemTemplateID(0は擬態しない)
+	bool act_first = 55; /// 先に動くかどうか（レイスなど）
+	int32 shop_item_set_id = 56; /// 商人のもっているアイテムセットID
+	int32 shop_count = 57; /// 商人のもっているアイテムの数の最低数
+	int32 shop_count_rand = 58; /// 商人のもっているアイテムの数のランダム増加分
+	int32 shop_special_count = 59; /// 商人のもっている特価品アイテムの数の最低数
+	int32 shop_special_count_rand = 60; /// 商人のもっている特価品アイテムの数のランダム増加分
+}
+
+//===========================================
+// ファング
+//===========================================
+
+enum FangAttribute {
+	None = 0;
+	FaFire = 1;
+	FaWater = 2;
+	FaWood = 3;
+	FaLight = 4;
+	FaDark = 5;
+}
+
+message FangTemplate {
+	int32 id = 1;
+	string name = 2;
+	repeated FangAttribute attributes = 3;
+	int32 hp = 4;
+	int32 attack = 5;
+	int32 defense = 6;
+}
+
+//===========================================
+// アイテム
+//===========================================
+
+/**
+ * アイテムの種類
+ */
+enum ItemType {
+	NoItemType = 0;
+	Potion = 1; /// 薬
+	Staff = 2; /// 杖
+	Book = 3; /// 書物
+	Weapon = 4; /// 武器
+	Shield = 5; /// 盾
+	Arrow = 6; /// 矢
+	Box = 7; /// 箱
+	Fang = 8; /// ファング
+	Trap = 9; /// 罠
+	Stair = 10; /// 階段
+	DropObject = 11; /// 落ちてるオブジェクト（ゴーレムの残骸）
+	Stone = 12; /// 石
+	Gold = 13; /// お金
+}
+
+/**
+ * アイテムの属性
+ * TODO: 仮
+ */
+enum ItemAttribute {
+	NoItemAttribute = 0;
+	TargetIsItem = 1; /// ターゲットがアイテムの書(ItemTypeがBookの時のみ使用される)
+	NotBreakOnThrow = 2; /// 投げたときキャラに当たらなかったら壊れない（中身も落ちない）
+	NoAttributeOnThrow = 4; /// 投げてもアイテム投げ属性と見なさない
+  TargetIsItemOnSkill = 8; /// アイテムを選択するタイプのスキル
+  RemoveInnerItemOnThrow = 16; /// 投げて壁に当たると中身がなくなる
+  DontReopenItemMenu = 32; /// 閉じた後にアイテムメニューを出す
+  IsMimic = 64; /// ミミックかどうか
+  CantStore = 128; /// 倉庫に保存できない
+  TargetIsFang = 256; /// ファングに使う
+}
+
+/**
+ * アイテムのテンプレート
+ */
+message ItemTemplate {
+	int32 id = 1;
+	string name = 2;
+	ItemType type = 3;
+	int32 image = 4;
+	int32 fang_icon = 17; /// ファングアイコンの番号
+    int32 equipment_image = 26; /// 装備画像
+	int32 sort_id = 5;
+	int32 price = 7;
+	int32 min_count = 8;
+	int32 max_count = 9;
+	int32 character_id = 15; /// ファングのキャラクターID(ファングのみ有効)
+	repeated ItemAttribute attributes = 11;
+	string desc = 12;
+	string spec = 14; /// 仕様書の説明文
+	int32 charge = 16; /// チャージ数
+	bool revealable = 28; /// 未識別になりうるかどうか
+	bool show_count_on_map = 34; /// カウントダウンを表示するかどうか
+	bool show_mesh = 39; /// 3Dオブジェクトとして表示して、スプライトとして表示しない
+	
+	repeated int32 num = 13; /// typeが、Weaponなら攻撃力、Shieldなら防御力
+
+	string skill_name = 27;
+	repeated SkillCode skill_on_use = 24;
+	repeated SkillCode skill_on_throw = 25;
+	repeated SkillCode skill_on_sacrify = 32;
+	
+	repeated Soul souls = 22; // 所持ソウル
+	string soul_name = 23; /// ソウル名
+	string skill_desc = 29;
+	string soul_desc = 30;
+	string sacrify_desc = 33;
+	string skill_spec = 35; /// スキル仕様
+	string soul_spec = 36; /// ソウル仕様
+	int32 level = 31; /// レベル
+	int32 unlock_level = 37; /// アンロックされるタイミング（０なら常に出現する）
+	int32 tutorial_dialog_id = 38; /// 初めて拾った時に表示されるチュートリアルダイアログのID
+}
+
+/**
+ * 未鑑定名
+ */
+ message UnrevealName {
+	int32 id = 1; 
+	Master.ItemType item_type = 2; /// アイテムの種類
+	string name = 3; /// 未鑑定名
+}
+
+//===========================================
+// スキル
+//===========================================
+
+/**
+ * スキルの対象範囲の種類.
+ *
+ * データを記述する場合は、スネークケースで記述する必要があるので注意すること。
+ */
+enum ScopeType {
+	/**
+	 * 使用者のみを対象.
+	 */
+	Self = 0;
+	/**
+	 * 直線上の範囲.
+	 *
+	 * rangeで幅を指定する。
+	 * pierceがtrueなら、貫通する。
+	 */
+	Straight = 1;
+	/**
+	 * 周囲Nマスの範囲.
+	 *
+	 * 部屋の中にいる場合は、通路は１マスまでしか対象にならない。
+	 * また、通路にいる場合は、周囲１マスまでしか対象にならない。
+	 * 部屋かどうかに関わらない場合は、around_any を利用する。
+	 *
+	 * center: true を指定すると、中央のマスを含むようになる.
+	 */
+	Around = 2;
+	/**
+	 * 「対象」のマスのみ.
+	 * 
+	 * 対象というのは、下記のようなケースを表す
+	 * アイテム投擲の際のアイテムが当たった場所 / 
+	 * カウンターの際にカウンターの対象 /
+	 */
+	Here = 3;
+	/**
+	 * 常に主人公が対象.
+	 *
+	 * ただし、rangeを指定した場合、主人公が範囲内の時のみに反応する
+	 */
+	Player = 4;
+	/**
+	 * 範囲１の通常攻撃と同様の範囲.
+	 *
+	 * rangeは指定していても、1で固定される。
+	 * Straightと違うのは、ナナメの際に横に壁があると邪魔されること。
+	 */
+	DirectAttack = 5; 
+	/**
+	 * 周囲Nマスの範囲.
+	 *
+	 * aroundと違い、部屋の中かどうかに関係なく周知Nマスまでが対象となる。
+	 *
+	 * center: true を指定すると、中央のマスを含むようになる.
+	 */
+	AroundAny = 6;
+	/**
+	 * 複数方向の直線.
+	 *
+	 * wayには 1=前方, 2=右前, 4=右, 8=右後ろ, 16=後ろ, 32=左後ろ, 64=左, 128=左前 の合計値を指定する
+	 *
+	 * 例:
+	 * nway(5, way: 1) = 前方のみ５マス(straight(5)とおなじ), 
+	 * nway(5, way: 131) = 前方３方向, 
+	 * nway(5, way: 199) = 前方５方向, 
+	 * nway(5, way: 85) = 十字,
+	 * nway(5, way: 255) = ８方向,
+	 */
+	Nway = 7;
+	/**
+	 * ビーム
+	 *
+	 * 正面距離[値1]、幅３	
+	 */
+	Beam = 8;
+	/**
+	 * アイテム指定.
+	 *
+	 * アイテム(ファング)を選択して、対象とする	
+	 */
+	ForItem = 9;
+	/**
+	 * 今向いている方向の、直線上のピンポイントから指定範囲（中心を含む）.
+	 *
+	 * rangeで着弾点、aroundで範囲を指定する（0は不可）.
+	 */
+	Pinpoint = 10;
+}
+
+/**
+ * スキルの対象の条件.
+ *
+ * 通常は、others/ours/both/without_obj のいずれかを指定すれば良い
+ *
+ * データを記述する場合は、スネークケースで記述する必要があるので注意すること。
+ *
+ */
+enum ScopeTargetType {
+	NoScopeTargetType = 0; /// この値を指定することはない、指定された場合はデフォルトのBothとなる
+	OnlyOthers = 1; /// 相手だけ
+	Ours = 2; /// 味方だけ
+	WithoutObj = 3; /// 相手+味方（オブジェ含まず）
+	OnlyObj = 4; /// オブジェだけ
+	Others = 5; /// 相手+オブジェ
+	//Ours+OnlyObj = 6; /// 相手+オブジェ（たぶん使わないので定義していない）
+	Both = 7; /// 相手+味方+オブジェ
+
+	WithoutNpc = 8; /// NPCを外す場合は追加(NPCだけWithoutなのは統一感がないけどしかたない)
+}
+
+/**
+ * スキルの影響範囲.
+ *
+ * 例:
+ *   straight(3) = 距離３,敵味方オブジェすべて
+ *   around(3, others) = 部屋内周囲３マス以内で敵とオブジェのみ,
+ *   around_any(3, without_obj) = 部屋内に限らず周囲３マス以内で、オブジェのみ,
+ *   around_any(3, center:true) = 部屋内に限らず周囲３マス以内で、自分も含む
+ */ 
+message SpecialScope {
+	enum BoardDisplay {
+		Normal = 0; /// 表示する
+		Hidden = 1; /// 表示しない
+		Support = 2; /// 支援効果（回復など、将来色を変えるため）
+	}
+
+	ScopeType type = 1; /// スコープの種類
+	int32 range = 2; /// 範囲
+	bool pierce = 4; /// 貫通かどうか(straightでのみ有効）
+	ScopeTargetType target = 3; /// 対象の種類
+	int32 way = 5; /// nwayの際の、線が出る方向のマスク(nwayで使用する)
+	int32 limit = 6; /// 当たる対象の限界数
+	bool center = 7; /// 中央を含むかどうか(around, around_anyで使用)
+	bool prior_near = 8; /// 近くを優先する, Limitが指定されているときのみ有効
+	bool available_in_wall = 9; /// 壁の中でもあたる
+	BoardDisplay board_display = 10; /// スコープボードの表示設定
+	int32 around = 11; /// PinPointの着弾点からの範囲
+	repeated int32 target_id = 12; /// 指定したキャラクターidだけが対象となる
+}
+
+/**
+ * スキル効果の種類.
+ *
+ * データを記述する場合は、スネークケースで記述する必要があるので注意すること。
+ *
+ * 箱に入れた時のソウルの場合は、Boxが名前の先頭につく。
+ *
+ * 基本的に攻撃力依存で数値を指定する場合は、
+ */
+enum SpecialType {
+	/**
+	 * 攻撃.
+	 *
+	 * pow,amount,direct でダメージを指定する
+	 *
+	 * 例:
+	 * attack(100) = 攻撃力100%のダメージ,
+	 * attack(amount:10) = 固定で１０のダメージ
+	 *
+	 */ 
+	Attack = 0;
+	/**
+	 * 回復.
+	 *
+	 * [値1]だけHPを回復する
+	 */
+	Heal = 1;
+	/**
+	 * エフェクトを表示する.
+	 *
+	 * effect: 対象のエフェクトファイル名
+	 */
+	Effect = 2;
+	/**
+	 * 状態異常付与
+	 *
+	 * [値1]ターン、対象を指定の状態異常にする
+	 * 同じ状態異常にすでにかかっていた場合は、大きい方の数字が採用される.
+	 *
+	 * 例:
+	 * set_status(5, status:[sleep]) = 睡眠５ターンを付与
+	 * set_status(3, status:[sleep,poison]) = 睡眠、毒を３ターンで付与
+	 *
+	 */
+	SetStatus = 3;
+	/**
+	 * 特定の状態異常を加算する
+	 *
+	 * pow: ターン数
+	 * 
+	 * 例:
+	 * inc_status(10, status:[poison]) = 毒を５ターン追加
+	 *
+	 */
+	IncStatus = 4;
+
+	/**
+	 * ブレイブアップ.
+	 *
+	 * [値1]だけブレイブを即座に得られる
+	 */
+	BraveUp = 6;
+
+	/**
+	 * ふき飛ばし.
+	 *
+	 * powの残り吹き飛ばし距離をもった吹き飛ばしを、方向を持って付与
+	 */
+	Blowback = 7;
+	
+	/**
+	 * 入れ替え.
+	 *
+	 * 対象と使用者の位置を入れ替える
+	 */
+	Swap = 8;
+	/**
+	 * ステップバック.
+	 *
+	 * powの残り吹き飛ばし距離をもった吹き飛ばしを、方向を持って付与
+	 */
+	StepBack = 9;
+	/**
+	 * 前に移動する.
+	 *
+	 * pow: 移動するマス数
+	 */
+	StepForward = 10;
+	/**
+	 * 突進攻撃.
+	 * 
+	 * powの距離を貫通して移動する
+	 * 移動経路にいた対象にスキルを効果を与える
+	 * その対象にふきとばすかどうか指定できる
+	 */
+	Rush = 11;
+	/**
+	 * 貫通突進.
+	 *
+	 * powの距離を移動し、途中で吹き飛ばしを行わない。途中でぶつかったキャラに指定のスキル効果を与える
+	 * [TODO:ariyoshi] 未作成
+	 */
+	 
+	/**
+	 * 引き寄せ.
+	 *
+	 * 対象を引き寄せる
+	 * 仮に使用者の周囲1マスに引き寄せる
+	 */
+	Attract = 12;
+	/**
+	 * 転送.
+	 *
+	 * 対象を転送させる(なるべく遠くの部屋へ)
+	 */
+	Teleport = 13;
+	/**
+	 * すいつき
+	 *
+	 * 対象にすいつく
+	 *
+	 * [TODO:ariyoshi] 未作成
+	 */
+	Approach = 14;
+	/**
+	 * 瞬間移動
+	 *
+	 * 標的の付近、距離powにワープ
+	 *
+	 */
+	Warp = 15;
+
+	/**
+	 * 召喚
+	 * 
+	 * 下記の組み合わせで指定されたのモンスターを召喚する
+	 *
+	 * [値2]が 'character_id' の場合は、[値3]で指定されたモンスターが指定される。
+	 *
+	 * [TODO] [値2]が 'monster_table' の場合は、[値3]で指定されたIDのモンスターテーブルからランダムで選択される。
+	 *
+	 * lenで指定されたマス以内に召喚される。lenは指定されていなければ1となる
+	 *
+	 * [値2]が 'tenant_table' の場合は、[値3]で指定された現在のフロアのモンスターテーブルからランダムで選択される。
+	 * テーブルの指定は、0が１番目のテーブル、1が２番目のテーブルとなる。
+	 * また、テナントテーブルの重みも参照される。
+	 *
+	 * 範囲内に敵が出現できない場合は召喚されない。また、１体も召喚されなかった場合は「しかし、なぜか召喚されなかった」と表示される。
+	 * 敵が召喚されるマスは、歩行可能なマスである。
+	 *
+	 * (..., samon(1, character_id, 999, len: 2)) # キャラクタID 999 のモンスターを２マス以内に召喚する
+	 *
+	 * (..., samon(2, tenant_table, 0)) # 現在のフロアの最初のモンスターテーブルからランダムで２体召喚する
+	 *
+ 	 * (..., samon(2, tenant_table, 0, )) # 現在のフロアの最初のモンスターテーブルからランダムで２体召喚する
+	 *
+	 */
+	Samon = 16;
+	/**
+	 * モンスターハウス予約.
+	 * 
+	 * 即座に次のフロアに移動し、必ずモンハウ(ボス)から開始される
+	 *
+	 * [TODO:ariyoshi] 未作成
+	 */
+	CallMonsterHouse = 17;
+
+	/**
+	 * 進化.
+	 *
+	 * [値1]レベル対象を進化
+	 *
+	 */
+	Promote = 18;
+	
+	/**
+	 * 退化
+	 *
+	 * [値1]レベル対象を退化
+	 *
+	 */
+	Depromote = 19;
+
+	/**
+	 * 竜時回復
+	 *
+	 * [値1]だけ竜時を回復する.
+	 */
+	AddTime = 22;
+	
+	/**
+	 * 竜時減退
+	 *
+	 * [値1]だけ竜時を減退させる.
+	 */
+	SubTime = 23;
+	/**
+	 * 最大HPアップ
+	 * 
+	 * [値1]だけ最大HPをアップする
+	 */
+	AddMaxHp = 24;
+	/**
+	 * ブレイブ限界値アップ
+	 *
+	 * [値1]だけブレイブ限界値をアップする
+	 */
+	AddMaxBrave = 25;
+	/**
+	 * ブレイブ抑制
+	 *
+	 * [値1]だけブレイブを抑制する
+	 */
+	SubMaxBrave = 26;
+	/**
+	 * ブレイブ抑制解除
+	 *
+	 * ブレイブ抑制を完全解除する
+	 */
+	RestoreMaxBrave = 27;
+	/**
+	 * 状態異常解除
+	 *
+	 * statusで指定したの状態異常を解除する。
+	 * status_groupにはall_any,all_good,all_bad でまとめて全て/良い/悪いステータスを指定することができる
+	 *
+	 * status_groupにはステータスのグループを指定する.
+	 *
+	 * 例:
+	 * clear_status(status:[poison]) = 毒を解除,
+	 * clear_status(status_group:all_status) = 全てのステータスを解除,
+	 * clear_status(status_group:bad_status) = 全ての悪いステータスを解除
+	 * clear_status(status_group:good_status) = 全てのよいステータスを解除
+	 *
+	 */
+	ClearStatus = 28;
+	/**
+	 * 装備武器強化.
+	 *
+	 * powだけ装備武器のレベルが上がる
+	 */
+	AddWeaponLevel = 29;
+	/**
+	 * 装備武器劣化.
+	 *
+	 * powだけ装備武器のレベルが下がる
+	 */
+	SubWeaponLevel = 30;
+	/**
+	 * 装備盾強化
+	 *
+	 * powだけ装備盾のレベルが上がる
+	 */
+	AddShieldLevel = 31;
+	/**
+	 * 装備盾劣化
+	 *
+	 * powだけ装備盾のレベルが下がる
+	 */
+	SubShieldLevel = 32;
+	/**
+	 * 矢筒強化
+	 *
+	 * [値1]だけ最大矢所持数をアップする
+	 */
+	AddMaxArrow = 33;
+	/**
+	 * 矢筒減退
+	 *
+	 * [値1]だけ最大矢所持数を減退する
+	 */
+	SubMaxArrow = 34;
+	/**
+	 * 竜の時限界値アップ
+	 *
+	 * [値1]だけ竜時限界値をアップする
+	 */
+	AddMaxTime = 35;
+	/**
+	 * 竜の時限界値減退
+	 *
+	 * [値1]だけ竜時限界値を減退する
+	 */
+	SubMaxTime = 36;
+	/**
+	 * 自殺する
+	 *
+	 * [値1]１なら経験値などの恩恵を主人公に届ける
+	 *
+	 */
+	DieMyself = 37;
+	
+	/**
+	 * 別のモンスターに変化する
+	 *
+	 * [値1]変化するキャラクターID
+	 *
+	 */
+	ChangeCharacter = 38;
+
+	/**
+	 * スキルをチャージする
+	 *
+	 * [値1]だけ、すべてのファングのスキルをチャージする
+	 *
+	 */
+	ChargeSkill = 39;
+	
+	/**
+	 * ランダムスキル
+	 * ランダムにスキル発動する
+	 *
+	 * 例: 
+	 * random_skill(skill_lot:[(2001, 100), (2002, 50)])
+	 * id2001のスキル66.6..%、id2002のスキル33.3..%で発動
+	 */
+	RandomSkill = 40;
+	
+	/**
+	 * powだけ攻撃力を増やす
+	 * 効果は永続
+	 * モンスターには効かない
+	 */
+	AddAttack = 41;
+
+	/**
+	 * powだけ攻撃力を減らす
+	 * 効果は永続
+	 * 下限があって、それ以下にはならない
+	 * モンスターには効かない
+	 */
+	SubAttack = 42;
+
+	/**
+	 * powだけ最大HPを減らす
+	 * 効果は永続
+	 * 下限があって、それ以下にはならない
+	 * モンスターには効かない
+	 */
+	SubMaxHp = 43;
+
+	/**
+	 * powだけ矢の攻撃力を増やす
+	 * 効果は永続
+	 * モンスターには効かない
+	 */
+	AddAttackArrow = 44;
+
+	/**
+	 * powだけ矢の攻撃力を減らす
+	 * 効果は永続
+	 * 下限があって、それ以下にはならない
+	 * モンスターには効かない
+	 */
+	SubAttackArrow = 45;
+
+	/**
+	 * アイテム盗み
+	*主人公が受けた場合は
+	*現在のアイテムインベントリからランダムで1個アイテムを選ぶ
+	*選ぶカテゴリは指定できる(複数)(消費アイテム全般、箱全般、装備全般、ファング全般)
+	*装備中のアイテムは絶対に選択されない
+	*盗んだアイテムは一旦所持状態になる
+	*/
+	StealItem = 46;
+
+	/**
+	* レベルアップ
+	* powだけレベルが上がる
+	* レベル限界値は超えない
+	* レベルが上昇した場合、そのレベルにおける最小の経験値となる
+	*/
+	LevelUp = 47;
+
+	/**
+	* レベルダウン
+	* powだけレベルが下がる
+	* 1以下にはならない
+	* レベルが下降した場合、そのレベルにおける最大の経験値となる
+	*/
+	LevelDown = 48;
+
+	/**
+	* 矢入手
+	* powだけ矢の数が増える
+	*/
+	AddArrow = 49;
+
+	/**
+	* なにもしない
+	*/
+	Nothing = 50;
+
+	/**
+	 * アイテムドロップ.
+	 * アイテムを床に落とす
+	 * すべての所持アイテムからランダムで落とす
+	 * 足元 > 周囲1マスのどこかランダム、の順に落とす
+	 * 落とす個数を範囲で指定できる
+	 * 落とす個数が落とせる場所を上回っている場合は、虚空に消える
+	 * 例:
+	 * put_item(range:(4,5))
+	 * 4～5個落とす
+	*/
+	PutItem = 51;
+
+	/**
+	 * アイテム削除.
+	 * powの範囲のアイテムを削除する
+	*/
+	RemoveItem = 52;
+
+	/**
+	 * ドラマを表示する.
+	 * 
+	 * script に表示するスクリプトの名前を設定する
+	*/
+	ShowScript = 53;
+
+	/**
+	 * アイテムを識別する.
+	*/
+	RevealItem = 54;
+
+	/**
+	 * アイテムの使用回数を増やす（箱の容量も増える）
+	 * 最大9まで増やせる
+	*/
+	AddItemDurability = 55;
+
+	/**
+	 * アイテムを複製する
+	*/
+	CloneItem = 56;
+
+	/**
+	 * 待つ
+	 *
+	 * [値1]msec 待つ
+	 *
+	 */
+	 WaitMsec = 57;
+
+	/**
+	 * 次のフロアへいく
+	 *
+	 */
+	 Pitfall = 58;
+
+	/**
+	 * ふき飛ばし.
+	 *
+	 * ランダム方向に[値1]の距離移動させる
+	 */
+	BlowbackAny = 59;
+
+	/**
+	 * 強ふき飛ばし.
+	 *
+	 * ランダム方向に[値1]の距離移動するラッシュのスキルを使わせる
+	 */
+	StrongBlowback = 60;
+
+	/**
+	 * アイテムドロップ
+	 *
+	 * ＩＤで指定（アイテムＩＤ直指定。複数対応しなくてもＯＫ）
+	 * テーブルで指定（フロアに設定されたもの。１など）
+	 * 
+	 * amount で個数を指定する
+	 *
+	 * 使用例: 
+	 *
+	 * drop_item(param_type1:tenant_table, param1: 0) => 個のフロアに出る０番目のアイテムテーブルを使用する
+	 *
+	 * drop_item(param_type1:item_table, param1: 123) => アイテムテーブル１を使用する
+	 *
+	 * drop_item(123) => アイテムID 123 を使用する
+	 */
+	DropItem = 61;
+
+	/**
+	 * （箱スペシャル）アイテムを識別
+	 */
+	BoxRevealItem = 62;
+	 
+	/**
+	 * Luaを実行する
+	 * 
+	 * script に表示するスクリプトを指定する
+	 */
+	RunLua = 64;
+
+	/**
+	 * ランダム進化.
+	 *
+	 * 1レベル高いいずれかのモンスターに進化
+	 */
+	PromoteAny = 65;
+
+	/**
+	 * 変身.
+	 *
+	 * ランダム沸きする別のモンスターに変身する
+	 */
+	Transform = 66;
+
+	/**
+	 * 通常攻撃を出す
+	 *
+	 * 通常攻撃と同じく OnAfterAttack, OnEnchantが効く攻撃を出す
+	 */
+	DoNormalAttack = 67;
+
+	/**
+	 * 擬態する
+	 *
+	 * ランダム沸きする別のモンスターに擬態する
+	 */
+	Imitate = 68;
+
+	/**
+	 * いけにえ
+	 *
+	 * ファングを選んでサクリファイスを発動する
+	 * 発動後に、ファングの消滅するしないを 設定できる
+	 */
+	Sacrifice = 69;
+
+
+	/**
+	 * アイテム変化
+	 *
+	 * 選んだアイテムを別のアイテムに変化させる
+	 */
+	Instead = 70;
+
+	/**
+	 * アイテム吸い出し
+	 *
+	 * 箱のアイテムを取り出してばらまく
+	 */
+	VacuumItem = 71;
+
+	/**
+	 * アイテムの使用回数を減らす（箱の容量も減る）
+	 * 箱は1、もしくは箱に入っているアイテムの数、杖は0まで減る
+	 * 
+	*/
+	SubItemDurability = 72;
+
+	/**
+	 * 箱の中を特定の種類のアイテムで満たすと、別のアイテムひとつに変化する
+	 * 
+	*/
+	Exchange = 73;
+
+	/**
+	 * （箱スペシャル）倉庫に送る
+	 */
+	BoxStoreItem = 74;
+	 
+	/**
+	 * 装備しているアイテムの呪いを解く
+	 */
+	UncurseItems = 75;
+
+	/**
+	 * 装備しているアイテムが呪われる
+	 */
+	CurseEquip = 76;
+
+	/**
+	 * 装備が破壊される
+	 */
+	BreakEquipment = 77;
+
+	/**
+	 * ファングが破壊される
+	 */
+	BreakFang = 78;
+
+	/**
+	 * レリックを足す
+	 */
+	AddRelic = 79;
+
+	/**
+	 * レリックを削除
+	 */
+	DeleteRelic = 80;
+
+	/**
+	 * ショップを開く
+	 */
+	OpenShop = 81;
+
+	/**
+	 * 矢攻撃をする（ただし矢は消費しない）
+	 */
+	ShotArrow = 82;
+
+	/**
+	 * powだけ防御力を増やす
+	 * 効果は永続
+	 * モンスターには効かない
+	 */
+	AddDefense = 83;
+
+	/**
+	 * 箱に隠れているモンスターを外に出す
+	 */
+	PutOutMonster = 84;
+}
+
+/**
+ * スキルの属性.
+ *
+ * 複数の値をORすることで複数の値を表すことができる
+ */
+enum SpecialAttribute {
+	NoSpecialAttribute = 0; /// なにもなし
+	NormalAttack = 1; /// 普通の攻撃かどうかのフラグ、これが含まれるならOnEnchantなどの対象になる
+	ArrowAttack = 2; /// 弓矢の攻撃力を参照するかのフラグ、これが含まれるなら攻撃力の代わりに弓矢攻撃力が参照される
+	DontKill = 4; /// HPが0にはならず、1にとどまる
+	DirectTargetHp = 8; /// directの値をターゲットのHP依存にする
+	DirectTargetMaxHp = 16; /// directの値をターゲットのMaxHP依存にする
+	FangDrop = 32; /// とどめを刺したときにファングドロップする確率を指定できる(確率はprobで指定)
+	Reveal = 64; /// 効果が出た場合に、対象のアイテムの鑑定を行う
+	BlowBack = 128; /// 当たったらふきとぶ（Rushで使う）
+	RoseNoDead = 256; /// DontKillのロゼだけバージョン
+	NoMessage = 512; /// ログを出さない
+	ExplosionAttack = 1024; /// 爆発属性
+	StaffMagic = 2048; /// 杖魔法属性
+	FireAttack = 4096; /// 炎属性
+	FromRose = 8192; /// ロゼの攻撃と見なす
+	MultiAttack = 16384; /// ブレイブ状態なら必ずブレイブが溜まる
+	StopIfNoEffect = 32768; /// 効果がなかったら、スキルの処理を停止する（steal_itemとdepromoteのみ対応、スキル全体の実行を止めるために、注意すること）
+	NoFang = 65536; /// ファングを落とさない
+	NoExp = 131072; /// 経験値の獲得なし
+	RandomRange = 262144; /// 召喚スキルの範囲検索がlen全体になる 未指定は,1 > 2 > 3 と範囲を広げて検索する
+	ForceFromPoint = 524288; /// なにがなんでもFromPointからスキルを発生させる（samonで使う)
+	LockOn = 1048576; /// 対象の目の前に移動する（warpで使う)
+	PriorCenter = 2097152; /// 真ん中に優先して召喚する（samonで使う）
+	NoAddBrave = 4194304; /// ブレイブが増えない
+	RequireHpMax = 8388608; /// HPが減っていると発動しない
+	CannonAttack = 16777216; /// ビスマルクの攻撃
+}
+
+/**
+* 特定のなにかへのダメージ増加
+*/
+message Amplify {
+	int32 rate = 1; /// 倍率（100 = 100%増加）
+	Skill.SkillType skill_type = 2; /// どの種類の効果を強くするか
+	repeated CharacterStatus stat = 3; /// 対象の状態異常
+	repeated CharacterAttribute character_attribute = 4; /// 対象の属性
+	SpecialAttribute special_attribute = 5; /// スキル属性
+}
+
+/**
+* 特定のスキルの効果を増幅して受け取る
+*/
+message Greed{
+	int32 amount = 1; /// 固定値
+	int32 rate = 2; /// 倍率（100 = 100%増加）
+	repeated int32 server = 3; /// 誰から受け取るか
+	repeated SpecialType special_type = 4; /// どのスキルを増幅するか
+}
+
+/**
+ * 特殊効果
+ *
+ * Templateとついているのは、実際のゲーム内では、この情報を元にSpecialが作られるため
+ */
+message SpecialTemplate {
+	/**
+	 * param1に指定されるパラメータの種類を指定する
+	 *
+	 * ほとんど使われない種類のパラメータをわかりやすくするために使用される
+	 */
+	enum ParamType {
+		None = 0; /// 指定なし
+		CharacterId = 1; /// キャラクターID
+		EnemyTable = 2;  /// エネミーテーブルID(samonで使用)
+		TenantTable = 3;  /// テナントのエネミー/アイテムテーブル番号、0が１番目のテーブルを意味する(samon, drop_itemで使用)
+		AtRandom = 6; /// ランダムであることを示す
+	}
+
+	 /**
+	 * ランダムスキル発動用の入れ物	
+	 */
+	message SkillLot {
+		int32 id = 1; /// スキルid
+		int32 prob = 2; /// 抽選確率
+	}
+	
+	 /**
+	 * 範囲指定に使う（startからendまで）
+	 */
+	message Range {
+		int32 start = 1; /// から
+		int32 end = 2; /// まで
+	}
+
+	SpecialType type = 1;
+	int32 pow = 2;
+	ParamType param_type1 = 3;
+	int32 param1 = 4;
+	int32 amount = 5;
+	int32 rand = 6;
+	int32 direct = 7;
+	int32 prob = 8; /// attackではファングドロップ率. set_statusでは命中率
+	repeated CharacterStatus status = 9; /// 状態異常(add_status, set_statusでのみ使用する）
+	SpecialAttribute attribute = 10; /// 特殊な属性
+	Element element = 11; /// 攻撃の属性
+	StatusGroup status_group = 12; /// ステータスグループ(clear_statusでのみ使用する)
+	string effect = 13; /// ヒットエフェクト(エフェクトアセット名、もしくは、スキルエフェクト名を指定する）
+	repeated SkillLot skill_lot = 14; /// random_skillで使用する
+	repeated ItemType item_type = 15; /// steal_item / Instead / clone_itemで使用する
+	int32 hp_rate = 16; /// 現在HPの割合を%で指定する
+	Range range = 17; /// 乱数の範囲指定
+	string script = 18; /// スクリプトの名前（show_scriptで使用する）
+	int32 len = 19; /// 距離を指定する
+	int32 id = 20; /// 諸々のidを指定する
+	string hit_effect = 21; /// ヒットして有効だったときに表示するエフェクト
+	int32 max_hp_rate = 22; /// 最大HPの割合を%で指定する
+	bool lost = 23; /// 使用後に消えるか（sacrificeで使う）
+	int32 item_id = 24; /// アイテムID(box_item_change, steal_item, drop_itemで使用する)
+	int32 item_set_id = 25; /// アイテムセットID(box_item_change, steal_item, drop_itemで使用する)
+	int32 item_table = 26; /// フロアごとに設定されているアイテムセットのインデックス（1はじまり）(box_item_change, steal_item, drop_itemで使用する)
+	bool no_knockback = 27; /// ノックバックしない（attackで使う）
+	Amplify amplify = 28; /// 特定の状態異常や属性へのダメージを増やす（attackで使う）
+	float player_level = 29; /// ロゼのレベル x 指定した値%（attackで使う）
+	float count_rate = 30; /// アイテムの使用回数 x 指定した値%（attackで使う）
+}
+
+/**
+ * スキルエフェクトの種類
+ */
+enum SkillEffectType {
+	Wave = 0;
+	Throw = 1; /// 飛んでいく
+	Sound = 2;
+	Char = 3;
+	Rotate = 4; /// 使用者の向いている方向へ進んでいく
+	WaveDiamond = 5; /// 菱形に広がっていく
+	WaveSquare = 6; /// 矩形に広がっていく
+	WaveUp = 7; /// 下から上へ
+	WaveDown = 8; /// 上から下へ
+	Origin = 9; /// 原点（追随）
+	Parabora = 10; /// 投擲（オブジェクトがターゲット）
+	Sensitive = 11; /// 誰かいるときだけ発動
+	CameraFocus = 12; /// カメラを対象物にフォーカスさせる
+	Voice = 13; /// ボイス再生
+	Fan = 14; /// Rotate複数方向版
+}
+
+/**
+ * スキルのエフェクト.
+ * 
+ */
+message SkillEffect {
+	int32 id = 1;
+	string symbol = 2;
+	string name = 3;
+	repeated SkillEffectCode codes = 4;
+}
+
+
+/**
+ * スキルエフェクトの１動作
+ */
+message SkillEffectCode {
+	enum SkillEffectOption {
+		None = 0;
+		ForceSouth = 1; /// 必ず南向きでモーションを再生する(charでのみ使用)
+		NoWeapon = 2; /// 武器を表示しない(charでのみ使用)廃止
+		NoShield = 4; /// 盾を表示しない(charでのみ使用)廃止
+		NoEquipment = 8; /// 装備を表示しない(charでのみ使用)廃止
+		NoLanding = 16; /// 壁以外に当たって止まった場合は着弾エフェクトなし
+	}
+	
+	SkillEffectType type = 1;
+	string effect = 2;
+	float wait = 3;
+	float delay = 4;
+	float speed = 5; /// 飛んでいく速さ
+	float angle = 6; /// 回転する角度
+	float front = 7; // 何マス前に出すか
+	bool follow = 8; /// 当たった対象を追尾するか
+	float animation_speed = 9; /// アニメーションの再生速度
+	float v_angle = 10; /// 放物線の角度
+	float scale = 11; /// エフェクトの大きさ
+	string landing_effect = 12; /// 着弾エフェクト（エフェクト名かSkillEffectのSymbolを指定する）
+	string floor_flash = 13; /// 範囲をフラッシュする（エフェクト名かSkillEffectのSymbolを指定する）
+	string sound = 14; /// 音を鳴らす（エフェクト名かSkillEffectのSymbolを指定する）
+	SkillEffectOption option = 15; /// オプション
+	string sprite = 16; /// アイテム投げで使う
+	bool flip = 17; /// Rotateで369方向に出すときに特殊処理をする
+}
+
+/**
+ * スキルの１動作を表すコード.
+ */
+message SkillCode {
+	SpecialScope scope = 1; /// スキルの範囲や対象を表すスコープ
+	string effect = 2; /// スキルエフェクト
+	repeated SpecialTemplate specials = 3; /// スキルの効果の内容を表すスペシャル（複数）
+	bool no_critical_hit = 4; /// （WithShotArrow用）クリティカルヒットしない
+}
+
+/**
+ * スキル
+ */
+message Skill {
+	/**
+	* スキルの種類
+	*/
+	enum SkillType {
+		None = 0; // 指定なし
+		Attack = 1; // 通常攻撃
+		Arrow = 2; // 弓矢
+		FangSkill = 4; // ファングスキル
+	}
+
+	int32 id = 1;
+	string name = 3; /// 名前
+	repeated SkillCode codes = 4; /// スキルの１動作を表すスキルコードのリスト
+	int32 charge = 5; /// スキルチャージのターン数
+}
+
+//===========================================
+// レリック
+//===========================================
+
+/**
+ * レリックのテンプレート
+ */
+message RelicTemplate {
+	int32 id = 1;
+	string name = 2;
+	int32 relic_group_id = 11; /// レリックグループ
+	int32 level = 12; /// レリックグループ内のレベル
+	ItemType type = 3;
+	int32 image = 4;
+	int32 sort_id = 5;
+	string desc = 6;
+	string spec = 7; /// 仕様書の説明文
+	
+	repeated Soul souls = 8; // 所持ソウル
+	string soul_name = 9; /// ソウル名
+	string soul_desc = 10;
+}
+
+/**
+ * レリックのグループ
+ *
+ * 同じグループのレリックはよりレベルが高いほうで上書きされる
+ */
+message RelicGroup {
+	int32 id = 1;
+	string name = 2;
+}
+
+//===========================================
+// ステージ
+//===========================================
+
+/**
+ * ダンジョン
+ */
+message Dungeon {
+	int32 id = 1;
+	string name = 3;
+	string desc = 4;
+	int32 fang_drop_prob = 5; /// ファングドロップの確率[%]
+	bool skip_aging = 6; /// エージングで使用しない
+	bool hide_minimap = 7; /// ミニマップを表示しない
+	bool hide_ui = 8; /// UIを表示しない
+	DungeonKind dungeon_kind = 11; /// ダンジョンの種類
+	bool goto_result_each_stage = 10; /// 1ステージごとにリザルトに行くか（つまり、講座ダンジョンかどうか）
+	repeated ItemType unreveal_item_types = 9; /// 未識別になるアイテムの種類
+	bool no_time_spend = 12; /// 竜の時が減らない
+	int32 curse_rate = 13; /// 呪われている確率[%]
+	bool item_bringable = 14; /// 持ち込みを許可するか？
+	bool no_state_save = 15; /// ステートセーブをしない
+	bool no_record = 16; /// ファングの取得などを記録しない
+	int32 cell_count_bonus = 17; /// 踏破率の基礎得点
+	bool not_teleport = 18; /// テレポートのスキルを禁止する
+	int32 fang_drop_late_spawn_prob = 19; /// あと湧きモンスターのファングドロップの確率[%]
+	int32 aoc_id = 20; /// AOCのID
+	bool no_control = 21; /// コントロールを受け付けない（タッチUIも表示されない）
+	int32 override_monster_snooze_prob = 22; /// 初期配置の敵の起きている確率[%](０ならデフォルトの確率 Config.MonsterSnoozeProb が使用される）
+	int32 time_restore = 23; /// 竜の時の回復量（0もしくは指定しなければ、デフォルトの値、-1を指定すると0を設定したことになる）
+}
+
+enum DungeonKind {
+	UnderGround = 0;
+    AboveGround = 1;
+    Question = 2;
+}
+
+enum StageType {
+	Random = 0; /// ランダムマップ
+	Fixed = 1; /// 固定マップ
+	MetaMap = 2; /// ランダムマップ（メタマップ使用）
+}
+
+/**
+ * ダンジョンの１フロアに相当するもの
+ */
+message DungeonStage {
+	int32 id = 1;
+	int32 dungeon_id = 2;
+	
+	StageType type = 4;
+	string tmx_name = 15; /// (OBSOLETE), TMXのファイル名(type=Fixedの時のみ使用)
+	repeated string tmx_names = 28; /// TMXのファイル名(type=Fixedの時のみ使用, 複数指定)
+	string meta_map_set_id = 17; /// メタマップセットのID
+	string lobby_set_id = 19; /// ロビーセットのID
+	
+	string stage_name = 3;
+	string desc = 5; /// 説明文
+	int32 width = 6; /// (OBSOLETE)幅[マス]
+	int32 height = 7; /// (OBSOLETE)高さ[マス]
+	int32 room_num = 8; /// 部屋の数
+	int32 room_num_rand = 9; /// 部屋の数のばらつき、つまり（部屋の数+ (0?room_num_rand)) が部屋の数になる
+	repeated int32 enemy_num = 10; /// 部屋１０００マスあたりの敵の数
+	repeated int32 item_num = 11; /// 部屋１０００マスあたりのアイテムの数
+	repeated int32 item_set_id = 13; /// アイテムセットID
+	int32 monster_house_prob = 16; /// モンスターハウスの確率[%]
+	string bgm = 20;
+	int32 map_object_id = 18; /// マップ画像ID
+	bool no_stair = 23; /// 階段を作らない（タイトル画面用）
+	bool hidden_stair = 24; /// 階段をボスが倒すまで隠す
+	bool question_no_exp = 25; /// 妖精の箱庭用 経験値なし
+	bool question_skill_stable = 26; /// 妖精の箱庭用 スキル使用率100% 
+	bool question_no_miss = 27; /// 妖精の箱庭用 命中率１００％＆クリティカル率０％
+
+	repeated int32 marchant_ids = 29; /// 出る可能性のある商人のIDリスト
+	int32 marchant_prob = 30; /// 商人の出る可能性
+	bool enemy3_dont_place_center = 31; /// Enemy3を中央に配置しない（縦穴用）
+	bool force_awake_objs = 32; /// 岩（オブジェ）を強制的に目覚めさせる
+	
+	/**
+	 * ステージ開始時に実行されるスクリプト
+	 */
+	string on_start = 21;
+	 
+	/**
+	* ステージ終了時に実行されるスクリプト
+	*/
+	string on_finish = 22;
+}
+
+message Tenant {
+	int32 id = 1;
+	repeated int32 eid = 3; /// 敵1のEnemyIdのリスト
+	repeated int32 prob = 4; /// 敵1の出る確率のリスト
+	repeated int32 eid2 = 5; /// 敵2のEnemyIdのリスト
+	repeated int32 prob2 = 6; /// 敵1の出る確率のリスト
+	repeated int32 eid3 = 7; /// 敵2のEnemyIdのリスト
+	repeated int32 prob3 = 8; /// 敵1の出る確率のリスト
+}
+
+message ItemSet {
+	int32 id = 1;
+	string name = 2;
+	repeated int32 item_ids = 3; /// アイテムIDのリスト
+	repeated int32 item_probs = 4; /// アイテムの確率重みリスト
+}
+
+/**
+ * フロアにドロップする武器/盾の出現レベルと確率のテーブル
+ */
+message ArmLevel {
+	int32 floor = 1; /// フロア(1=1F)
+	repeated int32 level = 2; /// 各レベルごとの確立テーブル(level[0]がレベル１の出現率)
+	repeated int32 weapon_item_id = 3; /// 出現する武器のリスト
+	repeated int32 weapon_prob = 4; /// weapon_item_idに対応する出現率
+	repeated int32 shield_item_id = 5; /// 出現する武器のリスト
+	repeated int32 shield_prob = 6; /// weapon_item_idに対応する出現率
+}
+
+/**
+ * HomeInfoに保存されるイベントフラグ
+ */
+ enum EventFlagId {
+	NoEventFlagId = 0; /// ダミー
+	Guide = 8; /// 1=ゲームマスター(マネボー)と会った
+	Anneliese = 1; /// 1=アイテム先生（アンネリーゼ）と会った
+	Hannibal = 2; /// 1=トラップ先生（ハンニバル）と会った
+	//StaffMaster = 3; /// 1=杖先生（エルケ）と会った
+	GothMedusa = 4; /// 1=箱先生(サムソン)と会った
+	Amon = 5; /// 1=特殊床先生（アモン）と会った
+	Lohengrin = 6; /// ロエングリン
+	Ending = 7; /// エンディング
+
+	MainScenario = 9; /// メインシナリオ
+    UnlockLevel = 10; /// アイテムの出現する可能性のアンロックレベル
+	BraveSkillUsed = 11; /// ブレイブスキルを使った
+	Marta = 12; /// 1=大商人（マルタ）と会った
+}
+
+/**
+ * 実績の達成条件の種類
+ */
+enum AchievementType {
+	DungeonClear = 0; /// 特定のダンジョンをクリアしている
+	DungeonReach = 1; /// 特定のフロアまでいっている
+	FangOpen = 2; /// ファングを取得した
+	EventFlagOver = 3; /// 特定のイベントフラグが値を超えている
+	TalkAllPerson  = 4; /// NPC全員と宿り木で話した
+	AllFangOpen = 5; /// ファング図鑑をすべて埋めた
+	AllAchievementOpen = 6; /// すべての実績を解除した
+
+	Reserved01 = 11; /// もしものときの予約フラグ１
+	Reserved02 = 12;
+	Reserved03 = 13;
+	Reserved04 = 14;
+	Reserved05 = 15;
+	Reserved06 = 16;
+	Reserved07 = 17;
+	Reserved08 = 18;
+	Reserved09 = 19;
+}
+
+/**
+ * 実績
+ */
+message Achievement {
+	int32 id = 1; /// 実績ID
+	string name = 2; /// 名前
+	int32 sort_id = 8; /// ソート順（小さいほうが上）
+	AchievementType type = 3; /// 種類
+	int32 icon_num = 4; /// アイコンの番号
+	int32 num = 5; /// 必要なカウント（未使用)
+	int32 target_id = 11; /// 対象のID(FangOpenならItemId, EventFlagOverならイベントフラグの数値)
+	int32 dungeon_id = 6; /// ダンジョンID(DungeonClear, DungeonReachで使用)
+	int32 floor_num = 7; /// フロア番号(DungeonReachで使用)
+	EventFlagId event_flag_id = 9; /// イベントフラグ(EventFlagOverで使用)
+    string desc = 10; /// 説明
+}
+
+
+/**
+ * チュートリアルの種類
+ */
+enum TutorialId {
+	NoneTutorialType = 0; /// ダミー
+	ArivedAtB1f = 1; /// B1Fに到達した
+	ArivedAtB2f = 2; /// B2Fに到達した
+	Bellow50Time = 3; /// 竜の時が50以下になった
+	GetEquipment = 4; /// 武器防具を入手した
+	GotFang = 5; /// ファングを入手した
+	GotArrow  = 6; /// 矢を入手した
+	GotRevealedItem  = 7; /// 未識別の薬、杖、書、箱のいずれかを入手した
+	GotUnrevealedItem  = 8; /// 識別済みの薬、杖、書、箱のいずれかを入手した
+	ChargedSkill = 9; /// スキルがチャージ完了した
+	AppliedTrap = 10; /// 罠にかかった
+	AppliedBadStatus = 11; /// 悪い状態異常にかかった
+	LevelUped = 12; /// レベルが上がった
+}
+
+//===========================================
+// ダンジョンデータ
+//===========================================
+
+/**
+ * イベント
+ *
+ * 
+ * 敵
+ */
+message StageEvent {
+	enum Type {
+		/**
+		 * なし
+		 */
+		None = 0;
+		/**
+		 * プレイヤー
+		 */
+		Player = 1;
+		/**
+		 * 階段
+		 */
+		Stair = 2;
+		/**
+		 * その他、スクリプトで制御されるイベント
+		 */
+		Script = 3;
+		/**
+		 * マーク
+		 */
+		Mark = 4;
+		/**
+		 * アレンジオブジェクト
+		 */
+		Arrange = 5;
+	}
+	int32 x = 1; /// X座標
+	int32 y = 2; /// Y座標
+	Type type = 3; /// 種類
+	int32 id = 4; /// ID(EnemyならキャラクタID, アイテムならItemID, ScriptならEventScriptID)
+	int32 dungeon = 5; /// ダンジョンID(Stairのみ)
+	int32 floor = 6; /// 階(Stairのみ)
+	string script = 7; /// スクリプト(Scriptでのみ使用)
+	bool repeat = 8; /// スクリプトが１回のみでなく複数回発動するかどうか(Scriptでのみ使用)
+	bool keep_item = 9; /// 階段での移動時にアイテムを保持するか（宿り木からダンジョンへの移動など）
+	bool keep_all = 12; /// 階段での移動時にアイテムや宿り木の保存アイテムなどすべてを保持するか（宿り木の倉庫の行き来など）
+	int32 dir = 10; /// 方向(0:ランダム, 1: 北, 2: 北東, 3~8: 以後時計回りに)(Playerでのみ使用)
+	int32 level = 11; /// レベル(Playerでのみ使用)
+}
+
+/**
+ * 部屋の内容を指定する
+ */
+message StageRoom {
+	enum Type {
+		Normal = 0;
+		MonsterHouse = 1; // モンスターハウス
+	}
+	
+	enum Attribute {
+		None = 0;
+	}
+
+	int32 x = 1;
+	int32 y = 2;
+	int32 id = 3;
+	Type type = 6;
+	repeated Attribute attribute = 4;
+	int32 hint_id = 13; /// ヒントメッセージのID
+}
+
+message StageCharacter {
+	enum Attribute {
+		Awake = 0; /// 確定で起きている
+		Snooze = 1; /// 確定で仮眠している
+		Semisnooze = 2; /// 確定で半仮眠している
+	}
+			
+	int32 x = 1;
+	int32 y = 2;
+	int32 id = 3;
+	int32 dir = 5; /// 向いている方向(0: 指定なし、 1: 北, 2: 北東, 3~8: 以後時計回りに)
+	repeated Attribute attribute = 4;
+}
+
+message StageItem {
+	int32 x = 1;
+	int32 y = 2;
+	int32 id = 3;
+	int32 rest_count = 4; /// 残り回数（0ならデフォルトの範囲でランダムな値になる）
+	bool cursed = 5; /// 呪われているかどうか
+	bool unreveal = 6; /// 未識別かどうか
+}
+
+message Stage {
+	int32 id = 1;
+	string symbol = 8;
+	int32 width = 2;
+	int32 height = 3;
+	string name = 4;
+	string field_name = 5;
+	repeated int32 tiles = 6;
+	repeated StageCharacter characters = 7;
+	repeated StageEvent events = 9;
+	repeated StageItem items = 10;
+	repeated StageRoom rooms = 11;
+}
+
+message MetaMapTmx {
+	int32 id = 1;
+	string symbol = 2;
+	int32 width = 3;
+	int32 height = 4;
+	repeated int32 tiles = 5;
+	repeated int32 flags = 7;
+}
+
+/**
+ * メタマップの情報
+ */
+ message MetaMapDesc {
+	/*
+	 * 所属しているメタマップグループの情報
+	 */
+	message GroupEntry {
+		string meta_map_set_id = 1; // 
+		int32 prob = 2;
+	}
+	int32 id = 1; /// TMXのファイル名(.tmxを抜いたもの)
+	string tmx_filename = 15; /// TMXのファイル名
+	string spec = 4; /// 仕様書の説明文
+	int32 cell_width = 5; /// マップの幅[マス]
+	int32 cell_height = 6; /// マップの高さ[マス]
+	int32 min_room_size = 14; /// 最小の部屋のサイズ
+	bool circular = 7; /// 外周マップかどうか（一番外の枠のグリッドが小さくなる）
+	repeated GroupEntry group_entries = 8; /// 所属するグループの情報
+	int32 oneway_cut_prob = 9; /// 行き止まりの道が消える確率[%]
+	int32 straight_way_prob = 10; /// まっすぐな道が伸びる確率[%]（通路をつなぐ二部屋のうち両方が通路部屋でない場合に使用される）
+	int32 straight_way_for_passage_prob = 11; /// 通路へまっすぐな道が伸びる確率[%]（通路をつなぐ二部屋のうちいずれかが通路部屋の場合に使用される）
+	int32 node_cut_rate = 12; /// グリッド間の接続を消す割合（接続が１００個あった場合に、何個の道を消すか）
+	int32 passage_cut_prob = 13; /// 未確定の通路が消える確率[%]
+	int32 reduce_room_num = 16; /// 部屋の数をDungeonStageの指定よりも減らす数（０なら変化なし）
+}
+
+/**
+ * 部屋の情報
+ */
+message RoomDesc {
+	int32 id = 1;
+	string tmx_filename = 8; /// TMXの名前
+	string group = 2; /// 所属するグループ
+	string spec = 4; /// 仕様書の説明文
+	
+	repeated int32 monster_num = 5; /// 各エネミーセットのモンスターの数
+	repeated int32 item_num = 6; /// 各アイテムセットのアイテムの数
+	int32 fence_prob = 7; /// 「にっくき！とじこめ岩」の出る確率
+}
+
+//===========================================
+// その他
+//===========================================
+
+/** 
+ * プラットフォームの種類
+ */
+enum PlatformType {
+	Switch = 0;
+	Steam = 1;
+	Wsa = 2; /// XBOX/Windows Storeを含む
+	Ps4 = 3;
+}
+
+/**
+ * 更新情報のデータ
+ */
+message NewsInfo {
+	int32 id = 1;
+	string title = 2; /// タイトル
+	string content = 3; /// 内容
+	PlatformType platform = 4; /// 対象のプラットフォーム
+}
+
+/**
+ * 更新情報のデータ
+ */
+message TutorialDialog {
+	int32 id = 1; 
+	string name = 2; /// 名前
+	string image = 5; /// 画像名
+	string content = 3; /// 内容
+	int32 wait_msec = 4; /// ダイアログが表示されるまでの待ち時間
+	int32 order = 6; /// ソート順
+}
+
+//===========================================
+// 装備表示位置データ（仮フォーマット）
+//===========================================
+
+// json
+message Size {
+	int32 x = 1;
+	int32 y = 2;
+	int32 z = 3;
+}
+
+message PositionTemplate {
+	int32 id = 1;
+	string name = 2;
+	string type_name = 3; /// 種類名
+	int32 equipment_id = 4;	/// 装備画像番号
+	string animation_name = 5;	/// アニメーション名
+	int32 equipment_image_no = 6;	/// 装備画像番号
+	Size relative_position = 7;	/// キャラクタ画像センター位置からの相対座標
+	Size rotation = 8;	/// 回転
+	Size scale = 9;	/// 拡大縮小
+	bool flip_x = 10;	/// X反転
+	bool flip_y = 11;	/// Y反転
+	int32 additional_sorting_order = 12;	/// キャラクタ画像レイヤーからの相対値
+}
+
+//===========================================
+// デバッグメニュー
+//===========================================
+
+message DebugMenuInfo {
+	string name = 1;
+	string action = 2;
+	string shortcut = 4;
+	repeated DebugMenuInfo children = 3;
+}
+
+//===========================================
+// テストデータ
+//===========================================
+
+/**
+ * テストのゲーム設定
+ */
+message TestGame {
+	int32 id = 1;
+	string name = 3;
+	int32 dungeon_id = 4; /// ダンジョンID(0ならステージを使用)
+	int32 stage_id = 6; /// ステージID
+	int32 floor = 7; // 開始するフロア
+	int32 seed = 5; /// ランダムのシード(0ならシードもランダム)
+	int32 initial_level = 11; /// プレイヤーの初期レベル
+	int32 gold = 13; /// ゴールド
+
+	string tmx_name = 8;
+	repeated int32 enemy_ids = 9;
+	repeated int32 item_ids = 10;
+	repeated int32 trap_ids = 12;
+}
+
+message CharacterAppearance {
+	int32 id = 1;
+	Size size = 2;
+	Size height_bias = 3;
+	Size ui_overlay_height_hp = 4;
+	Size ui_overlay_height_status = 5;
+	Size shadow_size = 6;
+	int32 animation_speed = 7;
+	string damage_sound = 8;
+	string dead_sound = 9;
+	Size shadow_position = 10; /// 影の位置
+}
+
+/**
+ * Add On Content の情報
+ */
+message AocDesc {
+	int32 id = 1;
+	string name = 2; /// 表示名
+	int32 switch_aoc_index = 3; /// SwitchのAOCのID
+	int32 steam_dlc_app_id = 4; /// SteamのAOCのAppID
+	int32 ps4_content_app_id = 5; /// PS4のAOCのAppID
 }
