@@ -13,10 +13,12 @@ syntax = "proto3";
 
 package Master;
 
+/*
 message PbxHeader {
 	map<int32,int32> int_index = 1;
 	map<string,int32> string_index = 2;
 }
+*/
 
 /**
  * 変換メッセージ

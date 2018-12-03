@@ -307,7 +307,7 @@ func (d *FileDescriptor) goFileName(pathType pathType) string {
 	if ext := path.Ext(name); ext == ".proto" || ext == ".protodevel" {
 		name = name[:len(name)-len(ext)]
 	}
-	name += ".pb.cs"
+	name = CamelCase(name) + ".cs"
 
 	if pathType == pathTypeSourceRelative {
 		return name
@@ -984,23 +984,33 @@ func Annotate(file *FileDescriptor, path string, atoms ...interface{}) *Annotate
 
 // 内部クラスの定義を開始する
 func OpenInternalType(g *Generator, t []string) {
+	hasNamespace := false
 	for i, a := range t {
 		if i < len(t)-1 {
 			if a != "" {
-				g.P("public sealed partial class ", a, " {")
+				hasNamespace = true
+				g.P("public sealed partial class ", a, ": pb.Message {")
 			}
 		}
+	}
+	if hasNamespace {
+		g.P("public static partial class Types {")
 	}
 }
 
 // 内部クラスの定義を終了する
 func CloseInternalType(g *Generator, t []string) {
+	hasNamespace := false
 	for i, a := range t {
 		if i < len(t)-1 {
 			if a != "" {
+				hasNamespace = true
 				g.P("}")
 			}
 		}
+	}
+	if hasNamespace {
+		g.P("}")
 	}
 }
 
@@ -1167,7 +1177,7 @@ func (g *Generator) generate(file *FileDescriptor) {
 		}
 	*/
 	//g.generateInitFunction()
-	g.generateFileDescriptor(file)
+	//g.generateFileDescriptor(file)
 
 	// Run the plugins before the imports so we know which imports are necessary.
 	g.runPlugins(file)
@@ -1191,6 +1201,7 @@ func (g *Generator) generate(file *FileDescriptor) {
 	}
 	g.Write(rem.Bytes())
 	g.P("}")
+	g.P("#endregion Designer generated code")
 
 }
 
@@ -1293,6 +1304,7 @@ func (g *Generator) generateImports() {
 	g.P("using System.Collections.Generic;")
 	g.P("using pb = global::Google.ProtocolBuffers;")
 	g.P("using scg = global::System.Collections.Generic;")
+	g.P("using System;")
 	g.P()
 }
 
@@ -1342,7 +1354,7 @@ func (g *Generator) generateEnum(enum *EnumDescriptor) {
 		}
 
 		name := CamelCase(strings.ToLower(*e.Name))
-		g.P(name, " = ", e.Number, " ", deprecatedValue)
+		g.P(name, " = ", e.Number, " ", deprecatedValue, ",")
 		g.file.addExport(enum, constOrVarSymbol{name, "const", enumName})
 	}
 	g.P("}")
@@ -1523,10 +1535,10 @@ func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescripto
 		typ, wire = "String", "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_GROUP:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = "*"+g.TypeName(desc), "group"
+		typ, wire = g.TypeName(desc), "group"
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = "*"+g.TypeName(desc), "bytes"
+		typ, wire = g.TypeName(desc), "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_BYTES:
 		typ, wire = "byte[]", "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_ENUM:
@@ -1753,21 +1765,49 @@ func (f *simpleField) getter(g *Generator, mc *msgCtx) {
 }
 
 func (f *simpleField) writeTo(g *Generator, mc *msgCtx) {
+	d := f.fieldCommon.proto
 	g.P("if( ", f.goName, "!=", GetDefaultValue(f.proto.GetType(), &f.fieldCommon), ") {")
-	g.P("output.Write", f.goType, "(", f.proto.GetNumber(), ",", f.goName, ")")
+	if isRepeated(d) {
+		g.P("output.WriteArray(", f.proto.GetNumber(), ",", f.goName, ");")
+	} else {
+		g.P("output.Write", f.baseType(), "(", f.proto.GetNumber(), ",", f.goName, ");")
+	}
 	g.P("}")
 }
 
 func (f *simpleField) calcSize(g *Generator, mc *msgCtx) {
+	d := f.fieldCommon.proto
 	g.P("if( ", f.goName, "!=", GetDefaultValue(f.proto.GetType(), &f.fieldCommon), ") {")
-	g.P("output.Write", f.goType, "(", f.proto.GetNumber(), ",", f.goName, ")")
+	if isRepeated(d) {
+		g.P("foreach (var element in ", f.goName, ") {")
+		g.P("size += pb::CodedOutputStream.Compute", f.baseType(), "Size(", f.proto.GetNumber(), ", element);")
+		g.P("}")
+	} else {
+		g.P("size += pb::CodedOutputStream.Compute", f.baseType(), "Size(", f.proto.GetNumber(), ",", f.goName, ");")
+	}
 	g.P("}")
 }
 
 func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
-	g.P("if( ", f.goName, "!=", GetDefaultValue(f.proto.GetType(), &f.fieldCommon), ") {")
-	g.P("output.Write", f.goType, "(", f.proto.GetNumber(), ",", f.goName, ")")
+	d := f.fieldCommon.proto
+	g.P("case ", f.proto.GetNumber(), ": {")
+	if isRepeated(d) {
+		g.P("input.ReadMessageArray(tag, this.", f.goName, ",", f.goType, ".CreateInstance );")
+	} else {
+		g.P("input.Read", f.baseType(), "(ref this.", f.goName, ");")
+	}
+	g.P("break;")
 	g.P("}")
+}
+
+func (f *simpleField) baseType() string {
+	d := f.fieldCommon.proto
+	switch *d.Type {
+	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+		return "Message"
+	default:
+		return f.goType
+	}
 }
 
 // setter prints the setter method of the field.
@@ -2308,7 +2348,7 @@ func (g *Generator) generateMessageStruct(mc *msgCtx, topLevelFields []topLevelF
 		g.P(deprecationComment)
 	}
 
-	g.P("public sealed partial class ", Annotate(mc.message.file, mc.message.path, mc.goName), ": pb.Message {")
+	//g.P("public sealed partial class ", Annotate(mc.message.file, mc.message.path, mc.goName), ": pb.Message {")
 	for _, pf := range topLevelFields {
 		pf.decl(g, mc)
 	}
@@ -2339,7 +2379,7 @@ func (g *Generator) generateCalcSize(mc *msgCtx, topLevelFields []topLevelField)
 	g.P("}")
 	g.P()
 
-	g.P("private int CalcSerializedSize(pb::CodedOutputStream output) {")
+	g.P("private int CalcSerializedSize() {")
 	g.P("int size = 0;")
 	for _, pf := range topLevelFields {
 		pf.calcSize(g, mc)
@@ -2349,19 +2389,27 @@ func (g *Generator) generateCalcSize(mc *msgCtx, topLevelFields []topLevelField)
 }
 
 func (g *Generator) generateMergeFrom(mc *msgCtx, topLevelFields []topLevelField) {
-	g.P("public override int SerializedSize {")
-	g.P("get {")
-	g.P("return CalcSerializedSize();")
+	g.P("public override void MergeFrom(pb::CodedInputStream input) {")
+	g.P("uint tag;")
+	g.P("while (input.ReadTag(out tag)) {")
+	g.P("switch (tag) {")
+	g.P("case 0: {")
+	g.P("throw pb::InvalidProtocolBufferException.InvalidTag();")
 	g.P("}")
+	g.P("default: {")
+	g.P("if (pb::WireFormat.IsEndGroupTag(tag)) {")
+	g.P("return;")
 	g.P("}")
-	g.P()
+	g.P("input.SkipField(); // unknown field")
+	g.P("break;")
+	g.P("}")
 
-	g.P("private int CalcSerializedSize(pb::CodedOutputStream output) {")
-	g.P("int size = 0;")
 	for _, pf := range topLevelFields {
-		pf.calcSize(g, mc)
+		pf.mergeFrom(g, mc)
 	}
-	g.P("return size;")
+
+	g.P("}")
+	g.P("}")
 	g.P("}")
 }
 
@@ -2375,12 +2423,28 @@ func (g *Generator) generateSetters(mc *msgCtx, topLevelFields []topLevelField) 
 // generateCommonMethods adds methods to the message that are not on a per field basis.
 func (g *Generator) generateCommonMethods(mc *msgCtx) {
 	// Reset, String and ProtoMessage methods.
-	g.P("public ", mc.goName, "() { }")
-	g.P("public static ", mc.goName, " CreateInstance() { var obj = new ", mc.goName, "(); obj.Finish(); return obj; }")
-	g.P("public static ", mc.goName, " CreateEmpty() { return new ", mc.goName, "(); }")
-	g.P("private static readonly ", mc.goName, " defaultInstance = new ", mc.goName, "();")
-	g.P("public static ", mc.goName, " DefaultInstance {")
+	typeName := mc.message.TypeName()[len(mc.message.TypeName())-1]
+	g.P("public ", typeName, "() { }")
+	g.P("public static ", typeName, " CreateInstance() { var obj = new ", typeName, "(); obj.Finish(); return obj; }")
+	g.P("public static ", typeName, " CreateEmpty() { return new ", typeName, "(); }")
+	g.P("private static readonly ", typeName, " defaultInstance = new ", typeName, "();")
+	g.P("public static ", typeName, " DefaultInstance {")
 	g.P("  get { return defaultInstance; }")
+	g.P("}")
+
+	g.P("public override void Init() {")
+	g.P("}")
+	g.P("public override void Finish() {")
+	g.P("}")
+
+	g.P("public static ", typeName, " ParseFrom(byte[] data) {")
+	g.P("var mes = CreateInstance(); mes.MergeFrom(data); return mes;")
+	g.P("}")
+	g.P("public static ", typeName, " ParseFrom(global::System.IO.Stream input) {")
+	g.P("var mes = CreateInstance(); mes.MergeFrom(input); return mes;")
+	g.P("}")
+	g.P("public static ", typeName, " ParseFrom(pb::CodedInputStream input) {")
+	g.P("var mes = CreateInstance(); mes.MergeFrom(input); return mes;")
 	g.P("}")
 
 }
@@ -2591,6 +2655,11 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		message: message,
 	}
 
+	ccTypeName := CamelCaseSliceAll(typeName)
+	OpenInternalType(g, ccTypeName)
+	className := ccTypeName[len(ccTypeName)-1]
+	g.P("public sealed partial class ", className, ": pb.Message {")
+
 	g.generateMessageStruct(mc, topLevelFields)
 	g.P()
 	g.generateCommonMethods(mc)
@@ -2606,6 +2675,8 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	//g.P()
 	//g.generateOneofFuncs(mc, topLevelFields)
 	//g.P()
+
+	CloseInternalType(g, ccTypeName)
 	g.P("}")
 	g.P()
 
@@ -2885,17 +2956,19 @@ func CamelCase(s string) string {
 		if c == '_' && i+1 < len(s) && isASCIILower(s[i+1]) {
 			continue // Skip the underscore in s.
 		}
-		if isASCIIDigit(c) {
-			t = append(t, c)
-			continue
-		}
+		/*
+			if isASCIIDigit(c) {
+				t = append(t, c)
+				continue
+			}
+		*/
 		// Assume we have a letter now - if not, it's a bogus identifier.
 		// The next word is a sequence of characters that must start upper case.
 		if isASCIILower(c) {
 			c ^= ' ' // Make it a capital letter.
 		}
 		t = append(t, c) // Guaranteed not lower case.
-		// Accept lower case sequence that follows.
+		// Accep	t lower case sequence that follows.
 		for i+1 < len(s) && isASCIILower(s[i+1]) {
 			i++
 			t = append(t, s[i])
