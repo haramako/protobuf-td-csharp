@@ -1509,18 +1509,37 @@ func (g *Generator) TypeName(obj Object) string {
 	return g.DefaultPackageName(obj) + CamelCaseSlice(obj.TypeName())
 }
 
+func (g *Generator) TypeNameWithTypes(obj Object) string {
+	return g.DefaultPackageName(obj) + CamelCaseSliceWithType(obj.TypeName())
+}
+
+func GetFunctionPostfix(typ string) string {
+	switch typ {
+	case "double":
+		return "Double"
+	case "float":
+		return "Float"
+	case "bool":
+		return "Bool"
+	case "string":
+		return "String"
+	default:
+		return typ
+	}
+}
+
 // GoType returns a string representing the type name, and the wire type
 func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescriptorProto) (typ string, wire string) {
 	// TODO: Options.
 	switch *field.Type {
 	case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
-		typ, wire = "float64", "fixed64"
+		typ, wire = "double", "fixed64"
 	case descriptor.FieldDescriptorProto_TYPE_FLOAT:
-		typ, wire = "float32", "fixed32"
+		typ, wire = "float", "fixed32"
 	case descriptor.FieldDescriptorProto_TYPE_INT64:
-		typ, wire = "int64", "varint"
+		typ, wire = "Int64", "varint"
 	case descriptor.FieldDescriptorProto_TYPE_UINT64:
-		typ, wire = "uint64", "varint"
+		typ, wire = "UInt64", "varint"
 	case descriptor.FieldDescriptorProto_TYPE_INT32:
 		typ, wire = "Int32", "varint"
 	case descriptor.FieldDescriptorProto_TYPE_UINT32:
@@ -1532,18 +1551,18 @@ func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescripto
 	case descriptor.FieldDescriptorProto_TYPE_BOOL:
 		typ, wire = "bool", "varint"
 	case descriptor.FieldDescriptorProto_TYPE_STRING:
-		typ, wire = "String", "bytes"
+		typ, wire = "string", "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_GROUP:
 		desc := g.ObjectNamed(field.GetTypeName())
 		typ, wire = g.TypeName(desc), "group"
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = g.TypeName(desc), "bytes"
+		typ, wire = g.TypeNameWithTypes(desc), "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_BYTES:
 		typ, wire = "byte[]", "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_ENUM:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = g.TypeName(desc), "varint"
+		typ, wire = g.TypeNameWithTypes(desc), "varint"
 	case descriptor.FieldDescriptorProto_TYPE_SFIXED32:
 		typ, wire = "Int32", "fixed32"
 	case descriptor.FieldDescriptorProto_TYPE_SFIXED64:
@@ -1689,6 +1708,7 @@ type fieldCommon struct {
 	protoName  string // Name of field in proto language, e.g. "field_name" or "descriptor"
 	getterName string // Name of the getter, e.g. "GetFieldName" or "GetDescriptor_"
 	goType     string // The Go type as a string, e.g. "*int32" or "*OtherMessage"
+	csFullType string // FQN of C# class, e.g. "Int32" or "Hoge.Types.Fuga"
 	tags       string // The tag string/annotation for the type, e.g. `protobuf:"varint,8,opt,name=region_id,json=regionId"`
 	fullPath   string // The full path of the field as used by Annotate etc, e.g. "4,0,2,0"
 	proto      *descriptor.FieldDescriptorProto
@@ -1705,11 +1725,16 @@ func (f *fieldCommon) getGoType() string {
 }
 
 func GetDefaultValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) string {
+	if isRepeated(f.proto) {
+		return "null"
+	}
 	switch typ {
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		return "null"
 	case descriptor.FieldDescriptorProto_TYPE_STRING:
 		return "\"\""
+	case descriptor.FieldDescriptorProto_TYPE_BOOL:
+		return "false"
 	default:
 		return "0"
 	}
@@ -1728,7 +1753,7 @@ type simpleField struct {
 
 // decl prints the declaration of the field in the struct (if any).
 func (f *simpleField) decl(g *Generator, mc *msgCtx) {
-	g.P(f.comment, "public ", f.goType, " ", Annotate(mc.message.file, f.fullPath, f.goName), f.deprecated, " = ", GetDefaultValue(f.protoType, &f.fieldCommon), ";")
+	g.P(f.comment, "public ", f.csFullType, " ", Annotate(mc.message.file, f.fullPath, f.goName), f.deprecated, " = ", GetDefaultValue(f.protoType, &f.fieldCommon), ";")
 }
 
 // getter prints the getter for the field.
@@ -1768,9 +1793,11 @@ func (f *simpleField) writeTo(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
 	g.P("if( ", f.goName, "!=", GetDefaultValue(f.proto.GetType(), &f.fieldCommon), ") {")
 	if isRepeated(d) {
-		g.P("output.WriteArray(", f.proto.GetNumber(), ",", f.goName, ");")
+		g.P("output.WriteMessageArray(", f.proto.GetNumber(), ",", f.goName, ");")
+	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
+		g.P("output.WriteEnum(", f.proto.GetNumber(), ",", f.goName, ");")
 	} else {
-		g.P("output.Write", f.baseType(), "(", f.proto.GetNumber(), ",", f.goName, ");")
+		g.P("output.Write", GetFunctionPostfix(f.baseType()), "(", f.proto.GetNumber(), ",", f.goName, ");")
 	}
 	g.P("}")
 }
@@ -1782,8 +1809,10 @@ func (f *simpleField) calcSize(g *Generator, mc *msgCtx) {
 		g.P("foreach (var element in ", f.goName, ") {")
 		g.P("size += pb::CodedOutputStream.Compute", f.baseType(), "Size(", f.proto.GetNumber(), ", element);")
 		g.P("}")
+	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
+		g.P("size += pb::CodedOutputStream.ComputeEnumSize(", f.proto.GetNumber(), ", (int)", f.goName, ");")
 	} else {
-		g.P("size += pb::CodedOutputStream.Compute", f.baseType(), "Size(", f.proto.GetNumber(), ",", f.goName, ");")
+		g.P("size += pb::CodedOutputStream.Compute", GetFunctionPostfix(f.baseType()), "Size(", f.proto.GetNumber(), ",", f.goName, ");")
 	}
 	g.P("}")
 }
@@ -1792,9 +1821,13 @@ func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
 	g.P("case ", f.proto.GetNumber(), ": {")
 	if isRepeated(d) {
-		g.P("input.ReadMessageArray(tag, this.", f.goName, ",", f.goType, ".CreateInstance );")
+		g.P("input.ReadMessageArray(tag, this.", f.goName, ",", f.csFullType, ".CreateInstance );")
+	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
+		g.P("input.ReadMessage(this.", f.goName, ");")
+	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
+		g.P("input.ReadEnum(this.", f.goName, ");")
 	} else {
-		g.P("input.Read", f.baseType(), "(ref this.", f.goName, ");")
+		g.P("input.Read", GetFunctionPostfix(f.baseType()), "(ref this.", f.goName, ");")
 	}
 	g.P("break;")
 	g.P("}")
@@ -2457,6 +2490,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	typeName := message.TypeName()
 	// The full type name, CamelCased.
 	goTypeName := CamelCaseSlice(typeName)
+	//fullType := CamelCaseSliceWithType(typeName)
 
 	usedNames := make(map[string]bool)
 	for _, n := range methodNames {
@@ -2632,6 +2666,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				goName:     fieldName,
 				getterName: fieldGetterName,
 				goType:     typename,
+				csFullType: typename,
 				tags:       tag,
 				protoName:  field.GetName(),
 				fullPath:   fieldFullPath,
@@ -2979,7 +3014,13 @@ func CamelCase(s string) string {
 
 // CamelCaseSlice is like CamelCase, but the argument is a slice of strings to
 // be joined with "_".
-func CamelCaseSlice(elem []string) string { return CamelCase(strings.Join(elem, ".")) }
+func CamelCaseSlice(elem []string) string {
+	return CamelCase(strings.Join(elem, "."))
+}
+
+func CamelCaseSliceWithType(elem []string) string {
+	return CamelCase(strings.Join(elem, ".Types."))
+}
 
 func CamelCaseSliceAll(elem []string) []string {
 	result := make([]string, len(elem))
@@ -2990,7 +3031,9 @@ func CamelCaseSliceAll(elem []string) []string {
 }
 
 // dottedSlice turns a sliced name into a dotted name.
-func dottedSlice(elem []string) string { return strings.Join(elem, ".") }
+func dottedSlice(elem []string) string {
+	return strings.Join(elem, ".")
+}
 
 // Is this field optional?
 func isOptional(field *descriptor.FieldDescriptorProto) bool {
