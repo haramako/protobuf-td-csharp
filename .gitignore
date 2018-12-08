@@ -12,3 +12,6 @@ GPATH
 GRTAGS
 [#]*
 *~
+
+.vs
+packages

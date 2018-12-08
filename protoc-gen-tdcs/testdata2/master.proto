@@ -2363,6 +2363,7 @@ enum PlatformType {
 	Steam = 1;
 	Wsa = 2; /// XBOX/Windows Storeを含む
 	Ps4 = 3;
+	Dmm = 4;
 }
 
 /**

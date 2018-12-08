@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cs_test", "cs_test.csproj", "{F94D3EFC-354D-46B4-848D-F407FC047245}"
 EndProject
 Global
@@ -13,5 +15,11 @@ Global
 		{F94D3EFC-354D-46B4-848D-F407FC047245}.Debug|x86.Build.0 = Debug|x86
 		{F94D3EFC-354D-46B4-848D-F407FC047245}.Release|x86.ActiveCfg = Release|x86
 		{F94D3EFC-354D-46B4-848D-F407FC047245}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3BFDBBD6-1509-4326-B1FB-DD07DE5DFB9B}
 	EndGlobalSection
 EndGlobal
