@@ -59,6 +59,7 @@ namespace Test
 			mes.Sint64Value = -6;
 
 			//mes.BytesValue = ByteString.CopyFrom(new byte[]{1,2,3});
+            /*
 
 			mes.MessageValue = EmbedMessage.CreateInstance();
 
@@ -67,7 +68,14 @@ namespace Test
 			mes.RepeatedMessage = new List<EmbedMessage>(){EmbedMessage.CreateInstance()};
 			mes.PackedInt32 = new List<int>(){21,22,23};
 			mes.PackedInt64 = new List<long>(){32,33};
+            */
 
+            foreach(var c in mes.Dump())
+            {
+                Console.Write(string.Format("{0},", c));
+            }
+            Console.WriteLine();
+ 
 			Assert.IsTrue(comp(mes, TestMessage.ParseFrom(mes.Dump())));
 		}
 		

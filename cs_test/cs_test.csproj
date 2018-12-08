@@ -37,9 +37,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GoogleProtocolBuffer">
-      <HintPath>..\GoogleProtocolBuffer.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
@@ -49,6 +46,15 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cs_lib\ByteArray.cs" />
+    <Compile Include="cs_lib\ByteString.cs" />
+    <Compile Include="cs_lib\CodedInputStream.cs" />
+    <Compile Include="cs_lib\CodedOutputStream.ComputeSize.cs" />
+    <Compile Include="cs_lib\CodedOutputStream.cs" />
+    <Compile Include="cs_lib\FrameworkPortability.cs" />
+    <Compile Include="cs_lib\InvalidProtocolBufferException.cs" />
+    <Compile Include="cs_lib\Message.cs" />
+    <Compile Include="cs_lib\WireFormat.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />

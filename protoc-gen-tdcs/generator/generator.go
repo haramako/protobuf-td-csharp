@@ -1801,7 +1801,7 @@ func (f *simpleField) writeTo(g *Generator, mc *msgCtx) {
 			//g.P("output.WriteEnumArray(", f.proto.GetNumber(), ",", f.goName, ");") // TODO: WriteEnumArray対応
 		} else {
 			// TODO: 各Array対応
-			//g.P("output.WriteEnumArray(", f.proto.GetNumber(), ",", f.goName, ");")
+			g.P("output.Write", GetFunctionPostfix(f.baseElementType()), "Array(", f.proto.GetNumber(), ",", f.goName, ");")
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		g.P("output.WriteEnum(", f.proto.GetNumber(), ", (int)", f.goName, ", ", f.goName, ");") // TODO: rawValueはいらない？
@@ -1828,7 +1828,7 @@ func (f *simpleField) calcSize(g *Generator, mc *msgCtx) {
 
 func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
-	g.P("case ", f.proto.GetNumber(), ": {")
+	g.P("case ", f.proto.GetNumber()<<3, ": {")
 	if isRepeated(d) {
 		if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 			g.P("input.ReadMessageArray(tag, this.", f.goName, ",", f.csElementType, ".CreateInstance );")

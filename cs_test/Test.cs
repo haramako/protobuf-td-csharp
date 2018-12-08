@@ -73,15 +73,19 @@ if( Sint64Value!=0) {
 output.WriteInt64(7,Sint64Value);
 }
 if( RepeatedInt32!=null) {
+output.WriteInt32Array(10,RepeatedInt32);
 }
 if( RepeatedInt64!=null) {
+output.WriteInt64Array(11,RepeatedInt64);
 }
 if( RepeatedMessage!=null) {
 output.WriteMessageArray(12,RepeatedMessage);
 }
 if( PackedInt32!=null) {
+output.WriteInt32Array(20,PackedInt32);
 }
 if( PackedInt64!=null) {
+output.WriteInt64Array(21,PackedInt64);
 }
 }
 public override int SerializedSize {
@@ -149,51 +153,51 @@ return;
 input.SkipField(); // unknown field
 break;
 }
-case 1: {
+case 8: {
 input.ReadInt32(ref this.Int32Value);
 break;
 }
-case 2: {
+case 16: {
 input.ReadInt64(ref this.Int64Value);
 break;
 }
-case 3: {
+case 24: {
 input.ReadString(ref this.StringValue);
 break;
 }
-case 4: {
+case 32: {
 input.ReadEnum(ref this.EnumValue);
 break;
 }
-case 5: {
+case 40: {
 input.ReadMessage(this.MessageValue);
 break;
 }
-case 6: {
+case 48: {
 input.ReadInt32(ref this.Sint32Value);
 break;
 }
-case 7: {
+case 56: {
 input.ReadInt64(ref this.Sint64Value);
 break;
 }
-case 10: {
+case 80: {
 input.ReadInt32Array(tag, this.RepeatedInt32);
 break;
 }
-case 11: {
+case 88: {
 input.ReadInt64Array(tag, this.RepeatedInt64);
 break;
 }
-case 12: {
+case 96: {
 input.ReadMessageArray(tag, this.RepeatedMessage,EmbedMessage.CreateInstance );
 break;
 }
-case 20: {
+case 160: {
 input.ReadInt32Array(tag, this.PackedInt32);
 break;
 }
-case 21: {
+case 168: {
 input.ReadInt64Array(tag, this.PackedInt64);
 break;
 }
@@ -258,7 +262,7 @@ return;
 input.SkipField(); // unknown field
 break;
 }
-case 1: {
+case 8: {
 input.ReadInt32(ref this.Val);
 break;
 }
