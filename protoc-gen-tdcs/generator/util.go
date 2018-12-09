@@ -154,3 +154,35 @@ func baseName(name string) string {
 	}
 	return name
 }
+
+// 内部クラスの定義を開始する
+func OpenInternalType(g *Generator, t []string) {
+	hasNamespace := false
+	for i, a := range t {
+		if i < len(t)-1 {
+			if a != "" {
+				hasNamespace = true
+				g.P("public sealed partial class ", a, ": pb.Message {")
+			}
+		}
+	}
+	if hasNamespace {
+		g.P("public static partial class Types {")
+	}
+}
+
+// 内部クラスの定義を終了する
+func CloseInternalType(g *Generator, t []string) {
+	hasNamespace := false
+	for i, a := range t {
+		if i < len(t)-1 {
+			if a != "" {
+				hasNamespace = true
+				g.P("}")
+			}
+		}
+	}
+	if hasNamespace {
+		g.P("}")
+	}
+}

@@ -15,7 +15,7 @@ type simpleField struct {
 
 // decl prints the declaration of the field in the struct (if any).
 func (f *simpleField) decl(g *Generator, mc *msgCtx) {
-	g.P(f.comment, "public ", f.csFullType, " ", Annotate(mc.message.file, f.fullPath, f.goName), f.deprecated, " = ", GetDefaultValue(f.protoType, &f.fieldCommon), ";")
+	g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " = ", GetDefaultValue(f.protoType, &f.fieldCommon), ";")
 }
 
 // getter prints the getter for the field.
@@ -29,7 +29,7 @@ func (f *simpleField) getter(g *Generator, mc *msgCtx) {
 	if f.deprecated != "" {
 		g.P(f.deprecated)
 	}
-	g.P("func (m *", mc.goName, ") ", Annotate(mc.message.file, f.fullPath, f.getterName), "() "+tname+" {")
+	g.P("func (m *", mc.goName, ") ", f.getterName, "() "+tname+" {")
 	if f.getterDef == "nil" { // Simpler getter
 		g.P("if m != nil {")
 		g.P("return m." + f.goName)

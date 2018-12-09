@@ -5,6 +5,45 @@ import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
+// oneofField represents the oneof on top level.
+// The alternative fields within the oneof are represented by oneofSubField.
+type oneofField struct {
+	fieldCommon
+	subFields []*oneofSubField // All the possible oneof fields
+	comment   string           // The full comment for the field, e.g. "// Types that are valid to be assigned to MyOneof:\n\\"
+}
+
+// decl prints the declaration of the field in the struct (if any).
+func (f *oneofField) decl(g *Generator, mc *msgCtx) {
+	comment := f.comment
+	for _, sf := range f.subFields {
+		comment += "//\t*" + sf.oneofTypeName + "\n"
+	}
+	//g.P(comment, Annotate(mc.message.file, f.fullPath, f.goName), " ", f.goType, " `", f.tags, "`")
+}
+
+// getter for a oneof field will print additional discriminators and interfaces for the oneof,
+// also it prints all the getters for the sub fields.
+func (f *oneofField) getter(g *Generator, mc *msgCtx) {
+}
+
+// setter prints the setter method of the field.
+func (f *oneofField) setter(g *Generator, mc *msgCtx) {
+	// No setters for oneof yet
+}
+
+func (f *oneofField) writeTo(g *Generator, mc *msgCtx) {
+	panic("writeTo not supported")
+}
+
+func (f *oneofField) calcSize(g *Generator, mc *msgCtx) {
+	panic("calcSize not supported")
+}
+
+func (f *oneofField) mergeFrom(g *Generator, mc *msgCtx) {
+	panic("mergeFrom not supported")
+}
+
 // oneofSubFields are kept slize held by each oneofField. They do not appear in the top level slize of fields for the message.
 type oneofSubField struct {
 	fieldCommon
