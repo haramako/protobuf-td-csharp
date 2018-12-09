@@ -20,14 +20,14 @@ public Int32 Int32Value = 0;
 public Int64 Int64Value = 0;
 public string StringValue = "";
 public TestEnum EnumValue = 0;
-public EmbedMessage MessageValue = null;
+public EmbedMessage MessageValue = new EmbedMessage();
 public Int32 Sint32Value = 0;
 public Int64 Sint64Value = 0;
-public List<Int32> RepeatedInt32 = null;
-public List<Int64> RepeatedInt64 = null;
-public List<EmbedMessage> RepeatedMessage = null;
-public List<Int32> PackedInt32 = null;
-public List<Int64> PackedInt64 = null;
+public List<Int32> RepeatedInt32 = new List<Int32>();
+public List<Int64> RepeatedInt64 = new List<Int64>();
+public List<EmbedMessage> RepeatedMessage = new List<EmbedMessage>();
+public List<Int32> PackedInt32 = new List<Int32>();
+public List<Int64> PackedInt64 = new List<Int64>();
 
 public TestMessage() { }
 public static TestMessage CreateInstance() { var obj = new TestMessage(); obj.Finish(); return obj; }
@@ -67,10 +67,10 @@ if( MessageValue!=null) {
 output.WriteMessage(5,MessageValue);
 }
 if( Sint32Value!=0) {
-output.WriteInt32(6,Sint32Value);
+output.WriteSInt32(6,Sint32Value);
 }
 if( Sint64Value!=0) {
-output.WriteInt64(7,Sint64Value);
+output.WriteSInt64(7,Sint64Value);
 }
 if( RepeatedInt32!=null) {
 output.WriteInt32Array(10,RepeatedInt32);
@@ -112,10 +112,10 @@ if( MessageValue!=null) {
 size += pb::CodedOutputStream.ComputeMessageSize(5,MessageValue);
 }
 if( Sint32Value!=0) {
-size += pb::CodedOutputStream.ComputeInt32Size(6,Sint32Value);
+size += pb::CodedOutputStream.ComputeSInt32Size(6,Sint32Value);
 }
 if( Sint64Value!=0) {
-size += pb::CodedOutputStream.ComputeInt64Size(7,Sint64Value);
+size += pb::CodedOutputStream.ComputeSInt64Size(7,Sint64Value);
 }
 if( RepeatedInt32!=null) {
 foreach (var element in RepeatedInt32) {
@@ -161,7 +161,7 @@ case 16: {
 input.ReadInt64(ref this.Int64Value);
 break;
 }
-case 24: {
+case 26: {
 input.ReadString(ref this.StringValue);
 break;
 }
@@ -169,16 +169,16 @@ case 32: {
 input.ReadEnum(ref this.EnumValue);
 break;
 }
-case 40: {
+case 42: {
 input.ReadMessage(this.MessageValue);
 break;
 }
 case 48: {
-input.ReadInt32(ref this.Sint32Value);
+input.ReadSInt32(ref this.Sint32Value);
 break;
 }
 case 56: {
-input.ReadInt64(ref this.Sint64Value);
+input.ReadSInt64(ref this.Sint64Value);
 break;
 }
 case 80: {
@@ -189,7 +189,7 @@ case 88: {
 input.ReadInt64Array(tag, this.RepeatedInt64);
 break;
 }
-case 96: {
+case 98: {
 input.ReadMessageArray(tag, this.RepeatedMessage,EmbedMessage.CreateInstance );
 break;
 }

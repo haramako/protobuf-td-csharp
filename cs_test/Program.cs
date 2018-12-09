@@ -59,18 +59,19 @@ namespace Test
 			mes.Sint64Value = -6;
 
 			//mes.BytesValue = ByteString.CopyFrom(new byte[]{1,2,3});
-            /*
-
+ 
 			mes.MessageValue = EmbedMessage.CreateInstance();
+            mes.MessageValue.Val = 7;
 
 			mes.RepeatedInt32 = new List<int>(){11,12,13};
 			mes.RepeatedInt64 = new List<long>(){12,13};
 			mes.RepeatedMessage = new List<EmbedMessage>(){EmbedMessage.CreateInstance()};
+            /*
 			mes.PackedInt32 = new List<int>(){21,22,23};
 			mes.PackedInt64 = new List<long>(){32,33};
             */
 
-            foreach(var c in mes.Dump())
+            foreach (var c in mes.Dump())
             {
                 Console.Write(string.Format("{0},", c));
             }

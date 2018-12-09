@@ -1513,18 +1513,40 @@ func (g *Generator) TypeNameWithTypes(obj Object) string {
 	return g.DefaultPackageName(obj) + CamelCaseSliceWithType(obj.TypeName())
 }
 
-func GetFunctionPostfix(typ string) string {
+func GetFunctionPostfix(typ descriptor.FieldDescriptorProto_Type) string {
 	switch typ {
-	case "double":
+	case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
 		return "Double"
-	case "float":
+	case descriptor.FieldDescriptorProto_TYPE_FLOAT:
 		return "Float"
-	case "bool":
+	case descriptor.FieldDescriptorProto_TYPE_INT64:
+		return "Int64"
+	case descriptor.FieldDescriptorProto_TYPE_UINT64:
+		return "UInt64"
+	case descriptor.FieldDescriptorProto_TYPE_INT32:
+		return "Int32"
+	case descriptor.FieldDescriptorProto_TYPE_UINT32:
+		return "UInt32"
+	case descriptor.FieldDescriptorProto_TYPE_FIXED64:
+		return "RawLittleEndian64"
+	case descriptor.FieldDescriptorProto_TYPE_FIXED32:
+		return "RawLittleEndian32"
+	case descriptor.FieldDescriptorProto_TYPE_BOOL:
 		return "Bool"
-	case "string":
+	case descriptor.FieldDescriptorProto_TYPE_STRING:
 		return "String"
+	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+		return "Message"
+	case descriptor.FieldDescriptorProto_TYPE_BYTES:
+		return "ByteArray"
+	case descriptor.FieldDescriptorProto_TYPE_ENUM:
+		return "Enum"
+	case descriptor.FieldDescriptorProto_TYPE_SINT32:
+		return "SInt32"
+	case descriptor.FieldDescriptorProto_TYPE_SINT64:
+		return "SInt64"
 	default:
-		return typ
+		panic(fmt.Sprintf("unknown type for %v", typ))
 	}
 }
 
@@ -1711,6 +1733,7 @@ type fieldCommon struct {
 	goType        string // The Go type as a string, e.g. "*int32" or "*OtherMessage"
 	csFullType    string // FQN of C# class, e.g. "Int32" or "Hoge.Types.Fuga"
 	csElementType string // FQN of element type.
+	wireType      string // Wire type
 	tags          string // The tag string/annotation for the type, e.g. `protobuf:"varint,8,opt,name=region_id,json=regionId"`
 	fullPath      string // The full path of the field as used by Annotate etc, e.g. "4,0,2,0"
 	proto         *descriptor.FieldDescriptorProto
@@ -1727,6 +1750,20 @@ func (f *fieldCommon) getGoType() string {
 }
 
 func GetDefaultValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) string {
+	if isRepeated(f.proto) {
+		return "new " + f.csFullType + "()"
+	}
+	switch typ {
+	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+		return "new " + f.csFullType + "()"
+	case descriptor.FieldDescriptorProto_TYPE_STRING:
+		return "\"\""
+	default:
+		return GetNullValue(typ, f)
+	}
+}
+
+func GetNullValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) string {
 	if isRepeated(f.proto) {
 		return "null"
 	}
@@ -1793,7 +1830,7 @@ func (f *simpleField) getter(g *Generator, mc *msgCtx) {
 
 func (f *simpleField) writeTo(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
-	g.P("if( ", f.goName, "!=", GetDefaultValue(f.proto.GetType(), &f.fieldCommon), ") {")
+	g.P("if( ", f.goName, "!=", GetNullValue(f.proto.GetType(), &f.fieldCommon), ") {")
 	if isRepeated(d) {
 		if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 			g.P("output.WriteMessageArray(", f.proto.GetNumber(), ",", f.goName, ");")
@@ -1801,19 +1838,19 @@ func (f *simpleField) writeTo(g *Generator, mc *msgCtx) {
 			//g.P("output.WriteEnumArray(", f.proto.GetNumber(), ",", f.goName, ");") // TODO: WriteEnumArray対応
 		} else {
 			// TODO: 各Array対応
-			g.P("output.Write", GetFunctionPostfix(f.baseElementType()), "Array(", f.proto.GetNumber(), ",", f.goName, ");")
+			g.P("output.Write", GetFunctionPostfix(f.proto.GetType()), "Array(", f.proto.GetNumber(), ",", f.goName, ");")
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		g.P("output.WriteEnum(", f.proto.GetNumber(), ", (int)", f.goName, ", ", f.goName, ");") // TODO: rawValueはいらない？
 	} else {
-		g.P("output.Write", GetFunctionPostfix(f.baseType()), "(", f.proto.GetNumber(), ",", f.goName, ");")
+		g.P("output.Write", GetFunctionPostfix(f.proto.GetType()), "(", f.proto.GetNumber(), ",", f.goName, ");")
 	}
 	g.P("}")
 }
 
 func (f *simpleField) calcSize(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
-	g.P("if( ", f.goName, "!=", GetDefaultValue(f.proto.GetType(), &f.fieldCommon), ") {")
+	g.P("if( ", f.goName, "!=", GetNullValue(f.proto.GetType(), &f.fieldCommon), ") {")
 	if isRepeated(d) {
 		g.P("foreach (var element in ", f.goName, ") {")
 		//g.P("size += pb::CodedOutputStream.ComputeArraySize(", f.proto.GetNumber(), ", element);")
@@ -1821,28 +1858,56 @@ func (f *simpleField) calcSize(g *Generator, mc *msgCtx) {
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		g.P("size += pb::CodedOutputStream.ComputeEnumSize(", f.proto.GetNumber(), ", (int)", f.goName, ");")
 	} else {
-		g.P("size += pb::CodedOutputStream.Compute", GetFunctionPostfix(f.baseType()), "Size(", f.proto.GetNumber(), ",", f.goName, ");")
+		g.P("size += pb::CodedOutputStream.Compute", GetFunctionPostfix(f.proto.GetType()), "Size(", f.proto.GetNumber(), ",", f.goName, ");")
 	}
 	g.P("}")
 }
 
+type WireType int
+
+const (
+	WireTypeVarint          = 0
+	WireTypeFixed64         = 1
+	WireTypeLengthDelimited = 2
+	WireTypeStartGroup      = 3
+	WireTypeEndGroup        = 4
+	WireTypeFixed32         = 5
+)
+
+func GetWireTypeTag(wireType string) WireType {
+	switch wireType {
+	case "varint", "zigzag64", "zigzag32":
+		return WireTypeVarint
+	case "fixed64":
+		return WireTypeFixed64
+	case "bytes":
+		return WireTypeLengthDelimited
+	case "group":
+		return WireTypeStartGroup // TODO: どういう意味か不明
+	case "fixed32":
+		return WireTypeFixed32
+	default:
+		panic("Unkown wire type " + wireType)
+	}
+}
+
 func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
-	g.P("case ", f.proto.GetNumber()<<3, ": {")
+	g.P("case ", f.proto.GetNumber()<<3|int32(GetWireTypeTag(f.fieldCommon.wireType)), ": {")
 	if isRepeated(d) {
 		if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 			g.P("input.ReadMessageArray(tag, this.", f.goName, ",", f.csElementType, ".CreateInstance );")
 		} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 			g.P("input.ReadEnumArray(tag, this.", f.goName, ");")
 		} else {
-			g.P("input.Read", GetFunctionPostfix(f.baseElementType()), "Array(tag, this.", f.goName, ");")
+			g.P("input.Read", GetFunctionPostfix(f.proto.GetType()), "Array(tag, this.", f.goName, ");")
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 		g.P("input.ReadMessage(this.", f.goName, ");")
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		g.P("input.ReadEnum(ref this.", f.goName, ");")
 	} else {
-		g.P("input.Read", GetFunctionPostfix(f.baseType()), "(ref this.", f.goName, ");")
+		g.P("input.Read", GetFunctionPostfix(f.proto.GetType()), "(ref this.", f.goName, ");")
 	}
 	g.P("break;")
 	g.P("}")
@@ -2693,6 +2758,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				goType:        typename,
 				csFullType:    typename,
 				csElementType: elemType,
+				wireType:      wiretype,
 				tags:          tag,
 				protoName:     field.GetName(),
 				fullPath:      fieldFullPath,
