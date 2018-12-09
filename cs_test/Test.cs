@@ -50,6 +50,71 @@ public static TestMessage ParseFrom(pb::CodedInputStream input) {
 var mes = CreateInstance(); mes.MergeFrom(input); return mes;
 }
 
+public override void MergeFrom(pb::CodedInputStream input) {
+uint tag;
+while (input.ReadTag(out tag)) {
+switch (tag) {
+case 0: {
+throw pb::InvalidProtocolBufferException.InvalidTag();
+}
+default: {
+if (pb::WireFormat.IsEndGroupTag(tag)) {
+return;
+}
+input.SkipField(); // unknown field
+break;
+}
+case 8: {
+input.ReadInt32(ref this.Int32Value);
+break;
+}
+case 16: {
+input.ReadInt64(ref this.Int64Value);
+break;
+}
+case 26: {
+input.ReadString(ref this.StringValue);
+break;
+}
+case 32: {
+input.ReadEnum(ref this.EnumValue);
+break;
+}
+case 42: {
+input.ReadMessage(this.MessageValue);
+break;
+}
+case 48: {
+input.ReadSInt32(ref this.Sint32Value);
+break;
+}
+case 56: {
+input.ReadSInt64(ref this.Sint64Value);
+break;
+}
+case 80: {
+input.ReadInt32Array(tag, this.RepeatedInt32);
+break;
+}
+case 88: {
+input.ReadInt64Array(tag, this.RepeatedInt64);
+break;
+}
+case 98: {
+input.ReadMessageArray(tag, this.RepeatedMessage,EmbedMessage.CreateInstance );
+break;
+}
+case 160: {
+input.ReadInt32Array(tag, this.PackedInt32);
+break;
+}
+case 168: {
+input.ReadInt64Array(tag, this.PackedInt64);
+break;
+}
+}
+}
+}
 public override void WriteTo(pb::CodedOutputStream output) {
 if( Int32Value!=0) {
 output.WriteInt32(1,Int32Value);
@@ -139,71 +204,6 @@ foreach (var element in PackedInt64) {
 }
 return size;
 }
-public override void MergeFrom(pb::CodedInputStream input) {
-uint tag;
-while (input.ReadTag(out tag)) {
-switch (tag) {
-case 0: {
-throw pb::InvalidProtocolBufferException.InvalidTag();
-}
-default: {
-if (pb::WireFormat.IsEndGroupTag(tag)) {
-return;
-}
-input.SkipField(); // unknown field
-break;
-}
-case 8: {
-input.ReadInt32(ref this.Int32Value);
-break;
-}
-case 16: {
-input.ReadInt64(ref this.Int64Value);
-break;
-}
-case 26: {
-input.ReadString(ref this.StringValue);
-break;
-}
-case 32: {
-input.ReadEnum(ref this.EnumValue);
-break;
-}
-case 42: {
-input.ReadMessage(this.MessageValue);
-break;
-}
-case 48: {
-input.ReadSInt32(ref this.Sint32Value);
-break;
-}
-case 56: {
-input.ReadSInt64(ref this.Sint64Value);
-break;
-}
-case 80: {
-input.ReadInt32Array(tag, this.RepeatedInt32);
-break;
-}
-case 88: {
-input.ReadInt64Array(tag, this.RepeatedInt64);
-break;
-}
-case 98: {
-input.ReadMessageArray(tag, this.RepeatedMessage,EmbedMessage.CreateInstance );
-break;
-}
-case 160: {
-input.ReadInt32Array(tag, this.PackedInt32);
-break;
-}
-case 168: {
-input.ReadInt64Array(tag, this.PackedInt64);
-break;
-}
-}
-}
-}
 }
 
 public sealed partial class EmbedMessage: pb.Message {
@@ -230,24 +230,6 @@ public static EmbedMessage ParseFrom(pb::CodedInputStream input) {
 var mes = CreateInstance(); mes.MergeFrom(input); return mes;
 }
 
-public override void WriteTo(pb::CodedOutputStream output) {
-if( Val!=0) {
-output.WriteInt32(1,Val);
-}
-}
-public override int SerializedSize {
-get {
-return CalcSerializedSize();
-}
-}
-
-private int CalcSerializedSize() {
-int size = 0;
-if( Val!=0) {
-size += pb::CodedOutputStream.ComputeInt32Size(1,Val);
-}
-return size;
-}
 public override void MergeFrom(pb::CodedInputStream input) {
 uint tag;
 while (input.ReadTag(out tag)) {
@@ -268,6 +250,24 @@ break;
 }
 }
 }
+}
+public override void WriteTo(pb::CodedOutputStream output) {
+if( Val!=0) {
+output.WriteInt32(1,Val);
+}
+}
+public override int SerializedSize {
+get {
+return CalcSerializedSize();
+}
+}
+
+private int CalcSerializedSize() {
+int size = 0;
+if( Val!=0) {
+size += pb::CodedOutputStream.ComputeInt32Size(1,Val);
+}
+return size;
 }
 }
 
