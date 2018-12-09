@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!--This file represents the results of running a test suite-->
-<test-results name="test.dll" total="2" failures="0" not-run="0" date="2017-06-17" time="19:49:08">
-  <environment nunit-version="2.4.8.0" clr-version="4.0.30319.42000" os-version="Unix 16.5.0.0" platform="Unix" cwd="/Users/makoto/protobuf-td-csharp/cs_test" machine-name="macoto2.local" user="makoto" user-domain="macoto2.local" />
-  <culture-info current-culture="ja-JP" current-uiculture="ja-JP" />
-  <test-suite name="test.dll" success="True" time="0.408" asserts="0">
-    <results>
-      <test-suite name="Test" success="True" time="0.386" asserts="0">
-        <results>
-          <test-suite name="ProgocolBufferTest" success="True" time="0.368" asserts="0">
-            <results>
-              <test-case name="Test.ProgocolBufferTest.EmptyMessage" executed="True" success="True" time="0.320" asserts="1" />
-              <test-case name="Test.ProgocolBufferTest.SimpleMessage" executed="True" success="True" time="0.030" asserts="1" />
-            </results>
-          </test-suite>
-        </results>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="2" engine-version="3.9.0.0" clr-version="4.0.30319.42000" start-time="2018-12-09 14:51:46Z" end-time="2018-12-09 14:51:47Z" duration="0.946701">
+  <command-line><![CDATA["C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe"  cs_test.csproj]]></command-line>
+  <test-suite type="Assembly" id="1-1003" name="cs_test.dll" fullname="cs_test.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2018-12-09 14:51:46Z" end-time="2018-12-09 14:51:47Z" duration="0.266119" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="2">
+    <environment framework-version="3.11.0.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 10.0.17134.0" platform="Win32NT" cwd="C:\Work\protobuf-td-csharp\cs_test" machine-name="LAPTOP-640SQ0JN" user="harada" user-domain="LAPTOP-640SQ0JN" culture="ja-JP" uiculture="ja-JP" os-architecture="x86" />
+    <settings>
+      <setting name="BasePath" value="C:\Work\protobuf-td-csharp\cs_test\bin\Debug" />
+      <setting name="DisposeRunners" value="True" />
+      <setting name="WorkDirectory" value="C:\Work\protobuf-td-csharp\cs_test" />
+      <setting name="ImageRuntimeVersion" value="4.0.30319" />
+      <setting name="ImageTargetFrameworkName" value=".NETFramework,Version=v4.5" />
+      <setting name="ImageRequiresX86" value="True" />
+      <setting name="RunAsX86" value="True" />
+      <setting name="ImageRequiresDefaultAppDomainAssemblyResolver" value="False" />
+      <setting name="NumberOfTestWorkers" value="8" />
+    </settings>
+    <properties>
+      <property name="_PID" value="3676" />
+      <property name="_APPDOMAIN" value="domain-dfde068b-cs_test.csproj" />
+    </properties>
+    <test-suite type="TestSuite" id="1-1004" name="Test" fullname="Test" runstate="Runnable" testcasecount="2" result="Passed" start-time="2018-12-09 14:51:46Z" end-time="2018-12-09 14:51:47Z" duration="0.253907" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="2">
+      <test-suite type="TestFixture" id="1-1000" name="ProgocolBufferTest" fullname="Test.ProgocolBufferTest" classname="Test.ProgocolBufferTest" runstate="Runnable" testcasecount="2" result="Passed" start-time="2018-12-09 14:51:46Z" end-time="2018-12-09 14:51:47Z" duration="0.251286" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="2">
+        <test-case id="1-1001" name="EmptyMessage" fullname="Test.ProgocolBufferTest.EmptyMessage" methodname="EmptyMessage" classname="Test.ProgocolBufferTest" runstate="Runnable" seed="2052850505" result="Passed" start-time="2018-12-09 14:51:46Z" end-time="2018-12-09 14:51:47Z" duration="0.241197" asserts="1" />
+        <test-case id="1-1002" name="SimpleMessage" fullname="Test.ProgocolBufferTest.SimpleMessage" methodname="SimpleMessage" classname="Test.ProgocolBufferTest" runstate="Runnable" seed="1350756734" result="Passed" start-time="2018-12-09 14:51:47Z" end-time="2018-12-09 14:51:47Z" duration="0.003500" asserts="1">
+          <output><![CDATA[8,1,16,2,26,1,51,32,2,42,2,8,7,48,9,56,11,80,11,80,12,80,13,88,12,88,13,98,0,
+]]></output>
+        </test-case>
       </test-suite>
-    </results>
+    </test-suite>
   </test-suite>
-</test-results>
+</test-run>

@@ -78,6 +78,8 @@ namespace Test
             Console.WriteLine();
  
 			Assert.IsTrue(comp(mes, TestMessage.ParseFrom(mes.Dump())));
+
+            //Assert.Fail();
 		}
 		
 	}
