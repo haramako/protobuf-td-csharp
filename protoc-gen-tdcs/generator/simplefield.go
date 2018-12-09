@@ -15,45 +15,16 @@ type simpleField struct {
 
 // decl prints the declaration of the field in the struct (if any).
 func (f *simpleField) decl(g *Generator, mc *msgCtx) {
-	g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " = ", GetDefaultValue(f.protoType, &f.fieldCommon), ";")
+	g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " = ", getDefaultValue(f.protoType, &f.fieldCommon), ";")
 }
 
 // getter prints the getter for the field.
 func (f *simpleField) getter(g *Generator, mc *msgCtx) {
-	star := ""
-	tname := f.goType
-	if needsStar(f.protoType) && tname[0] == '*' {
-		tname = tname[1:]
-		star = "*"
-	}
-	if f.deprecated != "" {
-		g.P(f.deprecated)
-	}
-	g.P("func (m *", mc.goName, ") ", f.getterName, "() "+tname+" {")
-	if f.getterDef == "nil" { // Simpler getter
-		g.P("if m != nil {")
-		g.P("return m." + f.goName)
-		g.P("}")
-		g.P("return nil")
-		g.P("}")
-		g.P()
-		return
-	}
-	if mc.message.proto3() {
-		g.P("if m != nil {")
-	} else {
-		g.P("if m != nil && m." + f.goName + " != nil {")
-	}
-	g.P("return " + star + "m." + f.goName)
-	g.P("}")
-	g.P("return ", f.getterDef)
-	g.P("}")
-	g.P()
 }
 
 func (f *simpleField) writeTo(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
-	g.P("if( ", f.goName, "!=", GetNullValue(f.proto.GetType(), &f.fieldCommon), ") {")
+	g.P("if( ", f.goName, "!=", getNullValue(f.proto.GetType(), &f.fieldCommon), ") {")
 	if isRepeated(d) {
 		if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 			g.P("output.WriteMessageArray(", f.proto.GetNumber(), ",", f.goName, ");")
@@ -61,19 +32,19 @@ func (f *simpleField) writeTo(g *Generator, mc *msgCtx) {
 			//g.P("output.WriteEnumArray(", f.proto.GetNumber(), ",", f.goName, ");") // TODO: WriteEnumArray対応
 		} else {
 			// TODO: 各Array対応
-			g.P("output.Write", GetFunctionPostfix(f.proto.GetType()), "Array(", f.proto.GetNumber(), ",", f.goName, ");")
+			g.P("output.Write", getFunctionPostfix(f.proto.GetType()), "Array(", f.proto.GetNumber(), ",", f.goName, ");")
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		g.P("output.WriteEnum(", f.proto.GetNumber(), ", (int)", f.goName, ", ", f.goName, ");") // TODO: rawValueはいらない？
 	} else {
-		g.P("output.Write", GetFunctionPostfix(f.proto.GetType()), "(", f.proto.GetNumber(), ",", f.goName, ");")
+		g.P("output.Write", getFunctionPostfix(f.proto.GetType()), "(", f.proto.GetNumber(), ",", f.goName, ");")
 	}
 	g.P("}")
 }
 
 func (f *simpleField) calcSize(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
-	g.P("if( ", f.goName, "!=", GetNullValue(f.proto.GetType(), &f.fieldCommon), ") {")
+	g.P("if( ", f.goName, "!=", getNullValue(f.proto.GetType(), &f.fieldCommon), ") {")
 	if isRepeated(d) {
 		g.P("foreach (var element in ", f.goName, ") {")
 		//g.P("size += pb::CodedOutputStream.ComputeArraySize(", f.proto.GetNumber(), ", element);")
@@ -81,11 +52,12 @@ func (f *simpleField) calcSize(g *Generator, mc *msgCtx) {
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		g.P("size += pb::CodedOutputStream.ComputeEnumSize(", f.proto.GetNumber(), ", (int)", f.goName, ");")
 	} else {
-		g.P("size += pb::CodedOutputStream.Compute", GetFunctionPostfix(f.proto.GetType()), "Size(", f.proto.GetNumber(), ",", f.goName, ");")
+		g.P("size += pb::CodedOutputStream.Compute", getFunctionPostfix(f.proto.GetType()), "Size(", f.proto.GetNumber(), ",", f.goName, ");")
 	}
 	g.P("}")
 }
 
+// WireType is presentation in binary format.
 type WireType int
 
 const (
@@ -123,14 +95,14 @@ func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 		} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 			g.P("input.ReadEnumArray(tag, this.", f.goName, ");")
 		} else {
-			g.P("input.Read", GetFunctionPostfix(f.proto.GetType()), "Array(tag, this.", f.goName, ");")
+			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "Array(tag, this.", f.goName, ");")
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 		g.P("input.ReadMessage(this.", f.goName, ");")
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		g.P("input.ReadEnum(ref this.", f.goName, ");")
 	} else {
-		g.P("input.Read", GetFunctionPostfix(f.proto.GetType()), "(ref this.", f.goName, ");")
+		g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref this.", f.goName, ");")
 	}
 	g.P("break;")
 	g.P("}")

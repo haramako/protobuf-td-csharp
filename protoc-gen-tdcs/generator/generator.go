@@ -1291,32 +1291,15 @@ func (g *Generator) generateEnum(enum *EnumDescriptor) {
 	CloseInternalType(g, ccTypeName)
 }
 
-func needsStar(typ descriptor.FieldDescriptorProto_Type) bool {
-	switch typ {
-	case descriptor.FieldDescriptorProto_TYPE_GROUP:
-		return false
-	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-		return false
-	case descriptor.FieldDescriptorProto_TYPE_BYTES:
-		return false
-	}
-	return true
-}
-
-// TypeName is the printed name appropriate for an item. If the object is in the current file,
-// TypeName drops the package name and underscores the rest.
-// Otherwise the object is from another package; and the result is the underscored
-// package name followed by the item name.
-// The result always has an initial capital.
-func (g *Generator) TypeName(obj Object) string {
+func (g *Generator) typeName(obj Object) string {
 	return g.DefaultPackageName(obj) + CamelCaseSlice(obj.TypeName())
 }
 
-func (g *Generator) TypeNameWithTypes(obj Object) string {
+func (g *Generator) typeNameWithTypes(obj Object) string {
 	return g.DefaultPackageName(obj) + CamelCaseSliceWithType(obj.TypeName())
 }
 
-func GetFunctionPostfix(typ descriptor.FieldDescriptorProto_Type) string {
+func getFunctionPostfix(typ descriptor.FieldDescriptorProto_Type) string {
 	switch typ {
 	case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
 		return "Double"
@@ -1379,15 +1362,15 @@ func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescripto
 		typ, wire = "string", "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_GROUP:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = g.TypeName(desc), "group"
+		typ, wire = g.typeName(desc), "group"
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = g.TypeNameWithTypes(desc), "bytes"
+		typ, wire = g.typeNameWithTypes(desc), "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_BYTES:
 		typ, wire = "byte[]", "bytes"
 	case descriptor.FieldDescriptorProto_TYPE_ENUM:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = g.TypeNameWithTypes(desc), "varint"
+		typ, wire = g.typeNameWithTypes(desc), "varint"
 	case descriptor.FieldDescriptorProto_TYPE_SFIXED32:
 		typ, wire = "Int32", "fixed32"
 	case descriptor.FieldDescriptorProto_TYPE_SFIXED64:
@@ -1406,8 +1389,6 @@ func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescripto
 		return
 	} else if field.OneofIndex != nil && message != nil {
 		return
-	} else if needsStar(*field.Type) {
-		typ = "*" + typ
 	}
 	return
 }
@@ -1550,7 +1531,7 @@ func (f *fieldCommon) getGoType() string {
 	return f.goType
 }
 
-func GetDefaultValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) string {
+func getDefaultValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) string {
 	if isRepeated(f.proto) {
 		return "new " + f.csFullType + "()"
 	}
@@ -1560,11 +1541,11 @@ func GetDefaultValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) s
 	case descriptor.FieldDescriptorProto_TYPE_STRING:
 		return "\"\""
 	default:
-		return GetNullValue(typ, f)
+		return getNullValue(typ, f)
 	}
 }
 
-func GetNullValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) string {
+func getNullValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) string {
 	if isRepeated(f.proto) {
 		return "null"
 	}
