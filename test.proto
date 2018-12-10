@@ -1,6 +1,9 @@
 syntax = "proto3";
 package Test;
 
+import "protoc-gen-tdcs/descriptor/descriptor.proto";
+
+
 enum TestEnum {
 	FOO = 0;
 	BAR = 1;
@@ -25,6 +28,8 @@ message TestMessage {
 	repeated int64 packed_int64 = 21 [packed=true];
 
 	//map<int32,string> map_value = 30;
+
+	int32 shared_int32 = 30 [shared=true];
 	
 }
 

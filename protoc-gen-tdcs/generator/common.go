@@ -6,7 +6,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"../descriptor"
 )
 
 // The file and package name method are common to messages and enums.

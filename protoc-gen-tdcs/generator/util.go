@@ -4,7 +4,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"../descriptor"
 )
 
 // And now lots of helper functions.

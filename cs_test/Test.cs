@@ -28,6 +28,7 @@ public List<Int64> RepeatedInt64 = new List<Int64>();
 public List<EmbedMessage> RepeatedMessage = new List<EmbedMessage>();
 public List<Int32> PackedInt32 = new List<Int32>();
 public List<Int64> PackedInt64 = new List<Int64>();
+public Int32 SharedInt32 = 0;
 
 public TestMessage() { }
 public static TestMessage CreateInstance() { var obj = new TestMessage(); obj.Finish(); return obj; }
@@ -112,6 +113,10 @@ case 168: {
 input.ReadInt64Array(tag, this.PackedInt64);
 break;
 }
+case 240: {
+input.ReadInt32(ref this.SharedInt32);
+break;
+}
 }
 }
 }
@@ -151,6 +156,9 @@ output.WriteInt32Array(20,PackedInt32);
 }
 if( PackedInt64!=null) {
 output.WriteInt64Array(21,PackedInt64);
+}
+if( SharedInt32!=0) {
+output.WriteInt32(30,SharedInt32);
 }
 }
 public override int SerializedSize {
@@ -201,6 +209,9 @@ foreach (var element in PackedInt32) {
 if( PackedInt64!=null) {
 foreach (var element in PackedInt64) {
 }
+}
+if( SharedInt32!=0) {
+size += pb::CodedOutputStream.ComputeInt32Size(30,SharedInt32);
 }
 return size;
 }

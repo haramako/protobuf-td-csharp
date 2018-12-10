@@ -1,6 +1,6 @@
 package generator
 
-import "github.com/golang/protobuf/protoc-gen-go/descriptor"
+import "../descriptor"
 
 // simpleField is not weak, not a oneof, not an extension. Can be required, optional or repeated.
 type simpleField struct {

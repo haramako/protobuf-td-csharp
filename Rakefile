@@ -41,3 +41,9 @@ task :test do
 	sh MSBUILD, 'cs_test/cs_test.csproj'
 	sh NUNIT3_CONSLE, '--noheader', "cs_test/cs_test.csproj"
 end
+
+task :proto do
+  sh 'protoc', '-I', 'protoc-gen-tdcs/descriptor', '--plugin=protoc-gen-go.exe', '--go_out=.', 'descriptor.proto'
+  cp 'github.com/golang/protobuf/protoc-gen-go/descriptor/descriptor.pb.go', 'protoc-gen-tdcs/descriptor'
+  rm_rf 'github.com'
+end

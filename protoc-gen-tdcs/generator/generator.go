@@ -47,9 +47,9 @@ import (
 	"unicode"
 	"unicode/utf8"
 
+	"../descriptor"
+	plugin "../plugin"
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 
 // generatedCodeVersion indicates a version of the generated code.

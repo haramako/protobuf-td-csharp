@@ -595,6 +595,9 @@ message FieldOptions {
   extensions 1000 to max;
 
   reserved 4;  // removed jtype
+
+  // add by tdcs
+  optional bool shared = 7;
 }
 
 message OneofOptions {

@@ -1,8 +1,8 @@
 package generator
 
 import (
+	"../descriptor"
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
 // oneofField represents the oneof on top level.
