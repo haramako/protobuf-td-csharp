@@ -4,8 +4,9 @@
 
 
 * plugin拡張
-  * メモリ節約モードを追加する(shared)
+  - メモリ節約モードを追加する(shared)
   * 変数のサイズ指定(size=int8)
+  * pbx対応(遅延読み込み、キャッシュ,WeakDictionary)
 
 # あとまわし
 

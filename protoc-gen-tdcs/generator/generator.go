@@ -1236,20 +1236,26 @@ func (g *Generator) generateMessageStruct(mc *msgCtx, topLevelFields []topLevelF
 	}
 
 	if mc.hasShared {
-		g.P("List<pb::SharedItem> sharedList_;")
+		g.P("pb::SharedItem[] sharedList_;")
 
-		g.P("pb::SharedItem findShared(int id){")
-		g.P("if( sharedList_ == null ) return null;")
-		g.P("var len = sharedList_.Count;")
-		g.P("for(int i = 0; i < len; i++){")
-		g.P("if( sharedList_[i].Id == id ) return sharedList_[i];")
-		g.P("}")
-		g.P("return null;")
+		g.P("object getShared(int id){")
+		g.P("  if( sharedList_ == null ) return null;")
+		g.P("  for(int i = 0; i < sharedList_.Length; i++){")
+		g.P("    if( sharedList_[i].Id == 0 ){ return null; }")
+		g.P("    if( sharedList_[i].Id == id ){ return sharedList_[i].Value; }")
+		g.P("  }")
+		g.P("  return null;")
 		g.P("}")
 
-		g.P("void addShared(int id, object val){")
-		g.P("if( sharedList_ == null ) sharedList_ = new List<pb::SharedItem>();")
-		g.P("sharedList_.Add(new pb::SharedItem(id,val));")
+		g.P("void setShared(int id, object val){")
+		g.P("  if( sharedList_ == null ){ sharedList_ = new pb::SharedItem[4]; }")
+		g.P("  for(int i = 0; i < sharedList_.Length; i++){")
+		g.P("    if( sharedList_[i].Id == 0 || sharedList_[i].Id == id ){")
+		g.P("       sharedList_[i].Id = id;")
+		g.P("       sharedList_[i].Value = val;")
+		g.P("       return;")
+		g.P("     }")
+		g.P("  }")
 		g.P("}")
 	}
 }
@@ -1282,6 +1288,7 @@ func (g *Generator) generateCalcSize(mc *msgCtx, topLevelFields []topLevelField)
 func (g *Generator) generateMergeFrom(mc *msgCtx, topLevelFields []topLevelField) {
 	g.P("public override void MergeFrom(pb::CodedInputStream input) {")
 	g.P("uint tag;")
+	g.P("int sharedNum = 0;")
 	g.P("while (input.ReadTag(out tag)) {")
 	g.P("switch (tag) {")
 	g.P("case 0: {")
@@ -1301,6 +1308,9 @@ func (g *Generator) generateMergeFrom(mc *msgCtx, topLevelFields []topLevelField
 
 	g.P("}")
 	g.P("}")
+	if mc.hasShared {
+		g.P("if( sharedNum > 0 ){ sharedList_ = pb::SharedItem.PopTemp(sharedNum); }")
+	}
 	g.P("}")
 }
 

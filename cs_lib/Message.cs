@@ -1,8 +1,9 @@
 using System.IO;
 using pb = global::Google.ProtocolBuffers;
+using System.Collections.Generic;
 
 namespace Google.ProtocolBuffers {
-    public class SharedItem
+    public struct SharedItem
     {
         public int Id;
         public object Value;
@@ -11,9 +12,28 @@ namespace Google.ProtocolBuffers {
             Id = id;
             Value = val;
         }
+
+        static List<SharedItem> tempList = new List<SharedItem>();
+
+        static public void PushTemp(int id, object val)
+        {
+            tempList.Add(new SharedItem(id, val));
+        }
+
+        static public SharedItem[] PopTemp(int num)
+        {
+            var result = new SharedItem[num];
+            int head = tempList.Count - num;
+            for (int i = 0; i < num; i++)
+            {
+                result[i] = tempList[head + i];
+            }
+            tempList.RemoveRange(head, num);
+            return result;
+        }
     }
 
-	public abstract class Message {
+    public abstract class Message {
 		public abstract void MergeFrom(pb::CodedInputStream input);
 		public abstract void WriteTo(pb::CodedOutputStream output);
 		public abstract int SerializedSize { get; }

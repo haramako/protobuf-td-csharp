@@ -157,7 +157,7 @@ message StatusInfo {
 	string desc = 16; /// 説明文
 	bool without_player = 18; /// プレイヤーには無効
 	bool without_monster = 19; /// モンスターには無効
-	string hit_effect = 20 [shared=true]; /// 効果が出たときに再生するエフェクト
+	string hit_effect = 20; /// 効果が出たときに再生するエフェクト
 }
 
 /**
@@ -593,7 +593,7 @@ message Soul {
 	int32 num = 3; /// 発動条件の数値. 
 	repeated CharacterStatus status = 4; /// 状態異常に対する場合に指定される
 	Element element = 7 [shared=true]; /// 属性("+"でつなげて複数指定可能)
-	string name = 6[shared=true];
+	string name = 6;
 	SoulOption opt = 10[shared=true]; /// オプション
 	repeated SkillCode codes = 8; /// スキルコード
 	int32 id = 9[shared=true];
@@ -945,34 +945,35 @@ message ItemTemplate {
     int32 equipment_image = 26; /// 装備画像
 	int32 sort_id = 5;
 	int32 price = 7;
-	int32 min_count = 8;
-	int32 max_count = 9;
+	int32 min_count = 8 [shared=true];
+	int32 max_count = 9 [shared=true];
 	int32 character_id = 15; /// ファングのキャラクターID(ファングのみ有効)
 	repeated ItemAttribute attributes = 11;
 	string desc = 12;
 	string spec = 14; /// 仕様書の説明文
 	int32 charge = 16; /// チャージ数
 	bool revealable = 28; /// 未識別になりうるかどうか
-	bool show_count_on_map = 34; /// カウントダウンを表示するかどうか
-	bool show_mesh = 39; /// 3Dオブジェクトとして表示して、スプライトとして表示しない
+	bool show_count_on_map = 34 [shared=true]; /// カウントダウンを表示するかどうか
+	bool show_mesh = 39 [shared=true]; /// 3Dオブジェクトとして表示して、スプライトとして表示しない
 	
 	repeated int32 num = 13; /// typeが、Weaponなら攻撃力、Shieldなら防御力
 
-	string skill_name = 27;
+	string skill_name = 27 [shared=true];
 	repeated SkillCode skill_on_use = 24;
 	repeated SkillCode skill_on_throw = 25;
 	repeated SkillCode skill_on_sacrify = 32;
 	
 	repeated Soul souls = 22; // 所持ソウル
+
 	string soul_name = 23; /// ソウル名
 	string skill_desc = 29;
 	string soul_desc = 30;
 	string sacrify_desc = 33;
 	string skill_spec = 35; /// スキル仕様
 	string soul_spec = 36; /// ソウル仕様
-	int32 level = 31; /// レベル
-	int32 unlock_level = 37; /// アンロックされるタイミング（０なら常に出現する）
-	int32 tutorial_dialog_id = 38; /// 初めて拾った時に表示されるチュートリアルダイアログのID
+	int32 level = 31 [shared=true]; /// レベル
+	int32 unlock_level = 37 [shared=true]; /// アンロックされるタイミング（０なら常に出現する）
+	int32 tutorial_dialog_id = 38 [shared=true]; /// 初めて拾った時に表示されるチュートリアルダイアログのID
 }
 
 /**
@@ -1116,15 +1117,15 @@ message SpecialScope {
 
 	ScopeType type = 1; /// スコープの種類
 	int32 range = 2; /// 範囲
-	bool pierce = 4; /// 貫通かどうか(straightでのみ有効）
-	ScopeTargetType target = 3; /// 対象の種類
-	int32 way = 5; /// nwayの際の、線が出る方向のマスク(nwayで使用する)
-	int32 limit = 6; /// 当たる対象の限界数
-	bool center = 7; /// 中央を含むかどうか(around, around_anyで使用)
-	bool prior_near = 8; /// 近くを優先する, Limitが指定されているときのみ有効
-	bool available_in_wall = 9; /// 壁の中でもあたる
-	BoardDisplay board_display = 10; /// スコープボードの表示設定
-	int32 around = 11; /// PinPointの着弾点からの範囲
+	bool pierce = 4 [shared=true]; /// 貫通かどうか(straightでのみ有効）
+	ScopeTargetType target = 3 [shared=true]; /// 対象の種類
+	int32 way = 5 [shared=true]; /// nwayの際の、線が出る方向のマスク(nwayで使用する)
+	int32 limit = 6 [shared=true]; /// 当たる対象の限界数
+	bool center = 7 [shared=true]; /// 中央を含むかどうか(around, around_anyで使用)
+	bool prior_near = 8 [shared=true]; /// 近くを優先する, Limitが指定されているときのみ有効
+	bool available_in_wall = 9 [shared=true]; /// 壁の中でもあたる
+	BoardDisplay board_display = 10 [shared=true]; /// スコープボードの表示設定
+	int32 around = 11 [shared=true]; /// PinPointの着弾点からの範囲
 	repeated int32 target_id = 12; /// 指定したキャラクターidだけが対象となる
 }
 
@@ -1842,8 +1843,8 @@ message SpecialTemplate {
 	int32 direct = 7 [shared = true];
 	int32 prob = 8 [shared = true]; /// attackではファングドロップ率. set_statusでは命中率
 	repeated CharacterStatus status = 9; /// 状態異常(add_status, set_statusでのみ使用する）
-	SpecialAttribute attribute = 10 [shared = true]; /// 特殊な属性
-	Element element = 11; /// 攻撃の属性
+	SpecialAttribute attribute = 10; /// 特殊な属性
+	Element element = 11 [shared=true]; /// 攻撃の属性
 	StatusGroup status_group = 12 [shared = true]; /// ステータスグループ(clear_statusでのみ使用する)
 	string effect = 13 [shared = true]; /// ヒットエフェクト(エフェクトアセット名、もしくは、スキルエフェクト名を指定する）
 	repeated SkillLot skill_lot = 14; /// random_skillで使用する
@@ -1853,7 +1854,7 @@ message SpecialTemplate {
 	string script = 18 [shared = true]; /// スクリプトの名前（show_scriptで使用する）
 	int32 len = 19 [shared = true]; /// 距離を指定する
 	int32 id = 20 [shared = true]; /// 諸々のidを指定する
-	string hit_effect = 21; /// ヒットして有効だったときに表示するエフェクト
+	string hit_effect = 21 [shared = true]; /// ヒットして有効だったときに表示するエフェクト
 	int32 max_hp_rate = 22 [shared = true]; /// 最大HPの割合を%で指定する
 	bool lost = 23 [shared = true]; /// 使用後に消えるか（sacrificeで使う）
 	int32 item_id = 24 [shared = true]; /// アイテムID(box_item_change, steal_item, drop_itemで使用する)

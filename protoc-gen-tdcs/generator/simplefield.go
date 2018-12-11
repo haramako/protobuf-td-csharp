@@ -25,8 +25,8 @@ func (f *simpleField) decl(g *Generator, mc *msgCtx) {
 
 func (f *simpleField) declShared(g *Generator, mc *msgCtx) {
 	g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " { ")
-	g.P("get { var found = findShared(", f.fieldCommon.proto.GetNumber(), "); if( found != null ){ return (", f.csFullType, ")found.Value; }else{ return ", getNullValue2(&f.fieldCommon), ";} }")
-	g.P("set { var found = findShared(", f.fieldCommon.proto.GetNumber(), "); if( found != null ){ found.Value = value; }else{ addShared(", f.fieldCommon.proto.GetNumber(), ", value);} }")
+	g.P("get { var found = getShared(", f.fieldCommon.proto.GetNumber(), "); if( found != null ){ return (", f.csFullType, ")found; }else{ return ", getNullValue2(&f.fieldCommon), ";} }")
+	g.P("set { setShared(", f.fieldCommon.proto.GetNumber(), ", value); }")
 	g.P("}")
 }
 
@@ -111,8 +111,10 @@ func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 		if f.shared {
-			g.P("if( ", f.goName, " == null ) addShared(", f.fieldCommon.proto.GetNumber(), ", ", f.csFullType, ".CreateInstance());")
-			g.P("input.ReadMessage(this.", f.goName, ");")
+			g.P("var temp = ", f.csFullType, ".CreateInstance();")
+			g.P("input.ReadMessage(temp);")
+			g.P("pb::SharedItem.PushTemp(", f.fieldCommon.proto.GetNumber(), ", temp);")
+			g.P("sharedNum++;")
 		} else {
 			g.P("input.ReadMessage(this.", f.goName, ");")
 		}
@@ -120,7 +122,8 @@ func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 		if f.shared {
 			g.P(f.csFullType, " temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
 			g.P("input.ReadEnum(ref temp);")
-			g.P(f.goName, " = temp;")
+			g.P("pb::SharedItem.PushTemp(", f.fieldCommon.proto.GetNumber(), ", temp);")
+			g.P("sharedNum++;")
 		} else {
 			g.P("input.ReadEnum(ref this.", f.goName, ");")
 		}
@@ -128,7 +131,8 @@ func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 		if f.shared {
 			g.P(f.csFullType, " temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
 			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref temp);")
-			g.P(f.goName, " = temp;")
+			g.P("pb::SharedItem.PushTemp(", f.fieldCommon.proto.GetNumber(), ", temp);")
+			g.P("sharedNum++;")
 		} else {
 			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref this.", f.goName, ");")
 		}

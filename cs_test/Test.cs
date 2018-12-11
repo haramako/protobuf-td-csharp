@@ -29,29 +29,35 @@ public List<EmbedMessage> RepeatedMessage = new List<EmbedMessage>();
 public List<Int32> PackedInt32 = new List<Int32>();
 public List<Int64> PackedInt64 = new List<Int64>();
 public Int32 SharedInt32 { 
-get { var found = findShared(30); if( found != null ){ return (Int32)found.Value; }else{ return 0;} }
-set { var found = findShared(30); if( found != null ){ found.Value = value; }else{ addShared(30, value);} }
+get { var found = getShared(30); if( found != null ){ return (Int32)found; }else{ return 0;} }
+set { setShared(30, value); }
 }
 public string SharedString { 
-get { var found = findShared(31); if( found != null ){ return (string)found.Value; }else{ return "";} }
-set { var found = findShared(31); if( found != null ){ found.Value = value; }else{ addShared(31, value);} }
+get { var found = getShared(31); if( found != null ){ return (string)found; }else{ return "";} }
+set { setShared(31, value); }
 }
 public EmbedMessage SharedMessage { 
-get { var found = findShared(32); if( found != null ){ return (EmbedMessage)found.Value; }else{ return null;} }
-set { var found = findShared(32); if( found != null ){ found.Value = value; }else{ addShared(32, value);} }
+get { var found = getShared(32); if( found != null ){ return (EmbedMessage)found; }else{ return null;} }
+set { setShared(32, value); }
 }
-List<pb::SharedItem> sharedList_;
-pb::SharedItem findShared(int id){
-if( sharedList_ == null ) return null;
-var len = sharedList_.Count;
-for(int i = 0; i < len; i++){
-if( sharedList_[i].Id == id ) return sharedList_[i];
+pb::SharedItem[] sharedList_;
+object getShared(int id){
+  if( sharedList_ == null ) return null;
+  for(int i = 0; i < sharedList_.Length; i++){
+    if( sharedList_[i].Id == 0 ){ return null; }
+    if( sharedList_[i].Id == id ){ return sharedList_[i].Value; }
+  }
+  return null;
 }
-return null;
-}
-void addShared(int id, object val){
-if( sharedList_ == null ) sharedList_ = new List<pb::SharedItem>();
-sharedList_.Add(new pb::SharedItem(id,val));
+void setShared(int id, object val){
+  if( sharedList_ == null ){ sharedList_ = new pb::SharedItem[4]; }
+  for(int i = 0; i < sharedList_.Length; i++){
+    if( sharedList_[i].Id == 0 || sharedList_[i].Id == id ){
+       sharedList_[i].Id = id;
+       sharedList_[i].Value = val;
+       return;
+     }
+  }
 }
 
 public TestMessage() { }
@@ -77,6 +83,7 @@ var mes = CreateInstance(); mes.MergeFrom(input); return mes;
 
 public override void MergeFrom(pb::CodedInputStream input) {
 uint tag;
+int sharedNum = 0;
 while (input.ReadTag(out tag)) {
 switch (tag) {
 case 0: {
@@ -140,20 +147,27 @@ break;
 case 240: {
 Int32 temp = 0;
 input.ReadInt32(ref temp);
+pb::SharedItem.PushTemp(30, temp);
+sharedNum++;
 break;
 }
 case 250: {
 string temp = "";
 input.ReadString(ref temp);
+pb::SharedItem.PushTemp(31, temp);
+sharedNum++;
 break;
 }
 case 258: {
 var temp = EmbedMessage.CreateInstance();
 input.ReadMessage(temp);
+pb::SharedItem.PushTemp(32, temp);
+sharedNum++;
 break;
 }
 }
 }
+if( sharedNum > 0 ){ sharedList_ = pb::SharedItem.PopTemp(sharedNum); }
 }
 public override void WriteTo(pb::CodedOutputStream output) {
 if( Int32Value!=0) {
@@ -290,6 +304,7 @@ var mes = CreateInstance(); mes.MergeFrom(input); return mes;
 
 public override void MergeFrom(pb::CodedInputStream input) {
 uint tag;
+int sharedNum = 0;
 while (input.ReadTag(out tag)) {
 switch (tag) {
 case 0: {
