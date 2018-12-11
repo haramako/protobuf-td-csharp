@@ -28,7 +28,31 @@ public List<Int64> RepeatedInt64 = new List<Int64>();
 public List<EmbedMessage> RepeatedMessage = new List<EmbedMessage>();
 public List<Int32> PackedInt32 = new List<Int32>();
 public List<Int64> PackedInt64 = new List<Int64>();
-public Int32 SharedInt32 = 0;
+public Int32 SharedInt32 { 
+get { var found = findShared(30); if( found != null ){ return (Int32)found.Value; }else{ return 0;} }
+set { var found = findShared(30); if( found != null ){ found.Value = value; }else{ addShared(30, value);} }
+}
+public string SharedString { 
+get { var found = findShared(31); if( found != null ){ return (string)found.Value; }else{ return "";} }
+set { var found = findShared(31); if( found != null ){ found.Value = value; }else{ addShared(31, value);} }
+}
+public EmbedMessage SharedMessage { 
+get { var found = findShared(32); if( found != null ){ return (EmbedMessage)found.Value; }else{ return null;} }
+set { var found = findShared(32); if( found != null ){ found.Value = value; }else{ addShared(32, value);} }
+}
+List<pb::SharedItem> sharedList_;
+pb::SharedItem findShared(int id){
+if( sharedList_ == null ) return null;
+var len = sharedList_.Count;
+for(int i = 0; i < len; i++){
+if( sharedList_[i].Id == id ) return sharedList_[i];
+}
+return null;
+}
+void addShared(int id, object val){
+if( sharedList_ == null ) sharedList_ = new List<pb::SharedItem>();
+sharedList_.Add(new pb::SharedItem(id,val));
+}
 
 public TestMessage() { }
 public static TestMessage CreateInstance() { var obj = new TestMessage(); obj.Finish(); return obj; }
@@ -114,7 +138,18 @@ input.ReadInt64Array(tag, this.PackedInt64);
 break;
 }
 case 240: {
-input.ReadInt32(ref this.SharedInt32);
+Int32 temp = 0;
+input.ReadInt32(ref temp);
+break;
+}
+case 250: {
+string temp = "";
+input.ReadString(ref temp);
+break;
+}
+case 258: {
+var temp = EmbedMessage.CreateInstance();
+input.ReadMessage(temp);
 break;
 }
 }
@@ -159,6 +194,12 @@ output.WriteInt64Array(21,PackedInt64);
 }
 if( SharedInt32!=0) {
 output.WriteInt32(30,SharedInt32);
+}
+if( SharedString!="") {
+output.WriteString(31,SharedString);
+}
+if( SharedMessage!=null) {
+output.WriteMessage(32,SharedMessage);
 }
 }
 public override int SerializedSize {
@@ -212,6 +253,12 @@ foreach (var element in PackedInt64) {
 }
 if( SharedInt32!=0) {
 size += pb::CodedOutputStream.ComputeInt32Size(30,SharedInt32);
+}
+if( SharedString!="") {
+size += pb::CodedOutputStream.ComputeStringSize(31,SharedString);
+}
+if( SharedMessage!=null) {
+size += pb::CodedOutputStream.ComputeMessageSize(32,SharedMessage);
 }
 return size;
 }

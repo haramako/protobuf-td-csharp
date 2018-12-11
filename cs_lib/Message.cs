@@ -2,6 +2,17 @@ using System.IO;
 using pb = global::Google.ProtocolBuffers;
 
 namespace Google.ProtocolBuffers {
+    public class SharedItem
+    {
+        public int Id;
+        public object Value;
+        public SharedItem(int id, object val)
+        {
+            Id = id;
+            Value = val;
+        }
+    }
+
 	public abstract class Message {
 		public abstract void MergeFrom(pb::CodedInputStream input);
 		public abstract void WriteTo(pb::CodedOutputStream output);

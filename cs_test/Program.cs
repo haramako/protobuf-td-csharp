@@ -70,13 +70,24 @@ namespace Test
 			mes.PackedInt32 = new List<int>(){21,22,23};
 			mes.PackedInt64 = new List<long>(){32,33};
 
+            mes.SharedInt32 = 40;
+            mes.SharedString = "41";
+            mes.SharedMessage = EmbedMessage.CreateInstance();
+            mes.SharedMessage.Val = 42;
+
             foreach (var c in mes.Dump())
             {
                 Console.Write(string.Format("{0},", c));
             }
             Console.WriteLine();
- 
-			Assert.IsTrue(comp(mes, TestMessage.ParseFrom(mes.Dump())));
+
+            var des = TestMessage.ParseFrom(mes.Dump());
+
+            Assert.AreEqual(40, des.SharedInt32);
+            Assert.AreEqual("41", des.SharedString);
+            Assert.AreEqual(42, des.SharedMessage.Val);
+
+            Assert.IsTrue(comp(mes, des));
 
             //Assert.Fail();
 		}

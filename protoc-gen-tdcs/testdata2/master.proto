@@ -10,6 +10,7 @@
  * ここで定義されたデータは、マスターデータに入る、もしくは、他のプロトコルから参照されるものである。
  */
 syntax = "proto3";
+import "descriptor.proto";
 
 package Master;
 
@@ -156,7 +157,7 @@ message StatusInfo {
 	string desc = 16; /// 説明文
 	bool without_player = 18; /// プレイヤーには無効
 	bool without_monster = 19; /// モンスターには無効
-	string hit_effect = 20; /// 効果が出たときに再生するエフェクト
+	string hit_effect = 20 [shared=true]; /// 効果が出たときに再生するエフェクト
 }
 
 /**
@@ -591,18 +592,18 @@ message Soul {
 	int32 brave = 2; /// 発動条件の数値. 内容に関しては、各SoulCondTypeを参照すること。必要ブレイブを表すことが多い
 	int32 num = 3; /// 発動条件の数値. 
 	repeated CharacterStatus status = 4; /// 状態異常に対する場合に指定される
-	Element element = 7; /// 属性("+"でつなげて複数指定可能)
-	string name = 6;
-	SoulOption opt = 10; /// オプション
+	Element element = 7 [shared=true]; /// 属性("+"でつなげて複数指定可能)
+	string name = 6[shared=true];
+	SoulOption opt = 10[shared=true]; /// オプション
 	repeated SkillCode codes = 8; /// スキルコード
-	int32 id = 9;
-	int32 prob = 11; /// 諸々の確率を示す
-	int32 over_brave = 12; /// ブレイブが増えたときに上がる発動確率
-	ArrowParam arrow_param = 13; /// 矢系ソウルのスキルパラメータ
+	int32 id = 9[shared=true];
+	int32 prob = 11[shared=true]; /// 諸々の確率を示す
+	int32 over_brave = 12[shared=true]; /// ブレイブが増えたときに上がる発動確率
+	ArrowParam arrow_param = 13[shared=true]; /// 矢系ソウルのスキルパラメータ
 	repeated ItemType item_type = 14; /// WithAppraiserで識別済みとなるアイテムの種類
-	Amplify amplify = 15; /// WithDamageUp のパラメータ
-	Greed greed = 16; /// WithGreed のパラメータ
-	int32 hp_less_than = 17; /// このHP以下のときのみ発動
+	Amplify amplify = 15[shared=true]; /// WithDamageUp のパラメータ
+	Greed greed = 16[shared=true]; /// WithGreed のパラメータ
+	int32 hp_less_than = 17[shared=true]; /// このHP以下のときのみ発動
 }
 
 /**
@@ -1834,34 +1835,34 @@ message SpecialTemplate {
 
 	SpecialType type = 1;
 	int32 pow = 2;
-	ParamType param_type1 = 3;
-	int32 param1 = 4;
-	int32 amount = 5;
-	int32 rand = 6;
-	int32 direct = 7;
-	int32 prob = 8; /// attackではファングドロップ率. set_statusでは命中率
+	ParamType param_type1 = 3 [shared = true];
+	int32 param1 = 4 [shared = true];
+	int32 amount = 5 [shared = true];
+	int32 rand = 6 [shared = true];
+	int32 direct = 7 [shared = true];
+	int32 prob = 8 [shared = true]; /// attackではファングドロップ率. set_statusでは命中率
 	repeated CharacterStatus status = 9; /// 状態異常(add_status, set_statusでのみ使用する）
-	SpecialAttribute attribute = 10; /// 特殊な属性
+	SpecialAttribute attribute = 10 [shared = true]; /// 特殊な属性
 	Element element = 11; /// 攻撃の属性
-	StatusGroup status_group = 12; /// ステータスグループ(clear_statusでのみ使用する)
-	string effect = 13; /// ヒットエフェクト(エフェクトアセット名、もしくは、スキルエフェクト名を指定する）
+	StatusGroup status_group = 12 [shared = true]; /// ステータスグループ(clear_statusでのみ使用する)
+	string effect = 13 [shared = true]; /// ヒットエフェクト(エフェクトアセット名、もしくは、スキルエフェクト名を指定する）
 	repeated SkillLot skill_lot = 14; /// random_skillで使用する
 	repeated ItemType item_type = 15; /// steal_item / Instead / clone_itemで使用する
-	int32 hp_rate = 16; /// 現在HPの割合を%で指定する
-	Range range = 17; /// 乱数の範囲指定
-	string script = 18; /// スクリプトの名前（show_scriptで使用する）
-	int32 len = 19; /// 距離を指定する
-	int32 id = 20; /// 諸々のidを指定する
+	int32 hp_rate = 16 [shared = true]; /// 現在HPの割合を%で指定する
+	Range range = 17 [shared = true]; /// 乱数の範囲指定
+	string script = 18 [shared = true]; /// スクリプトの名前（show_scriptで使用する）
+	int32 len = 19 [shared = true]; /// 距離を指定する
+	int32 id = 20 [shared = true]; /// 諸々のidを指定する
 	string hit_effect = 21; /// ヒットして有効だったときに表示するエフェクト
-	int32 max_hp_rate = 22; /// 最大HPの割合を%で指定する
-	bool lost = 23; /// 使用後に消えるか（sacrificeで使う）
-	int32 item_id = 24; /// アイテムID(box_item_change, steal_item, drop_itemで使用する)
-	int32 item_set_id = 25; /// アイテムセットID(box_item_change, steal_item, drop_itemで使用する)
-	int32 item_table = 26; /// フロアごとに設定されているアイテムセットのインデックス（1はじまり）(box_item_change, steal_item, drop_itemで使用する)
-	bool no_knockback = 27; /// ノックバックしない（attackで使う）
-	Amplify amplify = 28; /// 特定の状態異常や属性へのダメージを増やす（attackで使う）
-	float player_level = 29; /// ロゼのレベル x 指定した値%（attackで使う）
-	float count_rate = 30; /// アイテムの使用回数 x 指定した値%（attackで使う）
+	int32 max_hp_rate = 22 [shared = true]; /// 最大HPの割合を%で指定する
+	bool lost = 23 [shared = true]; /// 使用後に消えるか（sacrificeで使う）
+	int32 item_id = 24 [shared = true]; /// アイテムID(box_item_change, steal_item, drop_itemで使用する)
+	int32 item_set_id = 25 [shared = true]; /// アイテムセットID(box_item_change, steal_item, drop_itemで使用する)
+	int32 item_table = 26 [shared = true]; /// フロアごとに設定されているアイテムセットのインデックス（1はじまり）(box_item_change, steal_item, drop_itemで使用する)
+	bool no_knockback = 27 [shared = true]; /// ノックバックしない（attackで使う）
+	Amplify amplify = 28 [shared = true]; /// 特定の状態異常や属性へのダメージを増やす（attackで使う）
+	float player_level = 29 [shared = true]; /// ロゼのレベル x 指定した値%（attackで使う）
+	float count_rate = 30 [shared = true]; /// アイテムの使用回数 x 指定した値%（attackで使う）
 }
 
 /**

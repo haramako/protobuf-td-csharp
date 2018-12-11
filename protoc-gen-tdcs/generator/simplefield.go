@@ -11,11 +11,23 @@ type simpleField struct {
 	getterDef     string                               // Default for getters, e.g. "nil", `""` or "Default_MessageType_FieldName"
 	protoDef      string                               // Default value as defined in the proto file, e.g "yoshi" or "5"
 	comment       string                               // The full comment for the field, e.g. "// Useful information"
+	shared        bool                                 // Shared field
 }
 
 // decl prints the declaration of the field in the struct (if any).
 func (f *simpleField) decl(g *Generator, mc *msgCtx) {
-	g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " = ", getDefaultValue(f.protoType, &f.fieldCommon), ";")
+	if f.shared {
+		f.declShared(g, mc)
+	} else {
+		g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " = ", getDefaultValue(f.protoType, &f.fieldCommon), ";")
+	}
+}
+
+func (f *simpleField) declShared(g *Generator, mc *msgCtx) {
+	g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " { ")
+	g.P("get { var found = findShared(", f.fieldCommon.proto.GetNumber(), "); if( found != null ){ return (", f.csFullType, ")found.Value; }else{ return ", getNullValue2(&f.fieldCommon), ";} }")
+	g.P("set { var found = findShared(", f.fieldCommon.proto.GetNumber(), "); if( found != null ){ found.Value = value; }else{ addShared(", f.fieldCommon.proto.GetNumber(), ", value);} }")
+	g.P("}")
 }
 
 // getter prints the getter for the field.
@@ -98,11 +110,28 @@ func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "Array(tag, this.", f.goName, ");")
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
-		g.P("input.ReadMessage(this.", f.goName, ");")
+		if f.shared {
+			g.P("if( ", f.goName, " == null ) addShared(", f.fieldCommon.proto.GetNumber(), ", ", f.csFullType, ".CreateInstance());")
+			g.P("input.ReadMessage(this.", f.goName, ");")
+		} else {
+			g.P("input.ReadMessage(this.", f.goName, ");")
+		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
-		g.P("input.ReadEnum(ref this.", f.goName, ");")
+		if f.shared {
+			g.P(f.csFullType, " temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
+			g.P("input.ReadEnum(ref temp);")
+			g.P(f.goName, " = temp;")
+		} else {
+			g.P("input.ReadEnum(ref this.", f.goName, ");")
+		}
 	} else {
-		g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref this.", f.goName, ");")
+		if f.shared {
+			g.P(f.csFullType, " temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
+			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref temp);")
+			g.P(f.goName, " = temp;")
+		} else {
+			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref this.", f.goName, ");")
+		}
 	}
 	g.P("break;")
 	g.P("}")

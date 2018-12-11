@@ -1125,8 +1125,9 @@ var methodNames = [...]string{
 
 // msgCtx contains the context for the generator functions.
 type msgCtx struct {
-	goName  string      // Go struct name of the message, e.g. MessageName
-	message *Descriptor // The descriptor for the message
+	goName    string      // Go struct name of the message, e.g. MessageName
+	message   *Descriptor // The descriptor for the message
+	hasShared bool        // Has at lease one shared field
 }
 
 // fieldCommon contains data common to all types of fields.
@@ -1181,6 +1182,22 @@ func getNullValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) stri
 	}
 }
 
+func getNullValue2(f *fieldCommon) string {
+	if isRepeated(f.proto) {
+		return "null"
+	}
+	switch f.proto.GetType() {
+	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+		return "null"
+	case descriptor.FieldDescriptorProto_TYPE_STRING:
+		return "\"\""
+	case descriptor.FieldDescriptorProto_TYPE_BOOL:
+		return "false"
+	default:
+		return "0"
+	}
+}
+
 // topLevelField interface implemented by all types of fields on the top level (not oneofSubField).
 type topLevelField interface {
 	decl(g *Generator, mc *msgCtx)   // print declaration within the struct
@@ -1216,6 +1233,24 @@ func (g *Generator) generateMessageStruct(mc *msgCtx, topLevelFields []topLevelF
 
 	for _, pf := range topLevelFields {
 		pf.decl(g, mc)
+	}
+
+	if mc.hasShared {
+		g.P("List<pb::SharedItem> sharedList_;")
+
+		g.P("pb::SharedItem findShared(int id){")
+		g.P("if( sharedList_ == null ) return null;")
+		g.P("var len = sharedList_.Count;")
+		g.P("for(int i = 0; i < len; i++){")
+		g.P("if( sharedList_[i].Id == id ) return sharedList_[i];")
+		g.P("}")
+		g.P("return null;")
+		g.P("}")
+
+		g.P("void addShared(int id, object val){")
+		g.P("if( sharedList_ == null ) sharedList_ = new List<pb::SharedItem>();")
+		g.P("sharedList_.Add(new pb::SharedItem(id,val));")
+		g.P("}")
 	}
 }
 
@@ -1336,6 +1371,8 @@ func (g *Generator) generateMessage(message *Descriptor) {
 
 	mapFieldTypes := make(map[*descriptor.FieldDescriptorProto]string) // keep track of the map fields to be added later
 
+	hasShared := false // has at least 1 shared field
+
 	// Build a structure more suitable for generating the text in one pass
 	for i, field := range message.Field {
 		// Allocate the getter and the field at the same time so name
@@ -1453,6 +1490,13 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		if ok {
 			c += "\n"
 		}
+
+		shared := false
+		if field.Options != nil && field.Options.Shared != nil {
+			shared = *field.Options.Shared
+		}
+		hasShared = hasShared || shared
+
 		rf := simpleField{
 			fieldCommon: fieldCommon{
 				goName:        fieldName,
@@ -1464,6 +1508,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				protoName:     field.GetName(),
 				proto:         field,
 			},
+			shared:        shared,
 			protoTypeName: field.GetTypeName(),
 			protoType:     *field.Type,
 			deprecated:    fieldDeprecated,
@@ -1477,8 +1522,9 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	}
 
 	mc := &msgCtx{
-		goName:  goTypeName,
-		message: message,
+		goName:    goTypeName,
+		message:   message,
+		hasShared: hasShared,
 	}
 
 	ccTypeName := CamelCaseSliceAll(typeName)

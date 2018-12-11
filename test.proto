@@ -30,7 +30,8 @@ message TestMessage {
 	//map<int32,string> map_value = 30;
 
 	int32 shared_int32 = 30 [shared=true];
-	
+	string shared_string = 31 [shared=true];
+	EmbedMessage shared_message = 32 [shared=true];
 }
 
 message EmbedMessage {
