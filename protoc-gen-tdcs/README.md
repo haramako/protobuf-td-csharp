@@ -7,6 +7,7 @@
   - メモリ節約モードを追加する(shared)
   * 変数のサイズ指定(size=int8)
   * pbx対応(遅延読み込み、キャッシュ,WeakDictionary)
+  * repeat も sahredに対応
 
 # あとまわし
 

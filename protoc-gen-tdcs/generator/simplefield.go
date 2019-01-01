@@ -16,16 +16,21 @@ type simpleField struct {
 
 // decl prints the declaration of the field in the struct (if any).
 func (f *simpleField) decl(g *Generator, mc *msgCtx) {
+	t := &f.fieldCommon.goType
 	if f.shared {
 		f.declShared(g, mc)
+	} else if t.size != 0 {
+		g.P(f.comment, "public ", t.ftype, " ", f.goName, "_", f.deprecated, " = ", getDefaultValue(f.protoType, &f.fieldCommon), ";")
+		g.P(f.comment, "public ", t.typ, " ", f.goName, f.deprecated, " { get { return (", t.typ, ")", f.goName, "_; } set { ", f.goName, "_ = (", t.ftype, ")value; }")
+		g.P("}")
 	} else {
-		g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " = ", getDefaultValue(f.protoType, &f.fieldCommon), ";")
+		g.P(f.comment, "public ", t.typ, " ", f.goName, f.deprecated, " = ", getDefaultValue(f.protoType, &f.fieldCommon), ";")
 	}
 }
 
 func (f *simpleField) declShared(g *Generator, mc *msgCtx) {
-	g.P(f.comment, "public ", f.csFullType, " ", f.goName, f.deprecated, " { ")
-	g.P("get { var found = getShared(", f.fieldCommon.proto.GetNumber(), "); if( found != null ){ return (", f.csFullType, ")found; }else{ return ", getNullValue2(&f.fieldCommon), ";} }")
+	g.P(f.comment, "public ", f.fieldCommon.goType.typ, " ", f.goName, f.deprecated, " { ")
+	g.P("get { var found = getShared(", f.fieldCommon.proto.GetNumber(), "); if( found != null ){ return (", f.fieldCommon.goType.typ, ")found; }else{ return ", getNullValue2(&f.fieldCommon), ";} }")
 	g.P("set { setShared(", f.fieldCommon.proto.GetNumber(), ", value); }")
 	g.P("}")
 }
@@ -100,18 +105,21 @@ func GetWireTypeTag(wireType string) WireType {
 
 func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
-	g.P("case ", f.proto.GetNumber()<<3|int32(GetWireTypeTag(f.fieldCommon.wireType)), ": {")
+	g.P("case ", f.proto.GetNumber()<<3|int32(GetWireTypeTag(f.fieldCommon.goType.wire)), ": {")
 	if isRepeated(d) {
 		if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
-			g.P("input.ReadMessageArray(tag, this.", f.goName, ",", f.csElementType, ".CreateInstance );")
+			g.P("if( ", f.goName, " == null ) ", f.goName, " = new ", f.goType.typ, "();")
+			g.P("input.ReadMessageArray(tag, this.", f.goName, ",", f.fieldCommon.goType.etype, ".CreateInstance );")
 		} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
+			g.P("if( ", f.goName, " == null ) ", f.goName, " = new ", f.goType.typ, "();")
 			g.P("input.ReadEnumArray(tag, this.", f.goName, ");")
 		} else {
+			g.P("if( ", f.goName, " == null ) ", f.goName, " = new ", f.goType.typ, "();")
 			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "Array(tag, this.", f.goName, ");")
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 		if f.shared {
-			g.P("var temp = ", f.csFullType, ".CreateInstance();")
+			g.P("var temp = ", f.fieldCommon.goType.typ, ".CreateInstance();")
 			g.P("input.ReadMessage(temp);")
 			g.P("pb::SharedItem.PushTemp(", f.fieldCommon.proto.GetNumber(), ", temp);")
 			g.P("sharedNum++;")
@@ -120,7 +128,7 @@ func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 		}
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		if f.shared {
-			g.P(f.csFullType, " temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
+			g.P(f.fieldCommon.goType.typ, " temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
 			g.P("input.ReadEnum(ref temp);")
 			g.P("pb::SharedItem.PushTemp(", f.fieldCommon.proto.GetNumber(), ", temp);")
 			g.P("sharedNum++;")
@@ -129,10 +137,14 @@ func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 		}
 	} else {
 		if f.shared {
-			g.P(f.csFullType, " temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
+			g.P(f.fieldCommon.goType.typ, " temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
 			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref temp);")
 			g.P("pb::SharedItem.PushTemp(", f.fieldCommon.proto.GetNumber(), ", temp);")
 			g.P("sharedNum++;")
+		} else if f.size != 32 {
+			g.P("Int32 temp = ", getDefaultValue(f.fieldCommon.proto.GetType(), &f.fieldCommon), ";")
+			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref temp);")
+			g.P(f.goName, "= (", f.fieldCommon.goType.typ, ")temp;")
 		} else {
 			g.P("input.Read", getFunctionPostfix(f.proto.GetType()), "(ref this.", f.goName, ");")
 		}
@@ -147,7 +159,7 @@ func (f *simpleField) baseType() string {
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		return "Message"
 	default:
-		return f.goType
+		return f.goType.typ
 	}
 }
 
@@ -157,7 +169,7 @@ func (f *simpleField) baseElementType() string {
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		return "Message"
 	default:
-		return f.fieldCommon.csElementType
+		return f.fieldCommon.goType.etype
 	}
 }
 

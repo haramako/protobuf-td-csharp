@@ -1019,63 +1019,85 @@ func getFunctionPostfix(typ descriptor.FieldDescriptorProto_Type) string {
 	case descriptor.FieldDescriptorProto_TYPE_ENUM:
 		return "Enum"
 	case descriptor.FieldDescriptorProto_TYPE_SINT32:
-		return "SInt32"
+		return "Int32"
 	case descriptor.FieldDescriptorProto_TYPE_SINT64:
-		return "SInt64"
+		return "Int64"
 	default:
 		panic(fmt.Sprintf("unknown type for %v", typ))
 	}
 }
 
+var typeTable = map[descriptor.FieldDescriptorProto_Type]CsType{
+	descriptor.FieldDescriptorProto_TYPE_DOUBLE:   {typ: "double", prefix: "Double", wire: "fixed64"},
+	descriptor.FieldDescriptorProto_TYPE_FLOAT:    {typ: "float", prefix: "Float", wire: "fixed32"},
+	descriptor.FieldDescriptorProto_TYPE_INT64:    {typ: "Int64", prefix: "", wire: "varint"},
+	descriptor.FieldDescriptorProto_TYPE_UINT64:   {typ: "UInt64", prefix: "", wire: "varint"},
+	descriptor.FieldDescriptorProto_TYPE_INT32:    {typ: "Int32", prefix: "", wire: "varint"},
+	descriptor.FieldDescriptorProto_TYPE_UINT32:   {typ: "UInt32", prefix: "", wire: "varint"},
+	descriptor.FieldDescriptorProto_TYPE_FIXED64:  {typ: "UInt64", prefix: "", wire: "fixed64"},
+	descriptor.FieldDescriptorProto_TYPE_FIXED32:  {typ: "UInt32", prefix: "", wire: "fixed32"},
+	descriptor.FieldDescriptorProto_TYPE_BOOL:     {typ: "bool", prefix: "Bool", wire: "varint"},
+	descriptor.FieldDescriptorProto_TYPE_STRING:   {typ: "string", prefix: "String", wire: "bytes"},
+	descriptor.FieldDescriptorProto_TYPE_GROUP:    {typ: "", prefix: "", wire: "group"},
+	descriptor.FieldDescriptorProto_TYPE_MESSAGE:  {typ: "", prefix: "", wire: "bytes"},
+	descriptor.FieldDescriptorProto_TYPE_BYTES:    {typ: "byte[]", prefix: "", wire: "bytes"},
+	descriptor.FieldDescriptorProto_TYPE_ENUM:     {typ: "", prefix: "", wire: "varint"},
+	descriptor.FieldDescriptorProto_TYPE_SFIXED32: {typ: "Int32", prefix: "", wire: "fixed32"},
+	descriptor.FieldDescriptorProto_TYPE_SFIXED64: {typ: "Int64", prefix: "", wire: "fixed64"},
+	descriptor.FieldDescriptorProto_TYPE_SINT32:   {typ: "Int32", prefix: "", wire: "zigzag32"},
+	descriptor.FieldDescriptorProto_TYPE_SINT64:   {typ: "Int64", prefix: "", wire: "zigzag64"},
+}
+
 // GoType returns a string representing the type name, and the wire type
-func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescriptorProto) (typ string, wire string, etype string) {
+func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescriptorProto) (t CsType) {
+	size := 0
+	if field.Options != nil {
+		if field.Options.Size != nil {
+			size = int(*field.Options.Size)
+		}
+	}
+	t = typeTable[*field.Type]
+	t.ftype = t.typ
 	// TODO: Options.
 	switch *field.Type {
-	case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
-		typ, wire = "double", "fixed64"
-	case descriptor.FieldDescriptorProto_TYPE_FLOAT:
-		typ, wire = "float", "fixed32"
-	case descriptor.FieldDescriptorProto_TYPE_INT64:
-		typ, wire = "Int64", "varint"
-	case descriptor.FieldDescriptorProto_TYPE_UINT64:
-		typ, wire = "UInt64", "varint"
 	case descriptor.FieldDescriptorProto_TYPE_INT32:
-		typ, wire = "Int32", "varint"
+		if size == 8 {
+			t.size = 8
+			t.ftype = "byte"
+		} else if size == 16 {
+			t.size = 16
+			t.ftype = "Int16"
+		} else {
+			t.ftype = "Int32"
+		}
 	case descriptor.FieldDescriptorProto_TYPE_UINT32:
-		typ, wire = "UInt32", "varint"
-	case descriptor.FieldDescriptorProto_TYPE_FIXED64:
-		typ, wire = "UInt64", "fixed64"
-	case descriptor.FieldDescriptorProto_TYPE_FIXED32:
-		typ, wire = "UInt32", "fixed32"
-	case descriptor.FieldDescriptorProto_TYPE_BOOL:
-		typ, wire = "bool", "varint"
-	case descriptor.FieldDescriptorProto_TYPE_STRING:
-		typ, wire = "string", "bytes"
+		if size == 8 {
+			t.size = 8
+			t.ftype = "byte"
+		} else if size == 16 {
+			t.size = 16
+			t.ftype = "UInt16"
+		} else {
+			t.ftype = "UInt32"
+		}
 	case descriptor.FieldDescriptorProto_TYPE_GROUP:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = g.typeName(desc), "group"
+		t.typ = g.typeName(desc)
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = g.typeNameWithTypes(desc), "bytes"
-	case descriptor.FieldDescriptorProto_TYPE_BYTES:
-		typ, wire = "byte[]", "bytes"
+		t.typ = g.typeNameWithTypes(desc)
+		t.ftype = t.typ
 	case descriptor.FieldDescriptorProto_TYPE_ENUM:
 		desc := g.ObjectNamed(field.GetTypeName())
-		typ, wire = g.typeNameWithTypes(desc), "varint"
-	case descriptor.FieldDescriptorProto_TYPE_SFIXED32:
-		typ, wire = "Int32", "fixed32"
-	case descriptor.FieldDescriptorProto_TYPE_SFIXED64:
-		typ, wire = "Int64", "fixed64"
-	case descriptor.FieldDescriptorProto_TYPE_SINT32:
-		typ, wire = "Int32", "zigzag32"
-	case descriptor.FieldDescriptorProto_TYPE_SINT64:
-		typ, wire = "Int64", "zigzag64"
+		t.typ = g.typeNameWithTypes(desc)
+		t.ftype = t.typ
 	default:
-		g.Fail("unknown type for", field.GetName())
+		// g.Fail("unknown cs type for"+string(*field.Type), field.GetName())
 	}
-	etype = typ
+
 	if isRepeated(field) {
-		typ = "List<" + typ + ">"
+		t.etype = t.typ
+		t.typ = "List<" + t.typ + ">"
 	} else if message != nil && message.proto3() {
 		return
 	} else if field.OneofIndex != nil && message != nil {
@@ -1130,16 +1152,26 @@ type msgCtx struct {
 	hasShared bool        // Has at lease one shared field
 }
 
+type CsType struct {
+	typ    string // プロパティとしてのタイプ
+	ftype  string // フィールドのタイプ
+	etype  string
+	prefix string
+	wire   string
+	size   int
+}
+
 // fieldCommon contains data common to all types of fields.
 type fieldCommon struct {
-	goName        string // Go name of field, e.g. "FieldName" or "Descriptor_"
-	protoName     string // Name of field in proto language, e.g. "field_name" or "descriptor"
-	getterName    string // Name of the getter, e.g. "GetFieldName" or "GetDescriptor_"
-	goType        string // The Go type as a string, e.g. "*int32" or "*OtherMessage"
-	csFullType    string // FQN of C# class, e.g. "Int32" or "Hoge.Types.Fuga"
-	csElementType string // FQN of element type.
-	wireType      string // Wire type
-	proto         *descriptor.FieldDescriptorProto
+	goName      string // Go name of field, e.g. "FieldName" or "Descriptor_"
+	protoName   string // Name of field in proto language, e.g. "field_name" or "descriptor"
+	getterName  string // Name of the getter, e.g. "GetFieldName" or "GetDescriptor_"
+	goType      CsType // The Go type as a string, e.g. "*int32" or "*OtherMessage"
+	isProperty  bool   // Is property but not field.
+	csFieldType string // Field Type (If shared)
+	csFieldName string // Field Name (If shared)
+	size        int    // Bit size of number. (only for int32, int64)
+	proto       *descriptor.FieldDescriptorProto
 }
 
 // getProtoName gets the proto name of a field, e.g. "field_name" or "descriptor".
@@ -1148,17 +1180,17 @@ func (f *fieldCommon) getProtoName() string {
 }
 
 // getGoType returns the go type of the field  as a string, e.g. "*int32".
-func (f *fieldCommon) getGoType() string {
+func (f *fieldCommon) getGoType() CsType {
 	return f.goType
 }
 
 func getDefaultValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) string {
 	if isRepeated(f.proto) {
-		return "new " + f.csFullType + "()"
+		return "new " + f.goType.typ + "()"
 	}
 	switch typ {
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-		return "new " + f.csFullType + "()"
+		return "new " + f.goType.typ + "()"
 	case descriptor.FieldDescriptorProto_TYPE_STRING:
 		return "\"\""
 	default:
@@ -1393,28 +1425,31 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		base := CamelCase(*field.Name)
 		ns := allocNames(base, "Get"+base)
 		fieldName, fieldGetterName := ns[0], ns[1]
-		typename, wiretype, elemType := g.GoType(message, field)
+		csType := g.GoType(message, field)
+		//typename, wiretype, elemType := g.GoType(message, field)
 
 		oneof := field.OneofIndex != nil
 		if oneof && oFields[*field.OneofIndex] == nil {
-			odp := message.OneofDecl[int(*field.OneofIndex)]
-			base := CamelCase(odp.GetName())
-			names := allocNames(base, "Get"+base)
-			fname, gname := names[0], names[1]
+			/*
+				odp := message.OneofDecl[int(*field.OneofIndex)]
+				base := CamelCase(odp.GetName())
+				names := allocNames(base, "Get"+base)
+				fname, gname := names[0], names[1]
 
-			dname := "is" + goTypeName + "_" + fname
-			of := oneofField{
-				fieldCommon: fieldCommon{
-					goName:     fname,
-					getterName: gname,
-					goType:     dname,
-					protoName:  odp.GetName(),
-					proto:      field,
-				},
-				comment: "",
-			}
-			topLevelFields = append(topLevelFields, &of)
-			oFields[*field.OneofIndex] = &of
+				dname := "is" + goTypeName + "_" + fname
+				of := oneofField{
+					fieldCommon: fieldCommon{
+						goName:     fname,
+						getterName: gname,
+						goType:     dname,
+						protoName:  odp.GetName(),
+						proto:      field,
+					},
+					comment: "",
+				}
+				topLevelFields = append(topLevelFields, &of)
+				oFields[*field.OneofIndex] = &of
+			*/
 		}
 
 		if *field.Type == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
@@ -1422,24 +1457,10 @@ func (g *Generator) generateMessage(message *Descriptor) {
 			if d, ok := desc.(*Descriptor); ok && d.GetOptions().GetMapEntry() {
 				// Figure out the Go types and tags for the key and value types.
 				keyField, valField := d.Field[0], d.Field[1]
-				keyType, _, _ := g.GoType(d, keyField)
-				valType, _, _ := g.GoType(d, valField)
+				keyType := g.GoType(d, keyField)
+				valType := g.GoType(d, valField)
 
-				// We don't use stars, except for message-typed values.
-				// Message and enum types are the only two possibly foreign types used in maps,
-				// so record their use. They are not permitted as map keys.
-				keyType = strings.TrimPrefix(keyType, "*")
-				switch *valField.Type {
-				case descriptor.FieldDescriptorProto_TYPE_ENUM:
-					valType = strings.TrimPrefix(valType, "*")
-					g.RecordTypeUse(valField.GetTypeName())
-				case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-					g.RecordTypeUse(valField.GetTypeName())
-				default:
-					valType = strings.TrimPrefix(valType, "*")
-				}
-
-				typename = fmt.Sprintf("Dictionary<%s,%s>", keyType, valType)
+				typename := fmt.Sprintf("Dictionary<%s,%s>", keyType, valType)
 				mapFieldTypes[field] = typename // record for the getter generation
 			}
 		}
@@ -1479,7 +1500,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 				fieldCommon: fieldCommon{
 					goName:     fieldName,
 					getterName: fieldGetterName,
-					goType:     typename,
+					goType:     csType,
 					protoName:  field.GetName(),
 					proto:      field,
 				},
@@ -1507,16 +1528,19 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		}
 		hasShared = hasShared || shared
 
+		size := 32
+		if field.Options != nil && field.Options.Size != nil {
+			size = int(*field.Options.Size)
+		}
+
 		rf := simpleField{
 			fieldCommon: fieldCommon{
-				goName:        fieldName,
-				getterName:    fieldGetterName,
-				goType:        typename,
-				csFullType:    typename,
-				csElementType: elemType,
-				wireType:      wiretype,
-				protoName:     field.GetName(),
-				proto:         field,
+				goName:     fieldName,
+				getterName: fieldGetterName,
+				goType:     csType,
+				size:       size,
+				protoName:  field.GetName(),
+				proto:      field,
 			},
 			shared:        shared,
 			protoTypeName: field.GetTypeName(),

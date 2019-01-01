@@ -2,7 +2,6 @@ package generator
 
 import (
 	"../descriptor"
-	"github.com/golang/protobuf/proto"
 )
 
 // oneofField represents the oneof on top level.
@@ -140,128 +139,132 @@ func (f *oneofSubField) marshalCase(g *Generator) {
 
 // unmarshalCase prints the case matching this oneof subfield in the unmarshalling code.
 func (f *oneofSubField) unmarshalCase(g *Generator, origOneofName string, oneofName string) {
-	g.P("case ", f.fieldNumber, ": // ", origOneofName, ".", f.getProtoName())
-	g.P("if wire != ", g.Pkg["proto"], ".", f.wireTypeName(), " {")
-	g.P("return true, ", g.Pkg["proto"], ".ErrInternalBadWireType")
-	g.P("}")
-	lhs := "x, err" // overridden for TYPE_MESSAGE and TYPE_GROUP
-	var dec, cast, cast2 string
-	switch f.protoType {
-	case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
-		dec, cast = "b.DecodeFixed64()", g.Pkg["math"]+".Float64frombits"
-	case descriptor.FieldDescriptorProto_TYPE_FLOAT:
-		dec, cast, cast2 = "b.DecodeFixed32()", "uint32", g.Pkg["math"]+".Float32frombits"
-	case descriptor.FieldDescriptorProto_TYPE_INT64:
-		dec, cast = "b.DecodeVarint()", "int64"
-	case descriptor.FieldDescriptorProto_TYPE_UINT64:
-		dec = "b.DecodeVarint()"
-	case descriptor.FieldDescriptorProto_TYPE_INT32:
-		dec, cast = "b.DecodeVarint()", "int32"
-	case descriptor.FieldDescriptorProto_TYPE_FIXED64:
-		dec = "b.DecodeFixed64()"
-	case descriptor.FieldDescriptorProto_TYPE_FIXED32:
-		dec, cast = "b.DecodeFixed32()", "uint32"
-	case descriptor.FieldDescriptorProto_TYPE_BOOL:
-		dec = "b.DecodeVarint()"
-		// handled specially below
-	case descriptor.FieldDescriptorProto_TYPE_STRING:
-		dec = "b.DecodeStringBytes()"
-	case descriptor.FieldDescriptorProto_TYPE_GROUP:
-		g.P("msg := new(", f.goType[1:], ")") // drop star
-		lhs = "err"
-		dec = "b.DecodeGroup(msg)"
-		// handled specially below
-	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-		g.P("msg := new(", f.goType[1:], ")") // drop star
-		lhs = "err"
-		dec = "b.DecodeMessage(msg)"
-		// handled specially below
-	case descriptor.FieldDescriptorProto_TYPE_BYTES:
-		dec = "b.DecodeRawBytes(true)"
-	case descriptor.FieldDescriptorProto_TYPE_UINT32:
-		dec, cast = "b.DecodeVarint()", "uint32"
-	case descriptor.FieldDescriptorProto_TYPE_ENUM:
-		dec, cast = "b.DecodeVarint()", f.goType
-	case descriptor.FieldDescriptorProto_TYPE_SFIXED32:
-		dec, cast = "b.DecodeFixed32()", "int32"
-	case descriptor.FieldDescriptorProto_TYPE_SFIXED64:
-		dec, cast = "b.DecodeFixed64()", "int64"
-	case descriptor.FieldDescriptorProto_TYPE_SINT32:
-		dec, cast = "b.DecodeZigzag32()", "int32"
-	case descriptor.FieldDescriptorProto_TYPE_SINT64:
-		dec, cast = "b.DecodeZigzag64()", "int64"
-	default:
-		g.Fail("unhandled oneof field type ", f.protoType.String())
-	}
-	g.P(lhs, " := ", dec)
-	val := "x"
-	if cast != "" {
-		val = cast + "(" + val + ")"
-	}
-	if cast2 != "" {
-		val = cast2 + "(" + val + ")"
-	}
-	switch f.protoType {
-	case descriptor.FieldDescriptorProto_TYPE_BOOL:
-		val += " != 0"
-	case descriptor.FieldDescriptorProto_TYPE_GROUP,
-		descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-		val = "msg"
-	}
-	g.P("m.", oneofName, " = &", f.oneofTypeName, "{", val, "}")
-	g.P("return true, err")
+	/*
+		g.P("case ", f.fieldNumber, ": // ", origOneofName, ".", f.getProtoName())
+		g.P("if wire != ", g.Pkg["proto"], ".", f.wireTypeName(), " {")
+		g.P("return true, ", g.Pkg["proto"], ".ErrInternalBadWireType")
+		g.P("}")
+		lhs := "x, err" // overridden for TYPE_MESSAGE and TYPE_GROUP
+		var dec, cast, cast2 string
+		switch f.protoType {
+		case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
+			dec, cast = "b.DecodeFixed64()", g.Pkg["math"]+".Float64frombits"
+		case descriptor.FieldDescriptorProto_TYPE_FLOAT:
+			dec, cast, cast2 = "b.DecodeFixed32()", "uint32", g.Pkg["math"]+".Float32frombits"
+		case descriptor.FieldDescriptorProto_TYPE_INT64:
+			dec, cast = "b.DecodeVarint()", "int64"
+		case descriptor.FieldDescriptorProto_TYPE_UINT64:
+			dec = "b.DecodeVarint()"
+		case descriptor.FieldDescriptorProto_TYPE_INT32:
+			dec, cast = "b.DecodeVarint()", "int32"
+		case descriptor.FieldDescriptorProto_TYPE_FIXED64:
+			dec = "b.DecodeFixed64()"
+		case descriptor.FieldDescriptorProto_TYPE_FIXED32:
+			dec, cast = "b.DecodeFixed32()", "uint32"
+		case descriptor.FieldDescriptorProto_TYPE_BOOL:
+			dec = "b.DecodeVarint()"
+			// handled specially below
+		case descriptor.FieldDescriptorProto_TYPE_STRING:
+			dec = "b.DecodeStringBytes()"
+		case descriptor.FieldDescriptorProto_TYPE_GROUP:
+			g.P("msg := new(", f.goType[1:], ")") // drop star
+			lhs = "err"
+			dec = "b.DecodeGroup(msg)"
+			// handled specially below
+		case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+			g.P("msg := new(", f.goType[1:], ")") // drop star
+			lhs = "err"
+			dec = "b.DecodeMessage(msg)"
+			// handled specially below
+		case descriptor.FieldDescriptorProto_TYPE_BYTES:
+			dec = "b.DecodeRawBytes(true)"
+		case descriptor.FieldDescriptorProto_TYPE_UINT32:
+			dec, cast = "b.DecodeVarint()", "uint32"
+		case descriptor.FieldDescriptorProto_TYPE_ENUM:
+			dec, cast = "b.DecodeVarint()", f.goType
+		case descriptor.FieldDescriptorProto_TYPE_SFIXED32:
+			dec, cast = "b.DecodeFixed32()", "int32"
+		case descriptor.FieldDescriptorProto_TYPE_SFIXED64:
+			dec, cast = "b.DecodeFixed64()", "int64"
+		case descriptor.FieldDescriptorProto_TYPE_SINT32:
+			dec, cast = "b.DecodeZigzag32()", "int32"
+		case descriptor.FieldDescriptorProto_TYPE_SINT64:
+			dec, cast = "b.DecodeZigzag64()", "int64"
+		default:
+			g.Fail("unhandled oneof field type ", f.protoType.String())
+		}
+		g.P(lhs, " := ", dec)
+		val := "x"
+		if cast != "" {
+			val = cast + "(" + val + ")"
+		}
+		if cast2 != "" {
+			val = cast2 + "(" + val + ")"
+		}
+		switch f.protoType {
+		case descriptor.FieldDescriptorProto_TYPE_BOOL:
+			val += " != 0"
+		case descriptor.FieldDescriptorProto_TYPE_GROUP,
+			descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+			val = "msg"
+		}
+		g.P("m.", oneofName, " = &", f.oneofTypeName, "{", val, "}")
+		g.P("return true, err")
+	*/
 }
 
 // sizerCase prints the case matching this oneof subfield in the sizer code.
 func (f *oneofSubField) sizerCase(g *Generator) {
-	g.P("case *", f.oneofTypeName, ":")
-	val := "x." + f.goName
-	var varint, fixed string
-	switch f.protoType {
-	case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
-		fixed = "8"
-	case descriptor.FieldDescriptorProto_TYPE_FLOAT:
-		fixed = "4"
-	case descriptor.FieldDescriptorProto_TYPE_INT64, descriptor.FieldDescriptorProto_TYPE_UINT64, descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_ENUM:
-		varint = val
-	case descriptor.FieldDescriptorProto_TYPE_FIXED64, descriptor.FieldDescriptorProto_TYPE_SFIXED64:
-		fixed = "8"
-	case descriptor.FieldDescriptorProto_TYPE_FIXED32, descriptor.FieldDescriptorProto_TYPE_SFIXED32:
-		fixed = "4"
-	case descriptor.FieldDescriptorProto_TYPE_BOOL:
-		fixed = "1"
-	case descriptor.FieldDescriptorProto_TYPE_STRING:
-		fixed = "len(" + val + ")"
-		varint = fixed
-	case descriptor.FieldDescriptorProto_TYPE_GROUP:
-		fixed = g.Pkg["proto"] + ".Size(" + val + ")"
-	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
-		g.P("s := ", g.Pkg["proto"], ".Size(", val, ")")
-		fixed = "s"
-		varint = fixed
-	case descriptor.FieldDescriptorProto_TYPE_BYTES:
-		fixed = "len(" + val + ")"
-		varint = fixed
-	case descriptor.FieldDescriptorProto_TYPE_SINT32:
-		varint = "(uint32(" + val + ") << 1) ^ uint32((int32(" + val + ") >> 31))"
-	case descriptor.FieldDescriptorProto_TYPE_SINT64:
-		varint = "uint64(" + val + " << 1) ^ uint64((int64(" + val + ") >> 63))"
-	default:
-		g.Fail("unhandled oneof field type ", f.protoType.String())
-	}
-	// Tag and wire varint is known statically,
-	// so don't generate code for that part of the size computation.
-	tagAndWireSize := proto.SizeVarint(uint64(f.fieldNumber << 3)) // wire doesn't affect varint size
-	g.P("n += ", tagAndWireSize, " // tag and wire")
-	if varint != "" {
-		g.P("n += ", g.Pkg["proto"], ".SizeVarint(uint64(", varint, "))")
-	}
-	if fixed != "" {
-		g.P("n += ", fixed)
-	}
-	if f.protoType == descriptor.FieldDescriptorProto_TYPE_GROUP {
+	/*
+		g.P("case *", f.oneofTypeName, ":")
+		val := "x." + f.goName
+		var varint, fixed string
+		switch f.protoType {
+		case descriptor.FieldDescriptorProto_TYPE_DOUBLE:
+			fixed = "8"
+		case descriptor.FieldDescriptorProto_TYPE_FLOAT:
+			fixed = "4"
+		case descriptor.FieldDescriptorProto_TYPE_INT64, descriptor.FieldDescriptorProto_TYPE_UINT64, descriptor.FieldDescriptorProto_TYPE_INT32, descriptor.FieldDescriptorProto_TYPE_UINT32, descriptor.FieldDescriptorProto_TYPE_ENUM:
+			varint = val
+		case descriptor.FieldDescriptorProto_TYPE_FIXED64, descriptor.FieldDescriptorProto_TYPE_SFIXED64:
+			fixed = "8"
+		case descriptor.FieldDescriptorProto_TYPE_FIXED32, descriptor.FieldDescriptorProto_TYPE_SFIXED32:
+			fixed = "4"
+		case descriptor.FieldDescriptorProto_TYPE_BOOL:
+			fixed = "1"
+		case descriptor.FieldDescriptorProto_TYPE_STRING:
+			fixed = "len(" + val + ")"
+			varint = fixed
+		case descriptor.FieldDescriptorProto_TYPE_GROUP:
+			fixed = g.Pkg["proto"] + ".Size(" + val + ")"
+		case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
+			g.P("s := ", g.Pkg["proto"], ".Size(", val, ")")
+			fixed = "s"
+			varint = fixed
+		case descriptor.FieldDescriptorProto_TYPE_BYTES:
+			fixed = "len(" + val + ")"
+			varint = fixed
+		case descriptor.FieldDescriptorProto_TYPE_SINT32:
+			varint = "(uint32(" + val + ") << 1) ^ uint32((int32(" + val + ") >> 31))"
+		case descriptor.FieldDescriptorProto_TYPE_SINT64:
+			varint = "uint64(" + val + " << 1) ^ uint64((int64(" + val + ") >> 63))"
+		default:
+			g.Fail("unhandled oneof field type ", f.protoType.String())
+		}
+		// Tag and wire varint is known statically,
+		// so don't generate code for that part of the size computation.
+		tagAndWireSize := proto.SizeVarint(uint64(f.fieldNumber << 3)) // wire doesn't affect varint size
 		g.P("n += ", tagAndWireSize, " // tag and wire")
-	}
+		if varint != "" {
+			g.P("n += ", g.Pkg["proto"], ".SizeVarint(uint64(", varint, "))")
+		}
+		if fixed != "" {
+			g.P("n += ", fixed)
+		}
+		if f.protoType == descriptor.FieldDescriptorProto_TYPE_GROUP {
+			g.P("n += ", tagAndWireSize, " // tag and wire")
+		}
+	*/
 }
 
 // getProtoDef returns the default value explicitly stated in the proto file, e.g "yoshi" or "5".

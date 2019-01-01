@@ -40,6 +40,20 @@ public EmbedMessage SharedMessage {
 get { var found = getShared(32); if( found != null ){ return (EmbedMessage)found; }else{ return null;} }
 set { setShared(32, value); }
 }
+public List<Int32> SharedInt32Array { 
+get { var found = getShared(35); if( found != null ){ return (List<Int32>)found; }else{ return null;} }
+set { setShared(35, value); }
+}
+public TestEnum SharedEnum { 
+get { var found = getShared(36); if( found != null ){ return (TestEnum)found; }else{ return 0;} }
+set { setShared(36, value); }
+}
+public byte Int8Value_ = 0;
+public Int32 Int8Value { get { return (Int32)Int8Value_; } set { Int8Value_ = (byte)value; }
+}
+public Int16 Int16Value_ = 0;
+public Int32 Int16Value { get { return (Int32)Int16Value_; } set { Int16Value_ = (Int16)value; }
+}
 pb::SharedItem[] sharedList_;
 object getShared(int id){
   if( sharedList_ == null ) return null;
@@ -117,18 +131,20 @@ input.ReadMessage(this.MessageValue);
 break;
 }
 case 48: {
-input.ReadSInt32(ref this.Sint32Value);
+input.ReadInt32(ref this.Sint32Value);
 break;
 }
 case 56: {
-input.ReadSInt64(ref this.Sint64Value);
+input.ReadInt64(ref this.Sint64Value);
 break;
 }
 case 80: {
+if( RepeatedInt32 == null ) RepeatedInt32 = new List<Int32>();
 input.ReadInt32Array(tag, this.RepeatedInt32);
 break;
 }
 case 88: {
+if( RepeatedInt64 == null ) RepeatedInt64 = new List<Int64>();
 input.ReadInt64Array(tag, this.RepeatedInt64);
 break;
 }
@@ -137,10 +153,12 @@ input.ReadMessageArray(tag, this.RepeatedMessage,EmbedMessage.CreateInstance );
 break;
 }
 case 160: {
+if( PackedInt32 == null ) PackedInt32 = new List<Int32>();
 input.ReadInt32Array(tag, this.PackedInt32);
 break;
 }
 case 168: {
+if( PackedInt64 == null ) PackedInt64 = new List<Int64>();
 input.ReadInt64Array(tag, this.PackedInt64);
 break;
 }
@@ -165,6 +183,30 @@ pb::SharedItem.PushTemp(32, temp);
 sharedNum++;
 break;
 }
+case 280: {
+if( SharedInt32Array == null ) SharedInt32Array = new List<Int32>();
+input.ReadInt32Array(tag, this.SharedInt32Array);
+break;
+}
+case 288: {
+TestEnum temp = 0;
+input.ReadEnum(ref temp);
+pb::SharedItem.PushTemp(36, temp);
+sharedNum++;
+break;
+}
+case 264: {
+Int32 temp = 0;
+input.ReadInt32(ref temp);
+Int8Value= (Int32)temp;
+break;
+}
+case 272: {
+Int32 temp = 0;
+input.ReadInt32(ref temp);
+Int16Value= (Int32)temp;
+break;
+}
 }
 }
 if( sharedNum > 0 ){ sharedList_ = pb::SharedItem.PopTemp(sharedNum); }
@@ -186,10 +228,10 @@ if( MessageValue!=null) {
 output.WriteMessage(5,MessageValue);
 }
 if( Sint32Value!=0) {
-output.WriteSInt32(6,Sint32Value);
+output.WriteInt32(6,Sint32Value);
 }
 if( Sint64Value!=0) {
-output.WriteSInt64(7,Sint64Value);
+output.WriteInt64(7,Sint64Value);
 }
 if( RepeatedInt32!=null) {
 output.WriteInt32Array(10,RepeatedInt32);
@@ -214,6 +256,18 @@ output.WriteString(31,SharedString);
 }
 if( SharedMessage!=null) {
 output.WriteMessage(32,SharedMessage);
+}
+if( SharedInt32Array!=null) {
+output.WriteInt32Array(35,SharedInt32Array);
+}
+if( SharedEnum!=0) {
+output.WriteEnum(36, (int)SharedEnum, SharedEnum);
+}
+if( Int8Value!=0) {
+output.WriteInt32(33,Int8Value);
+}
+if( Int16Value!=0) {
+output.WriteInt32(34,Int16Value);
 }
 }
 public override int SerializedSize {
@@ -240,10 +294,10 @@ if( MessageValue!=null) {
 size += pb::CodedOutputStream.ComputeMessageSize(5,MessageValue);
 }
 if( Sint32Value!=0) {
-size += pb::CodedOutputStream.ComputeSInt32Size(6,Sint32Value);
+size += pb::CodedOutputStream.ComputeInt32Size(6,Sint32Value);
 }
 if( Sint64Value!=0) {
-size += pb::CodedOutputStream.ComputeSInt64Size(7,Sint64Value);
+size += pb::CodedOutputStream.ComputeInt64Size(7,Sint64Value);
 }
 if( RepeatedInt32!=null) {
 foreach (var element in RepeatedInt32) {
@@ -273,6 +327,19 @@ size += pb::CodedOutputStream.ComputeStringSize(31,SharedString);
 }
 if( SharedMessage!=null) {
 size += pb::CodedOutputStream.ComputeMessageSize(32,SharedMessage);
+}
+if( SharedInt32Array!=null) {
+foreach (var element in SharedInt32Array) {
+}
+}
+if( SharedEnum!=0) {
+size += pb::CodedOutputStream.ComputeEnumSize(36, (int)SharedEnum);
+}
+if( Int8Value!=0) {
+size += pb::CodedOutputStream.ComputeInt32Size(33,Int8Value);
+}
+if( Int16Value!=0) {
+size += pb::CodedOutputStream.ComputeInt32Size(34,Int16Value);
 }
 return size;
 }

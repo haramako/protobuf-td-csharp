@@ -32,6 +32,11 @@ message TestMessage {
 	int32 shared_int32 = 30 [shared=true];
 	string shared_string = 31 [shared=true];
 	EmbedMessage shared_message = 32 [shared=true];
+	repeated int32 shared_int32_array = 35 [shared=true];
+	TestEnum shared_enum = 36 [shared=true];
+
+	int32 int8_value = 33 [size=8];
+	int32 int16_value = 34 [size=16];
 }
 
 message EmbedMessage {

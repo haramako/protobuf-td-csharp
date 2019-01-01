@@ -944,7 +944,7 @@ message ItemTemplate {
 	int32 fang_icon = 17; /// ファングアイコンの番号
     int32 equipment_image = 26; /// 装備画像
 	int32 sort_id = 5;
-	int32 price = 7;
+	int32 price = 7 [size=16];
 	int32 min_count = 8 [shared=true];
 	int32 max_count = 9 [shared=true];
 	int32 character_id = 15; /// ファングのキャラクターID(ファングのみ有効)
@@ -1126,7 +1126,7 @@ message SpecialScope {
 	bool available_in_wall = 9 [shared=true]; /// 壁の中でもあたる
 	BoardDisplay board_display = 10 [shared=true]; /// スコープボードの表示設定
 	int32 around = 11 [shared=true]; /// PinPointの着弾点からの範囲
-	repeated int32 target_id = 12; /// 指定したキャラクターidだけが対象となる
+	repeated int32 target_id = 12 [shared=true]; /// 指定したキャラクターidだけが対象となる
 }
 
 /**
@@ -1835,20 +1835,20 @@ message SpecialTemplate {
 	}
 
 	SpecialType type = 1;
-	int32 pow = 2;
+	int32 pow = 2 [size=16];
 	ParamType param_type1 = 3 [shared = true];
 	int32 param1 = 4 [shared = true];
-	int32 amount = 5 [shared = true];
+	int32 amount = 5 [shared=true];
 	int32 rand = 6 [shared = true];
 	int32 direct = 7 [shared = true];
 	int32 prob = 8 [shared = true]; /// attackではファングドロップ率. set_statusでは命中率
-	repeated CharacterStatus status = 9; /// 状態異常(add_status, set_statusでのみ使用する）
-	SpecialAttribute attribute = 10; /// 特殊な属性
+	repeated CharacterStatus status = 9 [shared = true]; /// 状態異常(add_status, set_statusでのみ使用する）
+	SpecialAttribute attribute = 10 [shared = true]; /// 特殊な属性
 	Element element = 11 [shared=true]; /// 攻撃の属性
 	StatusGroup status_group = 12 [shared = true]; /// ステータスグループ(clear_statusでのみ使用する)
 	string effect = 13 [shared = true]; /// ヒットエフェクト(エフェクトアセット名、もしくは、スキルエフェクト名を指定する）
-	repeated SkillLot skill_lot = 14; /// random_skillで使用する
-	repeated ItemType item_type = 15; /// steal_item / Instead / clone_itemで使用する
+	repeated SkillLot skill_lot = 14 [shared = true]; /// random_skillで使用する
+	repeated ItemType item_type = 15 [shared = true]; /// steal_item / Instead / clone_itemで使用する
 	int32 hp_rate = 16 [shared = true]; /// 現在HPの割合を%で指定する
 	Range range = 17 [shared = true]; /// 乱数の範囲指定
 	string script = 18 [shared = true]; /// スクリプトの名前（show_scriptで使用する）
@@ -1913,22 +1913,22 @@ message SkillEffectCode {
 	}
 	
 	SkillEffectType type = 1;
-	string effect = 2;
-	float wait = 3;
-	float delay = 4;
-	float speed = 5; /// 飛んでいく速さ
-	float angle = 6; /// 回転する角度
-	float front = 7; // 何マス前に出すか
-	bool follow = 8; /// 当たった対象を追尾するか
-	float animation_speed = 9; /// アニメーションの再生速度
-	float v_angle = 10; /// 放物線の角度
-	float scale = 11; /// エフェクトの大きさ
-	string landing_effect = 12; /// 着弾エフェクト（エフェクト名かSkillEffectのSymbolを指定する）
-	string floor_flash = 13; /// 範囲をフラッシュする（エフェクト名かSkillEffectのSymbolを指定する）
-	string sound = 14; /// 音を鳴らす（エフェクト名かSkillEffectのSymbolを指定する）
-	SkillEffectOption option = 15; /// オプション
-	string sprite = 16; /// アイテム投げで使う
-	bool flip = 17; /// Rotateで369方向に出すときに特殊処理をする
+	string effect = 2 [shared=true];
+	float wait = 3 [shared=true];
+	float delay = 4 [shared=true];
+	float speed = 5 [shared=true]; /// 飛んでいく速さ
+	float angle = 6 [shared=true]; /// 回転する角度
+	float front = 7 [shared=true]; // 何マス前に出すか
+	bool follow = 8 [shared=true]; /// 当たった対象を追尾するか
+	float animation_speed = 9 [shared=true]; /// アニメーションの再生速度
+	float v_angle = 10 [shared=true]; /// 放物線の角度
+	float scale = 11 [shared=true]; /// エフェクトの大きさ
+	string landing_effect = 12 [shared=true]; /// 着弾エフェクト（エフェクト名かSkillEffectのSymbolを指定する）
+	string floor_flash = 13 [shared=true]; /// 範囲をフラッシュする（エフェクト名かSkillEffectのSymbolを指定する）
+	string sound = 14 [shared=true]; /// 音を鳴らす（エフェクト名かSkillEffectのSymbolを指定する）
+	SkillEffectOption option = 15 [shared=true]; /// オプション
+	string sprite = 16 [shared=true]; /// アイテム投げで使う
+	bool flip = 17 [shared=true]; /// Rotateで369方向に出すときに特殊処理をする
 }
 
 /**
@@ -2053,26 +2053,26 @@ message DungeonStage {
 	
 	string stage_name = 3;
 	string desc = 5; /// 説明文
-	int32 width = 6; /// (OBSOLETE)幅[マス]
-	int32 height = 7; /// (OBSOLETE)高さ[マス]
-	int32 room_num = 8; /// 部屋の数
-	int32 room_num_rand = 9; /// 部屋の数のばらつき、つまり（部屋の数+ (0?room_num_rand)) が部屋の数になる
+	int32 width = 6 [size=8]; /// (OBSOLETE)幅[マス]
+	int32 height = 7 [size=8]; /// (OBSOLETE)高さ[マス]
+	int32 room_num = 8 [size=8]; /// 部屋の数
+	int32 room_num_rand = 9 [size=8]; /// 部屋の数のばらつき、つまり（部屋の数+ (0?room_num_rand)) が部屋の数になる
 	repeated int32 enemy_num = 10; /// 部屋１０００マスあたりの敵の数
 	repeated int32 item_num = 11; /// 部屋１０００マスあたりのアイテムの数
 	repeated int32 item_set_id = 13; /// アイテムセットID
-	int32 monster_house_prob = 16; /// モンスターハウスの確率[%]
-	string bgm = 20;
+	int32 monster_house_prob = 16 [size=8]; /// モンスターハウスの確率[%]
+	string bgm = 20 [shared = true];
 	int32 map_object_id = 18; /// マップ画像ID
-	bool no_stair = 23; /// 階段を作らない（タイトル画面用）
-	bool hidden_stair = 24; /// 階段をボスが倒すまで隠す
-	bool question_no_exp = 25; /// 妖精の箱庭用 経験値なし
-	bool question_skill_stable = 26; /// 妖精の箱庭用 スキル使用率100% 
-	bool question_no_miss = 27; /// 妖精の箱庭用 命中率１００％＆クリティカル率０％
+	bool no_stair = 23 [shared = true]; /// 階段を作らない（タイトル画面用）
+	bool hidden_stair = 24 [shared = true]; /// 階段をボスが倒すまで隠す
+	bool question_no_exp = 25 [shared = true]; /// 妖精の箱庭用 経験値なし
+	bool question_skill_stable = 26 [shared = true]; /// 妖精の箱庭用 スキル使用率100% 
+	bool question_no_miss = 27 [shared = true]; /// 妖精の箱庭用 命中率１００％＆クリティカル率０％
 
-	repeated int32 marchant_ids = 29; /// 出る可能性のある商人のIDリスト
-	int32 marchant_prob = 30; /// 商人の出る可能性
-	bool enemy3_dont_place_center = 31; /// Enemy3を中央に配置しない（縦穴用）
-	bool force_awake_objs = 32; /// 岩（オブジェ）を強制的に目覚めさせる
+	repeated int32 marchant_ids = 29 [shared = true]; /// 出る可能性のある商人のIDリスト
+	int32 marchant_prob = 30 [shared = true]; /// 商人の出る可能性
+	bool enemy3_dont_place_center = 31 [shared = true]; /// Enemy3を中央に配置しない（縦穴用）
+	bool force_awake_objs = 32 [shared = true]; /// 岩（オブジェ）を強制的に目覚めさせる
 	
 	/**
 	 * ステージ開始時に実行されるスクリプト
@@ -2472,4 +2472,6 @@ message AocDesc {
 	int32 switch_aoc_index = 3; /// SwitchのAOCのID
 	int32 steam_dlc_app_id = 4; /// SteamのAOCのAppID
 	int32 ps4_content_app_id = 5; /// PS4のAOCのAppID
+	int32 dmm_dlc_id = 6;
+	string dmm_dlc_url = 7;
 }

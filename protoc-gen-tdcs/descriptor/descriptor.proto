@@ -597,7 +597,9 @@ message FieldOptions {
   reserved 4;  // removed jtype
 
   // add by tdcs
-  optional bool shared = 7;
+  optional bool shared = 100;
+
+  optional int32 size = 101;
 }
 
 message OneofOptions {
