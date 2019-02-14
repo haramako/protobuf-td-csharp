@@ -3,6 +3,7 @@ package Test;
 
 import "protoc-gen-tdcs/descriptor/descriptor.proto";
 
+import "imported.proto";
 
 enum TestEnum {
 	FOO = 0;
@@ -18,7 +19,7 @@ message TestMessage {
 	EmbedMessage message_value = 5;
 	sint32 sint32_value = 6;
 	sint64 sint64_value = 7;
-	//bytes bytes_value = 8;
+	bytes bytes_value = 8;
 
 	repeated int32 repeated_int32 = 10;
 	repeated int64 repeated_int64 = 11;
@@ -37,6 +38,8 @@ message TestMessage {
 
 	int32 int8_value = 33 [size=8];
 	int32 int16_value = 34 [size=16];
+
+	TestImported.ImportedMessage imported_value = 40;
 }
 
 message EmbedMessage {

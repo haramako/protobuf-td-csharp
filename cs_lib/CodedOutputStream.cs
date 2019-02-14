@@ -615,26 +615,14 @@ namespace Google.ProtocolBuffers
             }
         }
 
-#if false
         public void WriteEnumArray<T>(int fieldNumber, IEnumerable<T> list)
             where T : struct, IComparable, IFormattable
         {
-            if (list is ICastArray)
+            foreach (object value in list)
             {
-                foreach (int value in ((ICastArray) list).CastArray<int>())
-                {
-                    WriteEnum(fieldNumber, fieldName, value, null /*unused*/);
-                }
-            }
-            else
-            {
-                foreach (object value in list)
-                {
-                    WriteEnum(fieldNumber, fieldName, (int) value, null /*unused*/);
-                }
+                WriteEnum(fieldNumber, (int)value, null /*unused*/);
             }
         }
-#endif
         #endregion
 
         #region Write packed array members

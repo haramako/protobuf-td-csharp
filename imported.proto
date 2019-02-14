@@ -1,0 +1,6 @@
+syntax = "proto3";
+package TestImported;
+
+message ImportedMessage {
+    int32 i = 1;
+}

@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using pb = global::Google.ProtocolBuffers;
+using ByteString = global::Google.ProtocolBuffers.ByteString;
 using scg = global::System.Collections.Generic;
 using System;
 
@@ -19,13 +20,14 @@ public sealed partial class TestMessage: pb.Message {
 public Int32 Int32Value = 0;
 public Int64 Int64Value = 0;
 public string StringValue = "";
-public TestEnum EnumValue = 0;
-public EmbedMessage MessageValue = new EmbedMessage();
+public Test.TestEnum EnumValue = 0;
+public Test.EmbedMessage MessageValue = new Test.EmbedMessage();
 public Int32 Sint32Value = 0;
 public Int64 Sint64Value = 0;
+public ByteString BytesValue = new ByteString();
 public List<Int32> RepeatedInt32 = new List<Int32>();
 public List<Int64> RepeatedInt64 = new List<Int64>();
-public List<EmbedMessage> RepeatedMessage = new List<EmbedMessage>();
+public List<Test.EmbedMessage> RepeatedMessage = new List<Test.EmbedMessage>();
 public List<Int32> PackedInt32 = new List<Int32>();
 public List<Int64> PackedInt64 = new List<Int64>();
 public Int32 SharedInt32 { 
@@ -36,16 +38,16 @@ public string SharedString {
 get { var found = getShared(31); if( found != null ){ return (string)found; }else{ return "";} }
 set { setShared(31, value); }
 }
-public EmbedMessage SharedMessage { 
-get { var found = getShared(32); if( found != null ){ return (EmbedMessage)found; }else{ return null;} }
+public Test.EmbedMessage SharedMessage { 
+get { var found = getShared(32); if( found != null ){ return (Test.EmbedMessage)found; }else{ return null;} }
 set { setShared(32, value); }
 }
 public List<Int32> SharedInt32Array { 
 get { var found = getShared(35); if( found != null ){ return (List<Int32>)found; }else{ return null;} }
 set { setShared(35, value); }
 }
-public TestEnum SharedEnum { 
-get { var found = getShared(36); if( found != null ){ return (TestEnum)found; }else{ return 0;} }
+public Test.TestEnum SharedEnum { 
+get { var found = getShared(36); if( found != null ){ return (Test.TestEnum)found; }else{ return 0;} }
 set { setShared(36, value); }
 }
 public byte Int8Value_ = 0;
@@ -54,6 +56,7 @@ public Int32 Int8Value { get { return (Int32)Int8Value_; } set { Int8Value_ = (b
 public Int16 Int16Value_ = 0;
 public Int32 Int16Value { get { return (Int32)Int16Value_; } set { Int16Value_ = (Int16)value; }
 }
+public TestImported.ImportedMessage ImportedValue = new TestImported.ImportedMessage();
 pb::SharedItem[] sharedList_;
 object getShared(int id){
   if( sharedList_ == null ) return null;
@@ -107,6 +110,7 @@ default: {
 if (pb::WireFormat.IsEndGroupTag(tag)) {
 return;
 }
+UnityEngine.Debug.Log("unknown field " + tag);
 input.SkipField(); // unknown field
 break;
 }
@@ -138,6 +142,10 @@ case 56: {
 input.ReadInt64(ref this.Sint64Value);
 break;
 }
+case 66: {
+input.ReadBytes(ref this.BytesValue);
+break;
+}
 case 80: {
 if( RepeatedInt32 == null ) RepeatedInt32 = new List<Int32>();
 input.ReadInt32Array(tag, this.RepeatedInt32);
@@ -149,7 +157,8 @@ input.ReadInt64Array(tag, this.RepeatedInt64);
 break;
 }
 case 98: {
-input.ReadMessageArray(tag, this.RepeatedMessage,EmbedMessage.CreateInstance );
+if( RepeatedMessage == null ) RepeatedMessage = new List<Test.EmbedMessage>();
+input.ReadMessageArray(tag, this.RepeatedMessage,Test.EmbedMessage.CreateInstance );
 break;
 }
 case 160: {
@@ -177,7 +186,7 @@ sharedNum++;
 break;
 }
 case 258: {
-var temp = EmbedMessage.CreateInstance();
+var temp = Test.EmbedMessage.CreateInstance();
 input.ReadMessage(temp);
 pb::SharedItem.PushTemp(32, temp);
 sharedNum++;
@@ -189,7 +198,7 @@ input.ReadInt32Array(tag, this.SharedInt32Array);
 break;
 }
 case 288: {
-TestEnum temp = 0;
+Test.TestEnum temp = 0;
 input.ReadEnum(ref temp);
 pb::SharedItem.PushTemp(36, temp);
 sharedNum++;
@@ -207,67 +216,98 @@ input.ReadInt32(ref temp);
 Int16Value= (Int32)temp;
 break;
 }
+case 322: {
+input.ReadMessage(this.ImportedValue);
+break;
+}
 }
 }
 if( sharedNum > 0 ){ sharedList_ = pb::SharedItem.PopTemp(sharedNum); }
 }
 public override void WriteTo(pb::CodedOutputStream output) {
 if( Int32Value!=0) {
+UnityEngine.Debug.Log("write Int32Value " + Int32Value);
 output.WriteInt32(1,Int32Value);
 }
 if( Int64Value!=0) {
+UnityEngine.Debug.Log("write Int64Value " + Int64Value);
 output.WriteInt64(2,Int64Value);
 }
 if( StringValue!="") {
+UnityEngine.Debug.Log("write StringValue " + StringValue);
 output.WriteString(3,StringValue);
 }
 if( EnumValue!=0) {
+UnityEngine.Debug.Log("write EnumValue " + EnumValue);
 output.WriteEnum(4, (int)EnumValue, EnumValue);
 }
 if( MessageValue!=null) {
+UnityEngine.Debug.Log("write MessageValue " + MessageValue);
 output.WriteMessage(5,MessageValue);
 }
 if( Sint32Value!=0) {
+UnityEngine.Debug.Log("write Sint32Value " + Sint32Value);
 output.WriteInt32(6,Sint32Value);
 }
 if( Sint64Value!=0) {
+UnityEngine.Debug.Log("write Sint64Value " + Sint64Value);
 output.WriteInt64(7,Sint64Value);
 }
+if( BytesValue!=new ByteString()) {
+UnityEngine.Debug.Log("write BytesValue " + BytesValue);
+output.WriteBytes(8,BytesValue);
+}
 if( RepeatedInt32!=null) {
+UnityEngine.Debug.Log("write RepeatedInt32 " + RepeatedInt32);
 output.WriteInt32Array(10,RepeatedInt32);
 }
 if( RepeatedInt64!=null) {
+UnityEngine.Debug.Log("write RepeatedInt64 " + RepeatedInt64);
 output.WriteInt64Array(11,RepeatedInt64);
 }
 if( RepeatedMessage!=null) {
+UnityEngine.Debug.Log("write RepeatedMessage " + RepeatedMessage);
 output.WriteMessageArray(12,RepeatedMessage);
 }
 if( PackedInt32!=null) {
+UnityEngine.Debug.Log("write PackedInt32 " + PackedInt32);
 output.WriteInt32Array(20,PackedInt32);
 }
 if( PackedInt64!=null) {
+UnityEngine.Debug.Log("write PackedInt64 " + PackedInt64);
 output.WriteInt64Array(21,PackedInt64);
 }
 if( SharedInt32!=0) {
+UnityEngine.Debug.Log("write SharedInt32 " + SharedInt32);
 output.WriteInt32(30,SharedInt32);
 }
 if( SharedString!="") {
+UnityEngine.Debug.Log("write SharedString " + SharedString);
 output.WriteString(31,SharedString);
 }
 if( SharedMessage!=null) {
+UnityEngine.Debug.Log("write SharedMessage " + SharedMessage);
 output.WriteMessage(32,SharedMessage);
 }
 if( SharedInt32Array!=null) {
+UnityEngine.Debug.Log("write SharedInt32Array " + SharedInt32Array);
 output.WriteInt32Array(35,SharedInt32Array);
 }
 if( SharedEnum!=0) {
+UnityEngine.Debug.Log("write SharedEnum " + SharedEnum);
 output.WriteEnum(36, (int)SharedEnum, SharedEnum);
 }
 if( Int8Value!=0) {
+UnityEngine.Debug.Log("write Int8Value " + Int8Value);
 output.WriteInt32(33,Int8Value);
 }
 if( Int16Value!=0) {
+UnityEngine.Debug.Log("write Int16Value " + Int16Value);
 output.WriteInt32(34,Int16Value);
+}
+if( ImportedValue!=null) {
+UnityEngine.Debug.Log("write ImportedValue " + ImportedValue);
+output.WriteMessage(40,ImportedValue);
 }
 }
 public override int SerializedSize {
@@ -299,24 +339,32 @@ size += pb::CodedOutputStream.ComputeInt32Size(6,Sint32Value);
 if( Sint64Value!=0) {
 size += pb::CodedOutputStream.ComputeInt64Size(7,Sint64Value);
 }
+if( BytesValue!=new ByteString()) {
+size += pb::CodedOutputStream.ComputeBytesSize(8,BytesValue);
+}
 if( RepeatedInt32!=null) {
 foreach (var element in RepeatedInt32) {
+size += pb::CodedOutputStream.ComputeInt32Size(10, element);
 }
 }
 if( RepeatedInt64!=null) {
 foreach (var element in RepeatedInt64) {
+size += pb::CodedOutputStream.ComputeInt64Size(11, element);
 }
 }
 if( RepeatedMessage!=null) {
 foreach (var element in RepeatedMessage) {
+size += pb::CodedOutputStream.ComputeMessageSize(12, element);
 }
 }
 if( PackedInt32!=null) {
 foreach (var element in PackedInt32) {
+size += pb::CodedOutputStream.ComputeInt32Size(20, element);
 }
 }
 if( PackedInt64!=null) {
 foreach (var element in PackedInt64) {
+size += pb::CodedOutputStream.ComputeInt64Size(21, element);
 }
 }
 if( SharedInt32!=0) {
@@ -330,6 +378,7 @@ size += pb::CodedOutputStream.ComputeMessageSize(32,SharedMessage);
 }
 if( SharedInt32Array!=null) {
 foreach (var element in SharedInt32Array) {
+size += pb::CodedOutputStream.ComputeInt32Size(35, element);
 }
 }
 if( SharedEnum!=0) {
@@ -340,6 +389,9 @@ size += pb::CodedOutputStream.ComputeInt32Size(33,Int8Value);
 }
 if( Int16Value!=0) {
 size += pb::CodedOutputStream.ComputeInt32Size(34,Int16Value);
+}
+if( ImportedValue!=null) {
+size += pb::CodedOutputStream.ComputeMessageSize(40,ImportedValue);
 }
 return size;
 }
@@ -381,6 +433,7 @@ default: {
 if (pb::WireFormat.IsEndGroupTag(tag)) {
 return;
 }
+UnityEngine.Debug.Log("unknown field " + tag);
 input.SkipField(); // unknown field
 break;
 }
@@ -393,6 +446,7 @@ break;
 }
 public override void WriteTo(pb::CodedOutputStream output) {
 if( Val!=0) {
+UnityEngine.Debug.Log("write Val " + Val);
 output.WriteInt32(1,Val);
 }
 }

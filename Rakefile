@@ -36,7 +36,7 @@ end
 task :test do
 	Dir.chdir 'protoc-gen-tdcs' do
 		sh 'go', 'build'
-		sh 'protoc', '-I', '..', '--plugin=protoc-gen-tdcs.exe', '--tdcs_out=../cs_test', 'test.proto'
+		sh 'protoc', '-I', '..', '--plugin=protoc-gen-tdcs.exe', '--tdcs_out=../cs_test', 'test.proto', 'imported.proto'
 	end
 	sh MSBUILD, 'cs_test/cs_test.csproj'
 	sh NUNIT3_CONSLE, '--noheader', "cs_test/cs_test.csproj"

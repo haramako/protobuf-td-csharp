@@ -46,33 +46,7 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\cs_lib\ByteArray.cs">
-      <Link>cs_lib\ByteArray.cs</Link>
-    </Compile>
-    <Compile Include="..\cs_lib\ByteString.cs">
-      <Link>cs_lib\ByteString.cs</Link>
-    </Compile>
-    <Compile Include="..\cs_lib\CodedInputStream.cs">
-      <Link>cs_lib\CodedInputStream.cs</Link>
-    </Compile>
-    <Compile Include="..\cs_lib\CodedOutputStream.ComputeSize.cs">
-      <Link>cs_lib\CodedOutputStream.ComputeSize.cs</Link>
-    </Compile>
-    <Compile Include="..\cs_lib\CodedOutputStream.cs">
-      <Link>cs_lib\CodedOutputStream.cs</Link>
-    </Compile>
-    <Compile Include="..\cs_lib\FrameworkPortability.cs">
-      <Link>cs_lib\FrameworkPortability.cs</Link>
-    </Compile>
-    <Compile Include="..\cs_lib\InvalidProtocolBufferException.cs">
-      <Link>cs_lib\InvalidProtocolBufferException.cs</Link>
-    </Compile>
-    <Compile Include="..\cs_lib\Message.cs">
-      <Link>cs_lib\Message.cs</Link>
-    </Compile>
-    <Compile Include="..\cs_lib\WireFormat.cs">
-      <Link>cs_lib\WireFormat.cs</Link>
-    </Compile>
+    <Compile Include="Imported.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
@@ -80,6 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\GoogleProtocolBuffer.csproj">
+      <Project>{9601947e-cf7a-4123-978e-7cac5b7cca76}</Project>
+      <Name>GoogleProtocolBuffer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

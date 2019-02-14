@@ -46,7 +46,7 @@ func (f *simpleField) writeTo(g *Generator, mc *msgCtx) {
 		if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
 			g.P("output.WriteMessageArray(", f.proto.GetNumber(), ",", f.goName, ");")
 		} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
-			//g.P("output.WriteEnumArray(", f.proto.GetNumber(), ",", f.goName, ");") // TODO: WriteEnumArray対応
+			g.P("output.WriteEnumArray(", f.proto.GetNumber(), ",", f.goName, ");") // TODO: WriteEnumArray対応
 		} else {
 			// TODO: 各Array対応
 			g.P("output.Write", getFunctionPostfix(f.proto.GetType()), "Array(", f.proto.GetNumber(), ",", f.goName, ");")
@@ -64,7 +64,11 @@ func (f *simpleField) calcSize(g *Generator, mc *msgCtx) {
 	g.P("if( ", f.goName, "!=", getNullValue(f.proto.GetType(), &f.fieldCommon), ") {")
 	if isRepeated(d) {
 		g.P("foreach (var element in ", f.goName, ") {")
-		//g.P("size += pb::CodedOutputStream.ComputeArraySize(", f.proto.GetNumber(), ", element);")
+		if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
+			g.P("size += pb::CodedOutputStream.ComputeEnumSize(", f.proto.GetNumber(), ", (int)element);")
+		} else {
+			g.P("size += pb::CodedOutputStream.Compute", getFunctionPostfix(f.proto.GetType()), "Size(", f.proto.GetNumber(), ", element);")
+		}
 		g.P("}")
 	} else if f.protoType == descriptor.FieldDescriptorProto_TYPE_ENUM {
 		g.P("size += pb::CodedOutputStream.ComputeEnumSize(", f.proto.GetNumber(), ", (int)", f.goName, ");")

@@ -75,6 +75,8 @@ namespace Test
             mes.SharedMessage = EmbedMessage.CreateInstance();
             mes.SharedMessage.Val = 42;
 
+            mes.BytesValue = ByteString.CopyFrom(new byte[] { 1, 2, 3 });
+
             foreach (var c in mes.Dump())
             {
                 Console.Write(string.Format("{0},", c));
@@ -86,6 +88,7 @@ namespace Test
             Assert.AreEqual(40, des.SharedInt32);
             Assert.AreEqual("41", des.SharedString);
             Assert.AreEqual(42, des.SharedMessage.Val);
+            Assert.AreEqual(new byte[] { 1, 2, 3 }, des.BytesValue.ToByteArray());
 
             Assert.IsTrue(comp(mes, des));
 

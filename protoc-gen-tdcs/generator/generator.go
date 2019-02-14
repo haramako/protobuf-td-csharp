@@ -406,10 +406,10 @@ func (g *Generator) SetPackageNames() {
 	// Check that all files have a consistent package name and import path.
 	for _, f := range g.genFiles[1:] {
 		if a, b := g.genFiles[0].importPath, f.importPath; a != b {
-			g.Fail(fmt.Sprintf("inconsistent package import paths: %v, %v", a, b))
+			//g.Fail(fmt.Sprintf("inconsistent package import paths: %v, %v", a, b))
 		}
 		if a, b := g.genFiles[0].packageName, f.packageName; a != b {
-			g.Fail(fmt.Sprintf("inconsistent package names: %v, %v", a, b))
+			//g.Fail(fmt.Sprintf("inconsistent package names: %v, %v", a, b))
 		}
 	}
 
@@ -928,6 +928,7 @@ func (g *Generator) generateImports() {
 	// reference it later. The same argument applies to the fmt and math packages.
 	g.P("using System.Collections.Generic;")
 	g.P("using pb = global::Google.ProtocolBuffers;")
+	g.P("using ByteString = global::Google.ProtocolBuffers.ByteString;")
 	g.P("using scg = global::System.Collections.Generic;")
 	g.P("using System;")
 	g.P()
@@ -1015,7 +1016,7 @@ func getFunctionPostfix(typ descriptor.FieldDescriptorProto_Type) string {
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		return "Message"
 	case descriptor.FieldDescriptorProto_TYPE_BYTES:
-		return "ByteArray"
+		return "Bytes"
 	case descriptor.FieldDescriptorProto_TYPE_ENUM:
 		return "Enum"
 	case descriptor.FieldDescriptorProto_TYPE_SINT32:
@@ -1040,7 +1041,7 @@ var typeTable = map[descriptor.FieldDescriptorProto_Type]CsType{
 	descriptor.FieldDescriptorProto_TYPE_STRING:   {typ: "string", prefix: "String", wire: "bytes"},
 	descriptor.FieldDescriptorProto_TYPE_GROUP:    {typ: "", prefix: "", wire: "group"},
 	descriptor.FieldDescriptorProto_TYPE_MESSAGE:  {typ: "", prefix: "", wire: "bytes"},
-	descriptor.FieldDescriptorProto_TYPE_BYTES:    {typ: "byte[]", prefix: "", wire: "bytes"},
+	descriptor.FieldDescriptorProto_TYPE_BYTES:    {typ: "ByteString", prefix: "", wire: "bytes"},
 	descriptor.FieldDescriptorProto_TYPE_ENUM:     {typ: "", prefix: "", wire: "varint"},
 	descriptor.FieldDescriptorProto_TYPE_SFIXED32: {typ: "Int32", prefix: "", wire: "fixed32"},
 	descriptor.FieldDescriptorProto_TYPE_SFIXED64: {typ: "Int64", prefix: "", wire: "fixed64"},
@@ -1085,11 +1086,11 @@ func (g *Generator) GoType(message *Descriptor, field *descriptor.FieldDescripto
 		t.typ = g.typeName(desc)
 	case descriptor.FieldDescriptorProto_TYPE_MESSAGE:
 		desc := g.ObjectNamed(field.GetTypeName())
-		t.typ = g.typeNameWithTypes(desc)
+		t.typ = string(desc.File().packageName) + "." + g.typeNameWithTypes(desc)
 		t.ftype = t.typ
 	case descriptor.FieldDescriptorProto_TYPE_ENUM:
 		desc := g.ObjectNamed(field.GetTypeName())
-		t.typ = g.typeNameWithTypes(desc)
+		t.typ = string(desc.File().packageName) + "." + g.typeNameWithTypes(desc)
 		t.ftype = t.typ
 	default:
 		// g.Fail("unknown cs type for"+string(*field.Type), field.GetName())
@@ -1209,6 +1210,8 @@ func getNullValue(typ descriptor.FieldDescriptorProto_Type, f *fieldCommon) stri
 		return "\"\""
 	case descriptor.FieldDescriptorProto_TYPE_BOOL:
 		return "false"
+	case descriptor.FieldDescriptorProto_TYPE_BYTES:
+		return "new ByteString()"
 	default:
 		return "0"
 	}

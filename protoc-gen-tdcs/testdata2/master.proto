@@ -10,7 +10,7 @@
  * ここで定義されたデータは、マスターデータに入る、もしくは、他のプロトコルから参照されるものである。
  */
 syntax = "proto3";
-import "descriptor.proto";
+import "protoc-gen-tdcsharp.proto";
 
 package Master;
 
@@ -2366,6 +2366,7 @@ enum PlatformType {
 	Wsa = 2; /// XBOX/Windows Storeを含む
 	Ps4 = 3;
 	Dmm = 4;
+	N3ds = 5;
 }
 
 /**
@@ -2474,4 +2475,69 @@ message AocDesc {
 	int32 ps4_content_app_id = 5; /// PS4のAOCのAppID
 	int32 dmm_dlc_id = 6;
 	string dmm_dlc_url = 7;
+}
+
+
+message DramaScene {
+	string id = 1;
+	repeated DramaCommand commands = 2;
+}
+
+message DramaCommand {
+	enum Type {
+		Message = 0;
+		Shake = 1;
+		CharacterOff = 2;
+		Bg = 3;
+		InitMessageWindow = 4;
+		Param = 5;
+		Wait = 6;
+	}
+
+	enum ShakeKind {
+		MessageWindow = 0;
+		Graphics = 1;
+	}
+
+	enum ParamOption {
+		None = 0;
+		NotSkip = 1;
+		TextFadeIn = 2;
+		TextFadeOut = 3;
+	}
+
+	Type type = 1;
+	string text = 2; /// メッセージ(Type==Messageでのみ使用)
+	string voice = 3; /// 音声(Type==Messageでのみ使用)
+	string character_name = 4; /// キャラクター名(Type==Message,CharacterOffでのみ使用)
+	string character_pose = 5; /// キャラクターのポーズ(Type==Messageでのみ使用)
+	string character_position = 6; /// キャラクターの位置(Type==Messageでのみ使用)
+
+	ShakeKind shake_kind = 8; /// Shakeの種類（Type==Shakeでのみ使用)
+
+	string bg_name = 9; /// 背景の名前(Type==Bgでのみ使用)
+
+	float wait_sec = 10; /// ウェイトの時間[秒](Type==Waitでのみ使用)
+
+	ParamOption param_option = 11; /// パラメータの種類[秒](Type==Paramでのみ使用)
+	bool param_option_value = 12; /// パラメータの値[秒](Type==Paramでのみ使用)
+
+	string override_name = 13; /// キャラクターの名前を上書きする(Type==Messageでのみ使用)
+	string massage_window = 14; /// 全画面表示かウインドウ表示か
+	bool slow_play = 15; /// メッセージをゆっくり再生する
+}	
+
+message DramaCharacter {
+	string id = 1;
+	string pattern = 2;
+	string filename = 3;
+}
+
+message DramaLayer {
+	string id = 1;
+	int32 x = 2;
+	int32 y = 3;
+	int32 order = 4;
+	bool flip_x = 5;
+	bool flip_y = 6;
 }
