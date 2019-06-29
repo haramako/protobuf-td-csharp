@@ -838,7 +838,7 @@ func (g *Generator) generateHeader() {
 	} else {
 		g.P("// source: ", g.file.Name)
 	}
-	g.P("#pragma warning disable 1591, 0612, 3021")
+	g.P("#pragma warning disable 1591, 0612, 3021, 0219")
 	g.P("#region Designer generated code")
 	g.P()
 	g.PrintComments(strconv.Itoa(packagePath))

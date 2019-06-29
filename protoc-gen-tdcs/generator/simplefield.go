@@ -109,6 +109,9 @@ func GetWireTypeTag(wireType string) WireType {
 
 func (f *simpleField) mergeFrom(g *Generator, mc *msgCtx) {
 	d := f.fieldCommon.proto
+	if isRepeated(d) && GetWireTypeTag(f.fieldCommon.goType.wire) != 2 {
+		g.P("case ", f.proto.GetNumber()<<3|int32(2), ":") // TODO: repeatedのみにすべし
+	}
 	g.P("case ", f.proto.GetNumber()<<3|int32(GetWireTypeTag(f.fieldCommon.goType.wire)), ": {")
 	if isRepeated(d) {
 		if f.protoType == descriptor.FieldDescriptorProto_TYPE_MESSAGE {
